@@ -3,7 +3,6 @@ import React, { useState } from "react";
 export const Register = (props) => {
   const [email, setEmail] = useState("");
   const [pass, setPass] = useState("");
-  const [age, setAge] = useState("");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [location, setLocation] = useState("");
@@ -72,14 +71,6 @@ export const Register = (props) => {
           onChange={(e) => setLocation(e.target.value)}
           id="location"
           placeholder="city name"
-        />
-        <label htmlFor="name">Age</label>
-        <input
-          value={age}
-          name="age"
-          onChange={(e) => setAge(e.target.value)}
-          id="age"
-          placeholder="age"
         />
         <label htmlFor="image">Upload Image</label>
         <div>
