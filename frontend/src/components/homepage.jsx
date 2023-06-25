@@ -1,29 +1,45 @@
-import React from 'react';
-import { useSelector, useDispatch } from "react-redux";
-import { setLogout } from 'state';
+import { Box, useMediaQuery } from "@mui/material";
+import { useSelector } from "react-redux";
+import Navbar from "components/navbar"; 
+import UserWidget from "components/UserWidget";
+import MyPostWidget from "components/MyPost";
+import PostsWidget from "components/Posts";
+import FriendListWidget from "components/FriendList";
 
+const HomePage = () => {
+  const isNonMobileScreens = useMediaQuery("(min-width:1000px)");
+  const { _id, picturePath } = useSelector((state) => state.user);
 
-
-function Homepage() {
-  const dispatch = useDispatch();
-   const { firstName, picturePath } = useSelector((state) => state.user);
   return (
-    <>
-      <div>
-        <h1>Welcome {firstName}, Great to have you on board!</h1>
-        <img
-          src={`http://localhost:5000/assets/${picturePath}`}
-          height={100}
-          width={100}
-          alt="User"
-        />
-        <div>
-          <button onClick={() => dispatch(setLogout())}>Logout</button>
-        </div>
-      </div>
-    </>
+    <Box>
+      <Navbar />
+      <Box
+        width="100%"
+        padding="2rem 6%"
+        display={isNonMobileScreens ? "flex" : "block"}
+        gap="0.5rem"
+        justifyContent="space-between"
+      >
+        <Box flexBasis={isNonMobileScreens ? "26%" : undefined}>
+          <UserWidget userId={_id} picturePath={picturePath} />
+        </Box>
+        <Box
+          flexBasis={isNonMobileScreens ? "42%" : undefined}
+          mt={isNonMobileScreens ? undefined : "2rem"}
+        >
+          <MyPostWidget picturePath={picturePath} />
+          <PostsWidget userId={_id} />
+        </Box>
+        {isNonMobileScreens && (
+          <Box flexBasis="26%">
+            <Box m="2rem 0" />
+            <FriendListWidget userId={_id} />
+          </Box>
+        )}
+      </Box>
+    </Box>
   );
-}
+};
 
-export default Homepage;
+export default HomePage;
 
