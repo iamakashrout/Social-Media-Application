@@ -1,21 +1,17 @@
 import { Box } from "@mui/material";
-import { useSelector, useDispatch } from "react-redux";
 
-function UserImage() {
-const dispatch = useDispatch();
-   const {picturePath } = useSelector((state) => state.user);
-    return (
-    <Box width={100} height={100}>
+const UserImage = ({ image, size = "60px" }) => {
+  return (
+    <Box width={size} height={size}>
       <img
         style={{ objectFit: "cover", borderRadius: "50%" }}
-        width={100}
-        height={100}
+        width={size}
+        height={size}
         alt="user"
-        src={`http://localhost:5000/assets/${picturePath}`}
+        src={`http://localhost:5000/assets/${image}`}
       />
     </Box>
   );
-}
-
+};
 
 export default UserImage;

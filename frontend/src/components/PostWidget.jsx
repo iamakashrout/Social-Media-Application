@@ -64,7 +64,7 @@ import {
             height="auto"
             alt="post"
             style={{ borderRadius: "0.75rem", marginTop: "0.75rem" }}
-            src={`http://localhost:3001/assets/${picturePath}`}
+            src={`http://localhost:5000/assets/${picturePath}`}
           />
         )}
         <FlexBetween mt="0.25rem">
@@ -79,7 +79,7 @@ import {
               </IconButton>
               <Typography>{likeCount}</Typography>
             </FlexBetween>
-  
+
             <FlexBetween gap="0.3rem">
               <IconButton onClick={() => setIsComments(!isComments)}>
                 <ChatBubbleOutlineOutlined />
@@ -87,7 +87,7 @@ import {
               <Typography>{comments.length}</Typography>
             </FlexBetween>
           </FlexBetween>
-  
+
           <IconButton>
             <ShareOutlined />
           </IconButton>
