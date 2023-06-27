@@ -1,9 +1,15 @@
-import { useEffect } from "react";
+import { useEffect , useState} from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { Button, Menu, MenuItem } from '@mui/material';
 import { setPosts } from "state";
 import PostWidget from "./PostWidget";
 
 const PostsWidget = ({ userId, isProfile = false }) => {
+  const [selectedCategory, setSelectedCategory] = useState(null);
+  const [anchorEl, setAnchorEl] = useState(null);
+  const handleCategorySelect = (category) => {
+    setSelectedCategory(category);}
+  
   const dispatch = useDispatch();
   const posts = useSelector((state) => state.posts);
   const token = useSelector((state) => state.token);
@@ -39,7 +45,33 @@ const PostsWidget = ({ userId, isProfile = false }) => {
 
   return (
     <>
-      {posts.slice(0).reverse().map(
+    <Button
+      variant="outlined"
+      onClick={(event) => setAnchorEl(event.currentTarget)}
+      sx={{
+        color: 'grey',
+        fontWeight: 'bold', 
+        fontSize: '0.9rem', 
+        textTransform: 'none', 
+      }}
+    >
+      {selectedCategory ? selectedCategory : 'All Categories'}
+    </Button>
+
+    <Menu
+      anchorEl={anchorEl}
+      open={Boolean(anchorEl)}
+      onClose={() => setAnchorEl(null)}
+    >
+      <MenuItem onClick={() => handleCategorySelect(null)}>All Categories</MenuItem>
+      <MenuItem onClick={() => handleCategorySelect('Comedy')}>Entertainment</MenuItem>
+      <MenuItem onClick={() => handleCategorySelect('Political')}>Political</MenuItem>
+      <MenuItem onClick={() => handleCategorySelect('Bollywood')}>Bollywood</MenuItem>
+      <MenuItem onClick={() => handleCategorySelect('Sports')}>Sports</MenuItem>
+      <MenuItem onClick={() => handleCategorySelect('Academics')}>Academics</MenuItem>
+    </Menu>
+
+      {Array.isArray(posts) && posts.slice(0).reverse().map(
         ({
           _id,
           userId,

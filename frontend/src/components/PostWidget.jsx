@@ -130,54 +130,67 @@ const PostWidget = ({
       </FlexBetween>
       {isComments && (
         <Box mt="0.5rem">
-          <InputBase
-            placeholder="Write a comment..."
-            onChange={(e) => setComment(e.target.value)}
-            value={comment}
+          <Box
             sx={{
-              width: "100%",
-              backgroundColor: palette.neutral.light,
-              borderRadius: "2rem",
-            }}
-          />
-          <Button
-            disabled={!comment}
-            onClick={handleComment}
-            sx={{
-              color: palette.background.alt,
-              backgroundColor: palette.primary.main,
-              borderRadius: "3rem",
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.5rem',
+              width: '100%',
+              padding: '0.1rem',
             }}
           >
-            COMMENT
-          </Button>
+            <InputBase
+              placeholder="  Write a comment..."
+              onChange={(e) => setComment(e.target.value)}
+              value={comment}
+              sx={{
+                flex: 1,
+                backgroundColor: palette.neutral.light,
+                borderRadius: '1rem',
+              }}
+            />
+            <Button
+              disabled={!comment}
+              onClick={handleComment}
+              sx={{
+                color: palette.background.alt,
+                backgroundColor: palette.primary.main,
+                borderRadius: '0.8rem',
+                fontSize: '0.5rem',
+              }}
+            >
+              COMMENT
+            </Button>
+          </Box>
           {comments.map((item, i) => (
-            <Box key={`${name}-${i}`}>
+            <Box key={`${name}-${i}`} sx={{ mt: '0.5rem' }}>
               <Divider />
-              <UserImage image={item.userpic} size="30px" />
-              <Typography
-                sx={
-                  ({ color: main, m: "0.5rem 0", pl: "1rem" },
-                  {
-                    "&:hover": {
+              <Box sx={{ display: 'flex', alignItems: 'center', mt: '0.5rem' }}>
+                <UserImage image={item.userpic} size="30px" />
+                <Typography
+                  sx={{
+                    color: palette.secondary.main,
+                    ml: '1rem',
+                    fontWeight: 'bold', 
+                    '&:hover': {
                       color: palette.primary.light,
-                      cursor: "pointer",
+                      cursor: 'pointer',
                     },
-                  })
-                }
-                onClick={() => {
-                  navigate(`/profile/${item.userId}`);
-                  navigate(0);
-                }}
-              >
-                {item.username}
-              </Typography>
-              <Typography sx={{ color: main, m: "0.5rem 0", pl: "1rem" }}>
-                {item.comment}
-              </Typography>
+                  }}
+                  onClick={() => {
+                    navigate(`/profile/${item.userId}`);
+                    navigate(0);
+                  }}
+                >
+                  {item.username}
+                </Typography>
+                <Typography sx={{ color: main, ml: '0.5rem' }}>
+                  {item.comment}
+                </Typography>
+              </Box>
             </Box>
           ))}
-          <Divider />
+          <Divider sx={{ mt: '0.2rem' }} />
         </Box>
       )}
     </WidgetWrapper>
