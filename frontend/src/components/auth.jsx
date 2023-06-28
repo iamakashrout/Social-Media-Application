@@ -5,6 +5,13 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { setLogin } from "state";
 import Dropzone from "react-dropzone";
+import app from "../firebase.js";
+import {
+  getDownloadURL,
+  getStorage,
+  ref,
+  uploadBytesResumable,
+} from "firebase/storage";
 
 const registerSchema = yup.object().shape({
   firstName: yup.string().required("required"),
@@ -48,7 +55,42 @@ const Auth = () => {
     for (let value in values) {
       formData.append(value, values[value]);
     }
-    formData.append("picturePath", values.picture.name);
+    const fileName = new Date().getTime() + values.picture?.name;
+    const storage = getStorage(app);
+    const StorageRef = ref(storage, fileName);
+    const uploadTask = uploadBytesResumable(StorageRef, values.picture);
+    uploadTask.on("state_changed", (snapshot) => {
+      const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+      console.log("Upload is " + progress + "% done");
+      switch (snapshot.state) {
+        case "paused":
+          console.log("Upload is paused");
+          break;
+        case "running":
+          console.log("Upload is running");
+          break;
+      }
+    },
+      (error) => { },
+      () => {
+        getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+          console.log(downloadURL);
+          formData.append("picturePath", downloadURL);
+          fetch(`http://localhost:5000/auth/register`, {
+            method: "POST",
+            body: formData,
+          }).then(async (savedUserResponse) => {
+            const savedUser = await savedUserResponse.json();
+            onSubmitProps.resetForm();
+
+            if (savedUser) {
+              setPageType("login");
+            }
+          })
+        })
+      }
+    )
+    /*formData.append("picturePath", values.picture.name);
 
     const savedUserResponse = await fetch(
       "http://localhost:5000/auth/register",
@@ -62,7 +104,7 @@ const Auth = () => {
 
     if (savedUser) {
       setPageType("login");
-    }
+    }*/
   };
 
   const login = async (values, onSubmitProps) => {

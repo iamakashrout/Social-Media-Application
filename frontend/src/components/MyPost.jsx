@@ -23,7 +23,14 @@ import {
   import WidgetWrapper from "tools/WidgetWrapper";
   import { useState } from "react";
   import { useDispatch, useSelector } from "react-redux";
-  import { setPosts } from "state";
+import { setPosts } from "state";
+import app from "../firebase.js"
+   import {
+     getDownloadURL,
+     getStorage,
+     ref,
+     uploadBytesResumable,
+   } from "firebase/storage";
   
   const MyPostWidget = ({ picturePath }) => {
     const dispatch = useDispatch();
@@ -42,11 +49,52 @@ import {
       formData.append("userId", _id);
       formData.append("description", post);
       if (image) {
-        formData.append("picture", image);
-        formData.append("picturePath", image.name);
+        const fileName = new Date().getTime() + image?.name;
+        const storage = getStorage(app);
+        const StorageRef = ref(storage, fileName);
+        const uploadTask = uploadBytesResumable(StorageRef, image);
+        uploadTask.on(
+          "state_changed",
+          (snapshot) => {
+            const progress =
+              (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+            console.log("Upload is " + progress + "% done");
+            switch (snapshot.state) {
+              case "paused":
+                console.log("Upload is paused");
+                break;
+              case "running":
+                console.log("Upload is running");
+                break;
+            }
+          },
+          (error) => {},
+          () => {
+            getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+              console.log(downloadURL);
+              formData.append("picture", image);
+              formData.append("picturePath", downloadURL);
+              fetch(`http://localhost:5000/posts`, {
+                method: "POST",
+                headers: { Authorization: `Bearer ${token}` },
+                body: formData,
+              }).then(async (response) => {
+                const posts = await response.json();
+                dispatch(setPosts({ posts }));
+                setImage(null);
+                setPost("");
+              });
+            });
+          }
+        );
+
+
+
+        /*formData.append("picture", image);
+        formData.append("picturePath", image.name);*/
       }
   
-      const response = await fetch(`http://localhost:5000/posts`, {
+      /*const response = await fetch(`http://localhost:5000/posts`, {
         method: "POST",
         headers: { Authorization: `Bearer ${token}` },
         body: formData,
@@ -54,7 +102,7 @@ import {
       const posts = await response.json();
       dispatch(setPosts({ posts }));
       setImage(null);
-      setPost("");
+      setPost("");*/
     };
   
     return (
