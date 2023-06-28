@@ -1,3 +1,4 @@
+import "theme.js";
 import {
     EditOutlined,
     DeleteOutlined,
@@ -7,6 +8,7 @@ import {
     MicOutlined,
     MoreHorizOutlined,
   } from "@mui/icons-material";
+
   import {
     Box,
     Divider,
@@ -51,7 +53,6 @@ import app from "../firebase.js"
     const isNonMobileScreens = useMediaQuery("(min-width: 1000px)");
     const mediumMain = palette.neutral.mediumMain;
     const medium = palette.neutral.medium;
-  
     const handlePost = async () => {
       const formData = new FormData();
       formData.append("userId", _id);
@@ -141,6 +142,58 @@ import app from "../firebase.js"
             }}
           />
         </FlexBetween>
+
+
+
+        <Box sx={{ display: "flex",justifyContent: "right",marginLeft: "20px" }}>
+        <Button
+          onClick={(event) => setAnchorEl(event.currentTarget)}
+          sx={{
+            backgroundColor: palette.neutral.light,
+            color: mediumMain,
+            // fontWeight: "bold",
+            fontSize: "0.7rem",
+            padding: "5px 10px",
+            textTransform: "uppercase",
+            marginRight: "16px",
+            marginTop: "15px",
+            borderRadius: "2rem",
+          }}
+        >
+          {selectedCategory ? selectedCategory : "All Categories"}
+          <ExpandMoreIcon sx={{ marginLeft: "4px" }} />
+        </Button>
+
+        <Menu
+          anchorEl={anchorEl}
+          open={Boolean(anchorEl)}
+          onClose={() => setAnchorEl(null)}
+        >
+          <MenuItem onClick={() => handleCategorySelect("Individual")}>
+            Individual
+          </MenuItem>
+          <MenuItem onClick={() => handleCategorySelect("Political")}>
+            Political
+          </MenuItem>
+          <MenuItem onClick={() => handleCategorySelect("Entertainment")}>
+            Entertainment
+          </MenuItem>
+          <MenuItem onClick={() => handleCategorySelect("Sports")}>
+            Sports
+          </MenuItem>
+          <MenuItem onClick={() => handleCategorySelect("Education")}>
+            Education
+          </MenuItem>
+          <MenuItem onClick={() => handleCategorySelect("Tourism")}>
+            Tourism
+          </MenuItem>
+          <MenuItem onClick={() => handleCategorySelect("Health")}>
+            Health
+          </MenuItem>
+        </Menu>
+        </Box>
+
+
         {isImage && (
           <Box
             border={`1px solid ${medium}`}
@@ -191,55 +244,7 @@ import app from "../firebase.js"
 
         
 
-        
-        <Button
-          onClick={(event) => setAnchorEl(event.currentTarget)}
-          sx={{
-            backgroundColor: "primary.main",
-            color: "black",
-            fontWeight: "bold",
-            fontSize: "0.7rem",
-            padding: "4px 8px",
-            textTransform: "uppercase",
-            marginRight: "16px",
-            borderRadius: "0.75rem",
-            "&:hover": {
-              backgroundColor: "primary.dark",
-            },
-          }}
-        >
-          {selectedCategory ? selectedCategory : "All Categories"}
-          <ExpandMoreIcon sx={{ marginLeft: "4px" }} />
-        </Button>
-
-        <Menu
-          anchorEl={anchorEl}
-          open={Boolean(anchorEl)}
-          onClose={() => setAnchorEl(null)}
-        >
-          <MenuItem onClick={() => handleCategorySelect("Individual")}>
-            Individual
-          </MenuItem>
-          <MenuItem onClick={() => handleCategorySelect("Political")}>
-            Political
-          </MenuItem>
-          <MenuItem onClick={() => handleCategorySelect("Entertainment")}>
-            Entertainment
-          </MenuItem>
-          <MenuItem onClick={() => handleCategorySelect("Sports")}>
-            Sports
-          </MenuItem>
-          <MenuItem onClick={() => handleCategorySelect("Education")}>
-            Education
-          </MenuItem>
-          <MenuItem onClick={() => handleCategorySelect("Tourism")}>
-            Tourism
-          </MenuItem>
-          <MenuItem onClick={() => handleCategorySelect("Health")}>
-            Health
-          </MenuItem>
-        </Menu>
-
+       
 
 
         
