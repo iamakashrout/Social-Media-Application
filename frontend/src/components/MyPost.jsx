@@ -205,11 +205,25 @@ import app from "../firebase.js"
           <Button
             disabled={!post}
             onClick={handlePost}
-            sx={{
-              color: palette.background.alt,
-              backgroundColor: palette.primary.main,
-              borderRadius: "3rem",
-            }}
+          //   sx={{
+          //     // color: palette.background.alt,
+          //     color: "black",
+          //     backgroundColor: palette.primary.main,
+          //     borderRadius: "3rem",
+          //   }}
+          sx={{
+            backgroundColor: "primary.main",
+            color: "black",
+            fontWeight: "bold",
+            fontSize: "0.7rem",
+            padding: "5px 10px", 
+            textTransform: "uppercase", 
+            marginRight: "16px",
+            borderRadius: "0.75rem",
+            "&:hover": {
+              backgroundColor: "primary.dark", 
+            },
+          }}
           >
             POST
           </Button>

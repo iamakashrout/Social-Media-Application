@@ -3,6 +3,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { Button, Menu, MenuItem } from '@mui/material';
 import { setPosts } from "state";
 import PostWidget from "./PostWidget";
+import { Box } from "@mui/system";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
 const PostsWidget = ({ userId, isProfile = false }) => {
   const [selectedCategory, setSelectedCategory] = useState(null);
@@ -64,18 +66,27 @@ const PostsWidget = ({ userId, isProfile = false }) => {
 
   return (
     <>
+      <Box sx={{ display: "flex", marginTop:  "28px" , justifyContent: "center"}}>
       <Button
-        variant="outlined"
         onClick={(event) => setAnchorEl(event.currentTarget)}
         sx={{
-          color: "grey",
+          backgroundColor: "primary.main",
+          color: "black",
           fontWeight: "bold",
-          fontSize: "0.9rem",
-          textTransform: "none",
+          fontSize: "0.7rem",
+          padding: "4px 8px", 
+          textTransform: "uppercase", 
+          marginRight: "16px",
+          borderRadius: "0.75rem",
+          "&:hover": {
+            backgroundColor: "primary.dark", 
+          },
         }}
       >
         {selectedCategory ? selectedCategory : "All Categories"}
+        <ExpandMoreIcon sx={{ marginLeft: "4px" }} />
       </Button>
+      
 
       <Menu
         anchorEl={anchorEl}
@@ -85,7 +96,7 @@ const PostsWidget = ({ userId, isProfile = false }) => {
         <MenuItem onClick={() => handleCategorySelect(null)}>
           All Categories
         </MenuItem>
-        <MenuItem onClick={() => handleCategorySelect("Comedy")}>
+        <MenuItem onClick={() => handleCategorySelect("Entertainment")}>
           Entertainment
         </MenuItem>
         <MenuItem onClick={() => handleCategorySelect("Political")}>
@@ -103,17 +114,25 @@ const PostsWidget = ({ userId, isProfile = false }) => {
       </Menu>
 
       <Button
-        variant="outlined"
         onClick={(event) => setAnchorEl2(event.currentTarget)}
         sx={{
-          color: "grey",
+          backgroundColor: "primary.main",
+          color: "black",
           fontWeight: "bold",
-          fontSize: "0.9rem",
-          textTransform: "none",
+          fontSize: "0.7rem",
+          padding: "4px 8px", 
+          textTransform: "uppercase", 
+          marginRight: "16px",
+          borderRadius: "0.75rem",
+          "&:hover": {
+            backgroundColor: "primary.dark", 
+          },
         }}
       >
         {selectedOrder ? selectedOrder : "Latest"}
+        <ExpandMoreIcon sx={{ marginLeft: "4px" }} />
       </Button>
+      </Box>
 
       <Menu
         anchorEl={anchorEl2}
