@@ -4,6 +4,7 @@ import {
   FavoriteOutlined,
   ShareOutlined,
 } from "@mui/icons-material";
+import Badge from "@mui/material/Badge";
 import {
   Box,
   Divider,
@@ -83,7 +84,6 @@ const PostWidget = ({
     setComment("");
     dispatch(setPost({ post: updatedPost }));
   };
-
   return (
     <WidgetWrapper m="2rem 0">
       <div sx={{ margin: "-8px 0 16px 0" }}>
@@ -94,9 +94,12 @@ const PostWidget = ({
           userPicturePath={userPicturePath}
         />
         <Typography color={main} sx={{ mt: "1rem" }}>
-          {category}
+        <Badge color="secondary" badgeContent={category}
+        sx={{  marginTop: "-190px",mt: "-190px", mr: "8px", marginLeft: "415px"}}>
+
+        </Badge>
         </Typography>
-        <Typography color={main} sx={{ mt: "1rem" }}>
+        <Typography color={main} sx={{ mt: "-25px", ml: "8px" }}>
           {description}
         </Typography>
         {picturePath && (
