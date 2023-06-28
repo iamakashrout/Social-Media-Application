@@ -112,6 +112,17 @@ import app from "../firebase.js"
       dispatch(setPosts({ posts }));
       setImage(null);
       setPost("");*/
+      else {
+        const response = await fetch(`http://localhost:5000/posts`, {
+          method: "POST",
+          headers: { Authorization: `Bearer ${token}` },
+          body: formData,
+        });
+        const posts = await response.json();
+        dispatch(setPosts({ posts }));
+        setImage(null);
+        setPost("");
+      }
     };
   
     return (
