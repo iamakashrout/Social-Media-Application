@@ -63,75 +63,88 @@ const PostsWidget = ({ userId, isProfile = false }) => {
     viewPosts = sortedPosts;
   }
 
+  if (selectedCategory !== null) {
+    viewPosts = viewPosts.filter(function (p) {
+      return p.category === selectedCategory;
+    })
+  }
+
 
   return (
     <>
-      <Box sx={{ display: "flex", marginTop:  "28px" , justifyContent: "center"}}>
-      <Button
-        onClick={(event) => setAnchorEl(event.currentTarget)}
-        sx={{
-          backgroundColor: "primary.main",
-          color: "black",
-          fontWeight: "bold",
-          fontSize: "0.7rem",
-          padding: "4px 8px", 
-          textTransform: "uppercase", 
-          marginRight: "16px",
-          borderRadius: "0.75rem",
-          "&:hover": {
-            backgroundColor: "primary.dark", 
-          },
-        }}
+      <Box
+        sx={{ display: "flex", marginTop: "28px", justifyContent: "center" }}
       >
-        {selectedCategory ? selectedCategory : "All Categories"}
-        <ExpandMoreIcon sx={{ marginLeft: "4px" }} />
-      </Button>
-      
+        <Button
+          onClick={(event) => setAnchorEl(event.currentTarget)}
+          sx={{
+            backgroundColor: "primary.main",
+            color: "black",
+            fontWeight: "bold",
+            fontSize: "0.7rem",
+            padding: "4px 8px",
+            textTransform: "uppercase",
+            marginRight: "16px",
+            borderRadius: "0.75rem",
+            "&:hover": {
+              backgroundColor: "primary.dark",
+            },
+          }}
+        >
+          {selectedCategory ? selectedCategory : "All Categories"}
+          <ExpandMoreIcon sx={{ marginLeft: "4px" }} />
+        </Button>
 
-      <Menu
-        anchorEl={anchorEl}
-        open={Boolean(anchorEl)}
-        onClose={() => setAnchorEl(null)}
-      >
-        <MenuItem onClick={() => handleCategorySelect(null)}>
-          All Categories
-        </MenuItem>
-        <MenuItem onClick={() => handleCategorySelect("Entertainment")}>
-          Entertainment
-        </MenuItem>
-        <MenuItem onClick={() => handleCategorySelect("Political")}>
-          Political
-        </MenuItem>
-        <MenuItem onClick={() => handleCategorySelect("Bollywood")}>
-          Bollywood
-        </MenuItem>
-        <MenuItem onClick={() => handleCategorySelect("Sports")}>
-          Sports
-        </MenuItem>
-        <MenuItem onClick={() => handleCategorySelect("Academics")}>
-          Academics
-        </MenuItem>
-      </Menu>
+        <Menu
+          anchorEl={anchorEl}
+          open={Boolean(anchorEl)}
+          onClose={() => setAnchorEl(null)}
+        >
+          <MenuItem onClick={() => handleCategorySelect(null)}>
+            All Categories
+          </MenuItem>
+          <MenuItem onClick={() => handleCategorySelect("Individual")}>
+            Individual
+          </MenuItem>
+          <MenuItem onClick={() => handleCategorySelect("Political")}>
+            Political
+          </MenuItem>
+          <MenuItem onClick={() => handleCategorySelect("Entertainment")}>
+            Entertainment
+          </MenuItem>
+          <MenuItem onClick={() => handleCategorySelect("Sports")}>
+            Sports
+          </MenuItem>
+          <MenuItem onClick={() => handleCategorySelect("Education")}>
+            Education
+          </MenuItem>
+          <MenuItem onClick={() => handleCategorySelect("Tourism")}>
+            Tourism
+          </MenuItem>
+          <MenuItem onClick={() => handleCategorySelect("Health")}>
+            Health
+          </MenuItem>
+        </Menu>
 
-      <Button
-        onClick={(event) => setAnchorEl2(event.currentTarget)}
-        sx={{
-          backgroundColor: "primary.main",
-          color: "black",
-          fontWeight: "bold",
-          fontSize: "0.7rem",
-          padding: "4px 8px", 
-          textTransform: "uppercase", 
-          marginRight: "16px",
-          borderRadius: "0.75rem",
-          "&:hover": {
-            backgroundColor: "primary.dark", 
-          },
-        }}
-      >
-        {selectedOrder ? selectedOrder : "Latest"}
-        <ExpandMoreIcon sx={{ marginLeft: "4px" }} />
-      </Button>
+        <Button
+          onClick={(event) => setAnchorEl2(event.currentTarget)}
+          sx={{
+            backgroundColor: "primary.main",
+            color: "black",
+            fontWeight: "bold",
+            fontSize: "0.7rem",
+            padding: "4px 8px",
+            textTransform: "uppercase",
+            marginRight: "16px",
+            borderRadius: "0.75rem",
+            "&:hover": {
+              backgroundColor: "primary.dark",
+            },
+          }}
+        >
+          {selectedOrder ? selectedOrder : "Latest"}
+          <ExpandMoreIcon sx={{ marginLeft: "4px" }} />
+        </Button>
       </Box>
 
       <Menu
@@ -139,16 +152,16 @@ const PostsWidget = ({ userId, isProfile = false }) => {
         open={Boolean(anchorEl2)}
         onClose={() => setAnchorEl2(null)}
       >
-        <MenuItem onClick={() => handleOrderSelect("Latest")}>
-          Latest
-        </MenuItem>
+        <MenuItem onClick={() => handleOrderSelect("Latest")}>Latest</MenuItem>
         <MenuItem onClick={() => handleOrderSelect("Popular")}>
           Popular
         </MenuItem>
       </Menu>
 
       {Array.isArray(viewPosts) &&
-        viewPosts.slice().reverse()
+        viewPosts
+          .slice()
+          .reverse()
           .map(
             ({
               _id,
@@ -156,6 +169,7 @@ const PostsWidget = ({ userId, isProfile = false }) => {
               firstName,
               lastName,
               description,
+              category,
               location,
               picturePath,
               userPicturePath,
@@ -168,6 +182,7 @@ const PostsWidget = ({ userId, isProfile = false }) => {
                 postUserId={userId}
                 name={`${firstName} ${lastName}`}
                 description={description}
+                category={category}
                 location={location}
                 picturePath={picturePath}
                 userPicturePath={userPicturePath}
