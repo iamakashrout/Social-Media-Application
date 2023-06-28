@@ -85,13 +85,16 @@ const PostWidget = ({
 
   return (
     <WidgetWrapper m="2rem 0">
+       <div sx={{ margin: "-8px 0 16px 0" }}>
       <Friend
         friendId={postUserId}
         name={name}
         subtitle={location}
         userPicturePath={userPicturePath}
       />
-      <Typography color={main} sx={{ mt: "1rem" }}>
+      <Typography color={main} 
+      sx={{ mt: "1rem"
+      }}>
         {description}
       </Typography>
       {picturePath && (
@@ -153,10 +156,14 @@ const PostWidget = ({
               disabled={!comment}
               onClick={handleComment}
               sx={{
-                color: palette.background.alt,
+                // color: palette.background.alt,
+                color:"black",
                 backgroundColor: palette.primary.main,
-                borderRadius: '0.8rem',
+                borderRadius: '0.75rem',
                 fontSize: '0.5rem',
+                "&:hover": {
+                  backgroundColor: "primary.dark", 
+                },
               }}
             >
               COMMENT
@@ -193,6 +200,7 @@ const PostWidget = ({
           <Divider sx={{ mt: '0.2rem' }} />
         </Box>
       )}
+       </div>
     </WidgetWrapper>
   );
 };
