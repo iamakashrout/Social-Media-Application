@@ -30,6 +30,7 @@ const Navbar = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const user = useSelector((state) => state.user);
+  const [searchedUser, setSearchedUser] = useState("");
   const isNonMobileScreens = useMediaQuery("(min-width: 1000px)");
 
   const theme = useTheme();
@@ -65,9 +66,17 @@ const Navbar = () => {
             gap="3rem"
             padding="0.1rem 1.5rem"
           >
-            <InputBase placeholder="Search..." />
-            <IconButton>
-              <Search />
+            <InputBase
+              placeholder="Search..."
+              onChange={(e) => setSearchedUser(e.target.value)}
+              value={searchedUser}
+            />
+            <IconButton
+              onClick={() => {
+                navigate(`/search/${searchedUser}`);
+                navigate(0);
+              }}>
+            <Search/>
             </IconButton>
           </FlexBetween>
         )}

@@ -2,6 +2,7 @@ import { BrowserRouter, Navigate, Routes, Route } from "react-router-dom";
 import "./App.css";
 import HomePage from "components/homepage";
 import ProfilePage from "components/ProfilePage";
+import SearchPage from "components/SearchPage";
 import { useMemo } from "react";
 import { useSelector } from "react-redux";
 import { CssBaseline, ThemeProvider } from "@mui/material";
@@ -28,6 +29,10 @@ function App() {
             <Route
               path="/profile/:userId"
               element={isAuth ? <ProfilePage /> : <Navigate to="/" />}
+            />
+            <Route 
+              path="/search/:userName"
+              element={isAuth? <SearchPage />: <Navigate to="/"/>}
             />
           </Routes>
         </ThemeProvider>
