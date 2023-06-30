@@ -9,6 +9,7 @@ import { CssBaseline, ThemeProvider } from "@mui/material";
 import { createTheme } from "@mui/material/styles";
 import { themeSettings } from "./theme";
 import Auth from "components/auth";
+import Messenger from "components/Messenger/Messenger";
 
 function App() {
   const mode = useSelector((state) => state.mode);
@@ -30,9 +31,13 @@ function App() {
               path="/profile/:userId"
               element={isAuth ? <ProfilePage /> : <Navigate to="/" />}
             />
-            <Route 
+            <Route
               path="/search/:userName"
-              element={isAuth? <SearchPage />: <Navigate to="/"/>}
+              element={isAuth ? <SearchPage /> : <Navigate to="/" />}
+            />
+            <Route
+              path="/messenger"
+              element={isAuth ? <Messenger /> : <Navigate to="/" />}
             />
           </Routes>
         </ThemeProvider>
@@ -42,9 +47,6 @@ function App() {
 }
 
 export default App;
-
-
-
 
 /*function App() {
   const [currentForm, setCurrentForm] = useState("login");
@@ -77,4 +79,3 @@ export default App;
     </div>
   );
 }*/
-
