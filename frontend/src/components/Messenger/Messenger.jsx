@@ -6,6 +6,7 @@ import Navbar from "../navbar";
 import Conversation from "components/Conversations/Conversations";
 import Message from "components/Message/Message";
 import ChatOnline from "components/ChatOnline/ChatOnline";
+import { io } from "socket.io-client";
 
 const Messenger = () => {
   const loggedInUser = useSelector((state) => state.user);
@@ -14,8 +15,38 @@ const Messenger = () => {
   const [currentChat, setCurrentChat] = useState(null);
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
-
+  const [arrivalMessage, setArrivalMessage] = useState(null);
+  const [onlineUsers, setOnlineUsers] = useState([]);
+  const socket = useRef();
   const scrollRef = useRef();
+
+  useEffect(() => {
+    socket.current = io("ws://localhost:7000");
+    socket.current.on("getMessage", (data) => {
+      setArrivalMessage({
+        sender: data.senderId,
+        text: data.text,
+        createdAt: Date.now(),
+      });
+    });
+  }, []);
+
+  useEffect(() => {
+    arrivalMessage &&
+      currentChat?.members.includes(arrivalMessage.sender) &&
+      setMessages((prev) => [...prev, arrivalMessage]);
+  }, [arrivalMessage, currentChat]);
+
+  useEffect(() => {
+    socket.current.emit("addUser", loggedInUser._id);
+    socket.current.on("getUsers", (users) => {
+      setOnlineUsers(
+        users
+          /*loggedInUser.friends.filter((f) => users.some((u) => u.userId === f))*/
+        );
+      });
+  }, [loggedInUser]);
+
 
   useEffect(() => {
     const getConversations = async () => {
@@ -36,7 +67,6 @@ const Messenger = () => {
     getConversations();
   }, [loggedInUser._id]);
 
-
   useEffect(() => {
     const getMessages = async () => {
       try {
@@ -54,15 +84,20 @@ const Messenger = () => {
       }
     };
     getMessages();
-  }, [currentChat])
+  }, [currentChat]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-   /*const message = {
-      sender: loggedInUser._id,
+
+    const receiverId = currentChat.members.find(
+      (member) => member !== loggedInUser._id
+    );
+
+    socket.current.emit("sendMessage", {
+      senderId: loggedInUser._id,
+      receiverId,
       text: newMessage,
-      conversationId: currentChat._id,
-    };*/
+    });
 
     try {
       const res = await fetch(`http://localhost:5000/messages`, {
@@ -76,14 +111,16 @@ const Messenger = () => {
           text: newMessage,
           conversationId: currentChat._id,
         }),
-      }).then((res) => res.json()).then((data) => {
-        setMessages([...messages, data]);
-        setNewMessage("");
-      });
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          setMessages([...messages, data]);
+          setNewMessage("");
+        });
     } catch (err) {
       console.log(err);
     }
-  }
+  };
 
   useEffect(() => {
     scrollRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -95,9 +132,9 @@ const Messenger = () => {
       <div className="messenger">
         <div className="chatMenu">
           <div className="chatMenuWrapper">
-            <input placeholder="Search for friends" className="chatMenuInput" />
+            <div style={{fontSize: "20px"}}>Your Chats</div>
             {conversations.map((c) => (
-              <div onClick={()=>setCurrentChat(c)}>
+              <div onClick={() => setCurrentChat(c)}>
                 <Conversation conversation={c} />
               </div>
             ))}
@@ -110,7 +147,10 @@ const Messenger = () => {
                 <div className="chatBoxTop">
                   {messages.map((m) => (
                     <div ref={scrollRef}>
-                      <Message message={m} own={m?.sender===loggedInUser._id } />
+                      <Message
+                        message={m}
+                        own={m?.sender === loggedInUser._id}
+                      />
                     </div>
                   ))}
                 </div>
@@ -121,7 +161,9 @@ const Messenger = () => {
                     onChange={(e) => setNewMessage(e.target.value)}
                     value={newMessage}
                   ></textarea>
-                  <button className="chatSubmitButton" onClick={handleSubmit}>Send</button>
+                  <button className="chatSubmitButton" onClick={handleSubmit}>
+                    Send
+                  </button>
                 </div>
               </>
             ) : (
@@ -133,7 +175,9 @@ const Messenger = () => {
         </div>
         <div className="chatOnline">
           <div className="chatOnlineWrapper">
-            <ChatOnline />
+            <ChatOnline
+              currentId={loggedInUser._id}
+            />
           </div>
         </div>
       </div>

@@ -29,4 +29,17 @@ router.get("/:userId", verifyToken, async (req, res) => {
   }
 });
 
+// get conversation from two User IDs
+/* router.get("/find/:firstUserId/:secondUserId", async (res, req) => {
+  try {
+    const conversation = await Conversation.findOne({
+      members: { $all: [req.params.firstUserId, req.params.secondUserId] },
+    });
+    res.status(200).json(conversation);
+  } catch (err) {
+    res.status(500).json(err);
+  }
+}) */
+
+
 export default router;
