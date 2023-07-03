@@ -16,6 +16,7 @@ import messageRoutes from "./routes/messageRoutes.js";
 import { register } from "./controllers/authControllers.js";
 import { createPost } from "./controllers/postControllers.js";
 import { verifyToken } from "./middleware/auth.js";
+import { Server } from "socket.io";
 
 /* CONFIGURATION */
 const __filename = fileURLToPath(import.meta.url);
@@ -63,3 +64,56 @@ mongoose
     app.listen(PORT, () => console.log(`Server successfully running on Port: ${PORT}`));
   })
   .catch((error) => console.log(`${error} did not connect`));
+
+
+
+  
+
+  // SOCKET.IO FOR REAL TIME MESSAGING
+
+  const io = new Server(7000, {
+    cors: {
+      origin: "http://localhost:3000",
+    },
+  });
+
+  let users = [];
+
+  const addUser = (userId, socketId) => {
+    !users.some((user) => user.userId === userId) &&
+      users.push({ userId, socketId });
+  };
+
+  const removeUser = (socketId) => {
+    users = users.filter((user) => user.socketId !== socketId);
+  };
+
+  const getUser = (userId) => {
+    return users.find((user) => user.userId === userId);
+  };
+
+  io.on("connection", (socket) => {
+    console.log("a user connected.");
+
+    // connection
+    socket.on("addUser", (userId) => {
+      addUser(userId, socket.id);
+      io.emit("getUsers", users);
+    });
+
+    // send and receive messages
+    socket.on("sendMessage", ({ senderId, receiverId, text }) => {
+      const user = getUser(receiverId);
+      io.to(user?.socketId).emit("getMessage", {
+        senderId,
+        text,
+      });
+    });
+
+    // disconnection
+    socket.on("disconnect", () => {
+      console.log("a user disconnected!");
+      removeUser(socket.id);
+      io.emit("getUsers", users);
+    });
+  });
