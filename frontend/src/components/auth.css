@@ -1,0 +1,14 @@
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 150vh;
+    background-image: url('bg\ image.jpg'); /* Replace with your image file path */
+  background-size: cover;
+  background-position: center;
+  }
+  
+  .form-container {
+    border: 1px solid #000;
+    padding: 20px;
+  }
