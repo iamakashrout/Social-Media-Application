@@ -6,6 +6,9 @@ import { useDispatch } from "react-redux";
 import { setLogin } from "state";
 import Dropzone from "react-dropzone";
 import app from "../firebase.js";
+
+import "./auth.css";
+import backgroundImage from "./bg image.jpg";
 import {
   getDownloadURL,
   getStorage,
@@ -132,6 +135,8 @@ const Auth = () => {
   };
 
   return (
+    <div className="container">
+    <div className="form-container">
     <Formik
       onSubmit={handleFormSubmit}
       initialValues={isLogin ? initialValuesLogin : initialValuesRegister}
@@ -150,7 +155,7 @@ const Auth = () => {
         <form onSubmit={handleSubmit} className="auth-form-container">
           {isRegister && (
             <>
-              <label htmlFor="name">Enter First name</label>
+              <label htmlFor="name" style={{ color: "purple" }}>Enter First name</label>
               <input
                 onBlur={handleBlur}
                 onChange={handleChange}
@@ -160,7 +165,7 @@ const Auth = () => {
                 error={Boolean(touched.firstName) && Boolean(errors.firstName)}
                 helperText={touched.firstName && errors.firstName}
               />
-              <label htmlFor="name">Enter Last name</label>
+              <label htmlFor="name" style={{ color: "purple" }}>Enter Last name</label>
               <input
                 onBlur={handleBlur}
                 onChange={handleChange}
@@ -170,7 +175,7 @@ const Auth = () => {
                 error={Boolean(touched.lastName) && Boolean(errors.lastName)}
                 helperText={touched.lastName && errors.lastName}
               />
-              <label htmlFor="name">Location</label>
+              <label htmlFor="name" style={{ color: "purple" }}>Location</label>
               <input
                 label="Location"
                 onBlur={handleBlur}
@@ -181,7 +186,7 @@ const Auth = () => {
                 error={Boolean(touched.location) && Boolean(errors.location)}
                 helperText={touched.location && errors.location}
               />
-              <label htmlFor="name">Occupation</label>
+              <label htmlFor="name" style={{ color: "purple" }}>Occupation</label>
               <input
                 label="Occupation"
                 onBlur={handleBlur}
@@ -206,7 +211,7 @@ const Auth = () => {
                     <button {...getRootProps()}>
                       <input {...getInputProps()} />
                       {!values.picture ? (
-                        <p>Add picture here</p>
+                        <p  style={{ color: "purple" }}>Add picture here</p>
                       ) : (
                         <div>
                           <p>{values.picture.name}</p>
@@ -218,7 +223,7 @@ const Auth = () => {
               </div>
             </>
           )}
-          <label htmlFor="email">Email</label>
+          <label htmlFor="email" style={{ color: "purple" }}>Email</label>
           <input
             label="Email"
             onBlur={handleBlur}
@@ -229,7 +234,7 @@ const Auth = () => {
             error={Boolean(touched.email) && Boolean(errors.email)}
             helperText={touched.email && errors.email}
           />
-          <label htmlFor="password">Password</label>
+          <label htmlFor="password" style={{ color: "purple" }}>Password</label>
           <input
             label="Password"
             type="password"
@@ -241,20 +246,25 @@ const Auth = () => {
             error={Boolean(touched.password) && Boolean(errors.password)}
             helperText={touched.password && errors.password}
           />
-          <button type="submit">{isLogin ? "LOGIN" : "REGISTER"}</button>
+          <button type="submit" style={{ backgroundColor: "gray", color: "white" }}>{isLogin ? "LOGIN" : "REGISTER"}</button>
           <button className="link-btn"
             onClick={() => {
               setPageType(isLogin ? "register" : "login");
               resetForm();
             }}
           >
+            <p style={{ color: "gray" }}>
             {isLogin
               ? "Don't have an account? Sign up here."
               : "Already have an account? Login here."}
+            </p>
           </button>
         </form>
+       
       )}
     </Formik>
+    </div>
+    </div>
   );
 };
 
