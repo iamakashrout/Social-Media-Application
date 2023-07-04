@@ -3,7 +3,7 @@
     justify-content: center;
     align-items: center;
     height: 150vh;
-    background-image: url('bg\ image.jpg'); /* Replace with your image file path */
+    background-image: url('../../images/bgImage.jpg'); /* Replace with your image file path */
   background-size: cover;
   background-position: center;
   }
