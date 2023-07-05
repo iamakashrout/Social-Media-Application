@@ -5,10 +5,10 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { setLogin } from "state";
 import Dropzone from "react-dropzone";
-import app from "../firebase.js";
+import app from "../../firebase.js";
 
 import "./auth.css";
-import backgroundImage from "./bg image.jpg";
+import backgroundImage from "../../images/bgImage.jpg";
 import {
   getDownloadURL,
   getStorage,

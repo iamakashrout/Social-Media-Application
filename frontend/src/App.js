@@ -8,7 +8,7 @@ import { useSelector } from "react-redux";
 import { CssBaseline, ThemeProvider } from "@mui/material";
 import { createTheme } from "@mui/material/styles";
 import { themeSettings } from "./theme";
-import Auth from "components/auth";
+import Auth from "components/Auth/auth";
 import Messenger from "components/Messenger/Messenger";
 
 function App() {
