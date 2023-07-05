@@ -78,7 +78,7 @@ const PostsWidget = ({ userId, isProfile = false }) => {
         <Button
           onClick={(event) => setAnchorEl(event.currentTarget)}
           sx={{
-            backgroundColor: "primary.main",
+            backgroundColor: "silver",
             color: "black",
             fontWeight: "bold",
             fontSize: "0.7rem",
@@ -86,9 +86,7 @@ const PostsWidget = ({ userId, isProfile = false }) => {
             textTransform: "uppercase",
             marginRight: "16px",
             borderRadius: "0.75rem",
-            "&:hover": {
-              backgroundColor: "primary.dark",
-            },
+           
           }}
         >
           {selectedCategory ? selectedCategory : "All Categories"}
@@ -129,7 +127,7 @@ const PostsWidget = ({ userId, isProfile = false }) => {
         <Button
           onClick={(event) => setAnchorEl2(event.currentTarget)}
           sx={{
-            backgroundColor: "primary.main",
+            backgroundColor: "silver",
             color: "black",
             fontWeight: "bold",
             fontSize: "0.7rem",
@@ -137,9 +135,7 @@ const PostsWidget = ({ userId, isProfile = false }) => {
             textTransform: "uppercase",
             marginRight: "16px",
             borderRadius: "0.75rem",
-            "&:hover": {
-              backgroundColor: "primary.dark",
-            },
+            
           }}
         >
           {selectedOrder ? selectedOrder : "Latest"}
