@@ -9,6 +9,7 @@ import {
   FormControl,
   useTheme,
   useMediaQuery,
+  Button
 } from "@mui/material";
 import {
   Search,
@@ -43,21 +44,20 @@ const Navbar = () => {
   const fullName = `${user.firstName} ${user.lastName}`;
 
   return (
-    <FlexBetween padding="1rem 6%" backgroundColor={alt}>
+    <FlexBetween padding="1rem 6%" backgroundColor="black">
       <FlexBetween gap="1.75rem">
         <Typography
           fontWeight="bold"
           fontSize="clamp(1rem, 2rem, 2.25rem)"
-          color="primary"
+          color="#F582A7"
           onClick={() => navigate("/home")}
           sx={{
             "&:hover": {
-              color: primaryLight,
               cursor: "pointer",
             },
           }}
         >
-          News-Feed
+          OneWorld
         </Typography>
         {isNonMobileScreens && (
           <FlexBetween
@@ -85,23 +85,25 @@ const Navbar = () => {
 
       {/* DESKTOP NAV */}
       {isNonMobileScreens ? (
-        <FlexBetween gap="2rem">
-          <IconButton onClick={() => dispatch(setMode())}>
-            {theme.palette.mode === "dark" ? (
-              <DarkMode sx={{ fontSize: "25px" }} />
-            ) : (
-              <LightMode sx={{ color: dark, fontSize: "25px" }} />
-            )}
-          </IconButton>
-          <IconButton onClick={() => {
-            navigate(`/messenger`);
-            navigate(0);
-          }}>
-            <Message sx={{ fontSize: "25px" }} />
-          </IconButton>
+  <FlexBetween gap="2rem">
+    <IconButton onClick={() => dispatch(setMode())} sx={{ color: "#ffffff" }}>
+      {theme.palette.mode === "dark" ? (
+        <DarkMode sx={{ fontSize: "25px" }} />
+      ) : (
+        <LightMode sx={{ color: "#ffffff", fontSize: "25px" }} />
+      )}
+    </IconButton>
+    <IconButton onClick={() => {
+      navigate(`/messenger`);
+      navigate(0);
+    }}>
+      <Message sx={{ fontSize: "25px" , color: "white"  }} />
+      <Button sx={{ padding: 0, margin: 0, fontSize: "16px", textTransform: "none", color:  "darkGray", fontWeight: "bold" }}>MESSENGER</Button>
 
-          <Notifications sx={{ fontSize: "25px" }} />
-          <Help sx={{ fontSize: "25px" }} />
+    </IconButton>
+ 
+          {/* <Notifications sx={{ fontSize: "25px" }} /> */}
+          {/* <Help sx={{ fontSize: "25px" }} /> */}
           <FormControl variant="standard" value={fullName}>
             <Select
               value={fullName}
