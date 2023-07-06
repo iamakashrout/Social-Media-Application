@@ -1,4 +1,5 @@
 import "theme.js";
+ import { toast } from "react-hot-toast";
 import {
     EditOutlined,
     DeleteOutlined,
@@ -35,7 +36,7 @@ import app from "../firebase.js"
      getStorage,
      ref,
      uploadBytesResumable,
-   } from "firebase/storage";
+} from "firebase/storage";
   
   const MyPostWidget = ({ picturePath }) => {
     const dispatch = useDispatch();
@@ -93,6 +94,8 @@ import app from "../firebase.js"
                 dispatch(setPosts({ posts }));
                 setImage(null);
                 setPost("");
+                toast.dismiss();
+                toast.success("Post added");
               });
             });
           }
@@ -123,6 +126,8 @@ import app from "../firebase.js"
         dispatch(setPosts({ posts }));
         setImage(null);
         setPost("");
+        toast.dismiss();
+        toast.success("Post added");
       }
     };
   

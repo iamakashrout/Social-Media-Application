@@ -15,6 +15,7 @@ import {
   ref,
   uploadBytesResumable,
 } from "firebase/storage";
+import { toast } from "react-hot-toast";
 
 const registerSchema = yup.object().shape({
   firstName: yup.string().required("required"),
@@ -79,15 +80,26 @@ const Auth = () => {
         getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
           console.log(downloadURL);
           formData.append("picturePath", downloadURL);
+          toast.loading("loading...");
           fetch(`http://localhost:5000/auth/register`, {
             method: "POST",
             body: formData,
           }).then(async (savedUserResponse) => {
             const savedUser = await savedUserResponse.json();
+            if (savedUserResponse.status !== 201) {
+              toast.dismiss();
+              toast.error("Email already in use");
+              return;
+            }
             onSubmitProps.resetForm();
 
             if (savedUser) {
               setPageType("login");
+              if (savedUser) {
+                setPageType("login");
+                toast.dismiss();
+                toast.success("Registered successfully");
+              }
             }
           })
         })
@@ -111,11 +123,17 @@ const Auth = () => {
   };
 
   const login = async (values, onSubmitProps) => {
+     toast.loading("loading...");
     const loggedInResponse = await fetch("http://localhost:5000/auth/login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(values),
     });
+    if (loggedInResponse.status !== 200) {
+      toast.dismiss();
+       toast.error("invalid credentials");
+       return;
+     }
     const loggedIn = await loggedInResponse.json();
     onSubmitProps.resetForm();
     if (loggedIn) {
@@ -126,6 +144,8 @@ const Auth = () => {
         })
       );
       navigate("/home");
+       toast.dismiss();
+       toast.success("Logged in succesfully");
     }
   };
 

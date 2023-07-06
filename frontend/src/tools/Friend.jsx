@@ -5,6 +5,8 @@ import { useNavigate } from "react-router-dom";
 import { setFriends } from "state";
 import FlexBetween from "./FlexBetween";
 import UserImage from "./UserImage";
+import { toast } from "react-hot-toast";
+
 
 const Friend = ({ friendId, name, subtitle, userPicturePath }) => {
   const dispatch = useDispatch();
@@ -33,6 +35,11 @@ const Friend = ({ friendId, name, subtitle, userPicturePath }) => {
       }
     );
     const data = await response.json();
+    if (isFriend) {
+      toast.success("Friend removed");
+    } else {
+      toast.success("Friend added");
+    }
     dispatch(setFriends({ friends: data }));
   };
 
