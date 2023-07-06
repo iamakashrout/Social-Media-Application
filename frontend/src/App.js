@@ -11,6 +11,10 @@ import { themeSettings } from "./theme";
 import Auth from "components/Auth/auth";
 import Messenger from "components/Messenger/Messenger";
 
+
+//DEPLOYMENT READY YAYY !
+
+
 function App() {
   const mode = useSelector((state) => state.mode);
   const theme = useMemo(() => createTheme(themeSettings(mode)), [mode]);
