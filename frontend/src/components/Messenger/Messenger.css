@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap');
+
 .messenger {
     height: calc(100vh - 70px);
     display: flex;
@@ -39,11 +41,12 @@
 }
 
 .chatMessageInput {
+    font-family: 'Poppins', sans-serif;
     width: 80%;
-    height: 90px;
+    height: 60px;
     padding: 6.5px;
     border: 2px solid black; /* Change the border color */
-  border-radius: 0.75rem; /* Change the border radius */
+  border-radius: 1.2rem; /* Change the border radius */
   background-color: lightgray; /* Change the background color */
   color: black; 
   

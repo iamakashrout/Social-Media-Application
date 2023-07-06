@@ -86,7 +86,9 @@ const PostsWidget = ({ userId, isProfile = false }) => {
             textTransform: "uppercase",
             marginRight: "16px",
             borderRadius: "0.75rem",
-           
+            ":hover": {
+              backgroundColor: "#c147e9",
+            },
           }}
         >
           {selectedCategory ? selectedCategory : "All Categories"}
@@ -135,7 +137,9 @@ const PostsWidget = ({ userId, isProfile = false }) => {
             textTransform: "uppercase",
             marginRight: "16px",
             borderRadius: "0.75rem",
-            
+            ":hover": {
+              backgroundColor: "#c147e9",
+            },
           }}
         >
           {selectedOrder ? selectedOrder : "Latest"}

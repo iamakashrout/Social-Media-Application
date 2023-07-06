@@ -28,7 +28,7 @@ const Conversation = ({ conversation }) => {
   return (
     <div className="conversation">
       <img className="conversationImg" src={user.picturePath} alt="" />
-      <span className="conversationName">{user.firstName }</span>
+      <span className="conversationName">{user.firstName} {user.lastName}</span>
     </div>
   );
 }

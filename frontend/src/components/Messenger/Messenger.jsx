@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-
+import { Button } from "@mui/material";
 import "./Messenger.css";
 import { useSelector } from "react-redux";
 import Navbar from "../navbar";
@@ -132,7 +132,9 @@ const Messenger = () => {
       <div className="messenger">
         <div className="chatMenu">
           <div className="chatMenuWrapper">
-            <div style={{fontSize: "20px", fontWeight: "bold"}}>Your Chats</div>
+            <div style={{ fontSize: "20px", fontWeight: "bold" }}>
+              Your Chats
+            </div>
             {conversations.map((c) => (
               <div onClick={() => setCurrentChat(c)}>
                 <Conversation conversation={c} />
@@ -161,13 +163,38 @@ const Messenger = () => {
                     onChange={(e) => setNewMessage(e.target.value)}
                     value={newMessage}
                   ></textarea>
-                  <button className="chatSubmitButton" onClick={handleSubmit}>
-                    Send
-                  </button>
+                  <Button
+                    disabled={!newMessage}
+                    onClick={handleSubmit}
+                    //   sx={{
+                    //     // color: palette.background.alt,
+                    //     color: "black",
+                    //     backgroundColor: palette.primary.main,
+                    //     borderRadius: "3rem",
+                    //   }}
+                    sx={{
+                      backgroundColor: "silver",
+                      color: "black",
+                      fontWeight: "bold",
+                      fontSize: "0.7rem",
+                      padding: "5px 10px",
+                      textTransform: "uppercase",
+                      marginRight: "16px",
+                      borderRadius: "0.75rem",
+                      ":hover": {
+                        backgroundColor: "#c147e9",
+                      },
+                    }}
+                  >
+                    SEND
+                  </Button>
                 </div>
               </>
             ) : (
-              <span className="noConversationText" style={{ color: "silver", fontWeight: "bold" }}>
+              <span
+                className="noConversationText"
+                style={{ color: "silver", fontWeight: "bold" }}
+              >
                 Open a conversation to start a chat
               </span>
             )}
@@ -175,9 +202,7 @@ const Messenger = () => {
         </div>
         <div className="chatOnline">
           <div className="chatOnlineWrapper">
-            <ChatOnline
-              currentId={loggedInUser._id}
-            />
+            <ChatOnline currentId={loggedInUser._id} />
           </div>
         </div>
       </div>

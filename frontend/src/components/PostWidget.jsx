@@ -92,7 +92,13 @@ const PostWidget = ({
         <Friend
           friendId={postUserId}
           name={name}
-          subtitle={<ReactTimeAgo style={{fontSize: "90%", color: main}} date={createdAt} locale="en-US" />}
+          subtitle={
+            <ReactTimeAgo
+              style={{ color: main }}
+              date={createdAt}
+              locale="en-US"
+            />
+          }
           userPicturePath={userPicturePath}
         />
         <Typography color={main} sx={{ mt: "1rem" }}>
@@ -124,7 +130,7 @@ const PostWidget = ({
             <FlexBetween gap="0.3rem">
               <IconButton onClick={patchLike}>
                 {isLiked ? (
-                  <FavoriteOutlined sx={{ color: "purple" }} />
+                  <FavoriteOutlined sx={{ color: "#c147e9" }} />
                 ) : (
                   <FavoriteBorderOutlined />
                 )}
@@ -171,6 +177,9 @@ const PostWidget = ({
                   borderRadius: "0.75rem",
                   fontSize: "0.5rem",
                   fontWeight: "bold",
+                  ":hover": {
+                    backgroundColor: "#c147e9",
+                  },
                 }}
               >
                 COMMENT

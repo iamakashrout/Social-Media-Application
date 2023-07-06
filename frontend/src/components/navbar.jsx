@@ -85,23 +85,41 @@ const Navbar = () => {
 
       {/* DESKTOP NAV */}
       {isNonMobileScreens ? (
-  <FlexBetween gap="2rem">
-    <IconButton onClick={() => dispatch(setMode())} sx={{ color: "#ffffff" }}>
-      {theme.palette.mode === "dark" ? (
-        <DarkMode sx={{ fontSize: "25px" }} />
-      ) : (
-        <LightMode sx={{ color: "#ffffff", fontSize: "25px" }} />
-      )}
-    </IconButton>
-    <IconButton onClick={() => {
-      navigate(`/messenger`);
-      navigate(0);
-    }}>
-      <Message sx={{ fontSize: "25px" , color: "white"  }} />
-      <Button sx={{ padding: 0, margin: 0, fontSize: "16px", textTransform: "none", color:  "darkGray", fontWeight: "bold" }}>MESSENGER</Button>
+        <FlexBetween gap="2rem">
+          <IconButton
+            onClick={() => dispatch(setMode())}
+            sx={{ color: "#ffffff" }}
+          >
+            {theme.palette.mode === "dark" ? (
+              <DarkMode sx={{ fontSize: "25px" }} />
+            ) : (
+              <LightMode sx={{ color: "#ffffff", fontSize: "25px" }} />
+            )}
+          </IconButton>
+          <IconButton
+            onClick={() => {
+              navigate(`/messenger`);
+              navigate(0);
+            }}
+          >
+            <Message sx={{ fontSize: "25px", color: "white" }} />
+            <Button
+              sx={{
+                padding: 0,
+                margin: 0,
+                fontSize: "16px",
+                textTransform: "none",
+                color: "darkGray",
+                fontWeight: "bold",
+                ":hover": {
+                  color: "#F582A7",
+                },
+              }}
+            >
+              MESSENGER
+            </Button>
+          </IconButton>
 
-    </IconButton>
- 
           {/* <Notifications sx={{ fontSize: "25px" }} /> */}
           {/* <Help sx={{ fontSize: "25px" }} /> */}
           <FormControl variant="standard" value={fullName}>

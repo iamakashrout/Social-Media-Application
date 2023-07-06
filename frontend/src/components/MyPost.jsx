@@ -143,56 +143,58 @@ import app from "../firebase.js"
           />
         </FlexBetween>
 
-
-
-        <Box sx={{ display: "flex",justifyContent: "right",marginLeft: "20px" }}>
-        <Button
-          onClick={(event) => setAnchorEl(event.currentTarget)}
-          sx={{
-            backgroundColor: palette.neutral.light,
-            color: mediumMain,
-            // fontWeight: "bold",
-            fontSize: "0.7rem",
-            padding: "5px 10px",
-            textTransform: "uppercase",
-            marginRight: "16px",
-            marginTop: "15px",
-            borderRadius: "2rem",
-          }}
+        <Box
+          sx={{ display: "flex", justifyContent: "right", marginLeft: "20px" }}
         >
-          {selectedCategory ? selectedCategory : "All Categories"}
-          <ExpandMoreIcon sx={{ marginLeft: "4px" }} />
-        </Button>
+          <Button
+            onClick={(event) => setAnchorEl(event.currentTarget)}
+            sx={{
+              backgroundColor: palette.neutral.light,
+              color: mediumMain,
+              // fontWeight: "bold",
+              fontSize: "0.7rem",
+              padding: "5px 10px",
+              textTransform: "uppercase",
+              marginRight: "16px",
+              marginTop: "15px",
+              borderRadius: "2rem",
+              ":hover": {
+                backgroundColor: "#c147e9",
+              },
+            }}
+          >
+            {selectedCategory ? selectedCategory : "All Categories"}
+            <ExpandMoreIcon sx={{ marginLeft: "4px" }} />
+          </Button>
 
-        <Menu
-          anchorEl={anchorEl}
-          open={Boolean(anchorEl)}
-          onClose={() => setAnchorEl(null)}
-        >
-          <MenuItem onClick={() => handleCategorySelect("Individual")}>
-            Individual
-          </MenuItem>
-          <MenuItem onClick={() => handleCategorySelect("Political")}>
-            Political
-          </MenuItem>
-          <MenuItem onClick={() => handleCategorySelect("Entertainment")}>
-            Entertainment
-          </MenuItem>
-          <MenuItem onClick={() => handleCategorySelect("Sports")}>
-            Sports
-          </MenuItem>
-          <MenuItem onClick={() => handleCategorySelect("Education")}>
-            Education
-          </MenuItem>
-          <MenuItem onClick={() => handleCategorySelect("Tourism")}>
-            Tourism
-          </MenuItem>
-          <MenuItem onClick={() => handleCategorySelect("Health")}>
-            Health
-          </MenuItem>
-        </Menu>
+          <Menu
+            anchorEl={anchorEl}
+            open={Boolean(anchorEl)}
+            onClose={() => setAnchorEl(null)}
+          >
+            <MenuItem onClick={() => handleCategorySelect("Individual")}>
+              Individual
+            </MenuItem>
+            <MenuItem onClick={() => handleCategorySelect("Political")}>
+              Political
+            </MenuItem>
+            <MenuItem onClick={() => handleCategorySelect("Entertainment")}>
+              Entertainment
+            </MenuItem>
+            <MenuItem onClick={() => handleCategorySelect("Sports")}>
+              Sports
+            </MenuItem>
+            <MenuItem onClick={() => handleCategorySelect("Education")}>
+              Education
+            </MenuItem>
+            <MenuItem onClick={() => handleCategorySelect("Tourism")}>
+              Tourism
+            </MenuItem>
+            <MenuItem onClick={() => handleCategorySelect("Health")}>
+              Health
+            </MenuItem>
+          </Menu>
         </Box>
-
 
         {isImage && (
           <Box
@@ -241,14 +243,6 @@ import app from "../firebase.js"
 
         <Divider sx={{ margin: "1.25rem 0" }} />
 
-
-        
-
-       
-
-
-        
-
         <FlexBetween>
           <FlexBetween gap="0.25rem" onClick={() => setIsImage(!isImage)}>
             <ImageOutlined sx={{ color: mediumMain }} />
@@ -278,6 +272,9 @@ import app from "../firebase.js"
               textTransform: "uppercase",
               marginRight: "16px",
               borderRadius: "0.75rem",
+              ":hover": {
+                backgroundColor: "#c147e9",
+              },
             }}
           >
             POST
