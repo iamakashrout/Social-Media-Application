@@ -65,7 +65,6 @@ import {
                 fontWeight="bold"
                 sx={{
                   "&:hover": {
-                    color: palette.primary.light,
                     cursor: "pointer",
                     fontWeight: "bold"
                   },
