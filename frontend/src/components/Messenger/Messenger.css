@@ -41,17 +41,26 @@
 .chatMessageInput {
     width: 80%;
     height: 90px;
-    padding: 10px;
+    padding: 6.5px;
+    border: 2px solid black; /* Change the border color */
+  border-radius: 0.75rem; /* Change the border radius */
+  background-color: lightgray; /* Change the background color */
+  color: black; 
+  
 }
 
 .chatSubmitButton {
     width: 70px;
-    height: 40px;
+    height: 20px;
     border: none;
-    border-radius: 5px;
+    border-radius: 0.75rem;
+    border: 2px solid black;
     cursor: pointer;
-    background-color: teal;
-    color: white;
+    background-color: silver;
+    color: black;
+        display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .chatOnline {
