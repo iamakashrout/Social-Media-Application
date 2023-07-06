@@ -116,7 +116,7 @@ const PostWidget = ({
             <FlexBetween gap="0.3rem">
               <IconButton onClick={patchLike}>
                 {isLiked ? (
-                  <FavoriteOutlined sx={{ color: primary }} />
+                  <FavoriteOutlined sx={{ color: "purple" }} />
                 ) : (
                   <FavoriteBorderOutlined />
                 )}
@@ -131,10 +131,6 @@ const PostWidget = ({
               <Typography>{comments.length}</Typography>
             </FlexBetween>
           </FlexBetween>
-
-          <IconButton>
-            <ShareOutlined />
-          </IconButton>
         </FlexBetween>
         {isComments && (
           <Box mt="0.5rem">
@@ -163,9 +159,10 @@ const PostWidget = ({
                 sx={{
                   // color: palette.background.alt,
                   color: "black",
-                  backgroundColor: palette.primary.main,
+                  backgroundColor:"silver",
                   borderRadius: "0.75rem",
                   fontSize: "0.5rem",
+                  fontWeight: "bold",
                   "&:hover": {
                     backgroundColor: "primary.dark",
                   },

@@ -1,4 +1,6 @@
 // color design tokens export
+import './fonts.css';
+
 export const colorTokens = {
     grey: {
       0: "#FFFFFF",
@@ -14,6 +16,8 @@ export const colorTokens = {
       800: "#1A1A1A",
       900: "#0A0A0A",
       1000: "#000000",
+      1010: "#E6E6FA",
+      1020: "#C9D1D3",
     },
     primary: {
       50: "#E6FBFF",
@@ -69,36 +73,36 @@ export const colorTokens = {
                 light: colorTokens.grey[50],
               },
               background: {
-                default: colorTokens.grey[10],
-                alt: colorTokens.grey[0],
+                default: colorTokens.grey[50],
+                alt: colorTokens.grey[1020],
               },
             }),
       },
       typography: {
-        fontFamily: ["Rubik", "sans-serif"].join(","),
+        fontFamily: ["Poppins", "sans-serif"].join(","),
         fontSize: 12,
         h1: {
-          fontFamily: ["Rubik", "sans-serif"].join(","),
+          fontFamily: ["Poppins", "sans-serif"].join(","),
           fontSize: 40,
         },
         h2: {
-          fontFamily: ["Rubik", "sans-serif"].join(","),
+          fontFamily: ["Poppins", "sans-serif"].join(","),
           fontSize: 32,
         },
         h3: {
-          fontFamily: ["Rubik", "sans-serif"].join(","),
+          fontFamily: ["Poppins", "sans-serif"].join(","),
           fontSize: 24,
         },
         h4: {
-          fontFamily: ["Rubik", "sans-serif"].join(","),
+          fontFamily: ["Poppins", "sans-serif"].join(","),
           fontSize: 20,
         },
         h5: {
-          fontFamily: ["Rubik", "sans-serif"].join(","),
+          fontFamily: ["Poppins", "sans-serif"].join(","),
           fontSize: 16,
         },
         h6: {
-          fontFamily: ["Rubik", "sans-serif"].join(","),
+          fontFamily: ["Poppins", "sans-serif"].join(","),
           fontSize: 14,
         },
       },

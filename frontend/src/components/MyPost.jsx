@@ -256,32 +256,9 @@ import app from "../firebase.js"
               color={mediumMain}
               sx={{ "&:hover": { cursor: "pointer", color: medium } }}
             >
-              Image
+              Upload an Image
             </Typography>
           </FlexBetween>
-
-          {isNonMobileScreens ? (
-            <>
-              <FlexBetween gap="0.25rem">
-                <GifBoxOutlined sx={{ color: mediumMain }} />
-                <Typography color={mediumMain}>Clip</Typography>
-              </FlexBetween>
-
-              <FlexBetween gap="0.25rem">
-                <AttachFileOutlined sx={{ color: mediumMain }} />
-                <Typography color={mediumMain}>Attachment</Typography>
-              </FlexBetween>
-
-              <FlexBetween gap="0.25rem">
-                <MicOutlined sx={{ color: mediumMain }} />
-                <Typography color={mediumMain}>Audio</Typography>
-              </FlexBetween>
-            </>
-          ) : (
-            <FlexBetween gap="0.25rem">
-              <MoreHorizOutlined sx={{ color: mediumMain }} />
-            </FlexBetween>
-          )}
 
           <Button
             disabled={!post}
@@ -293,7 +270,7 @@ import app from "../firebase.js"
             //     borderRadius: "3rem",
             //   }}
             sx={{
-              backgroundColor: "primary.main",
+              backgroundColor: "silver",
               color: "black",
               fontWeight: "bold",
               fontSize: "0.7rem",
