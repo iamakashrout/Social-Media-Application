@@ -278,9 +278,6 @@ import app from "../firebase.js"
               textTransform: "uppercase",
               marginRight: "16px",
               borderRadius: "0.75rem",
-              "&:hover": {
-                backgroundColor: "primary.dark",
-              },
             }}
           >
             POST
