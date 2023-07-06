@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
+import ReactTimeAgo from "react-time-ago";
 import "./Message.css";
 
 const Message = ({ message, own }) => {
@@ -23,16 +24,14 @@ const Message = ({ message, own }) => {
 
 
   return (
-    <div className={own? "message own": "message"}>
+    <div className={own ? "message own" : "message"}>
       <div className="messageTop">
-        <img
-          className="messageImg"
-          src={user?.picturePath}
-          alt=""
-        />
+        <img className="messageImg" src={user?.picturePath} alt="" />
         <p className="messageText">{message?.text}</p>
       </div>
-      <div className="messageBottom">{message?.createdAt}</div>
+      <div className="messageBottom">
+        <ReactTimeAgo date={message?.createdAt} locale="en-US" />
+      </div>
     </div>
   );
 }

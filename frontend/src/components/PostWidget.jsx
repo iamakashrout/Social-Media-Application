@@ -22,6 +22,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { setPost } from "state";
 import UserImage from "tools/UserImage";
+import ReactTimeAgo from "react-time-ago";
 
 const PostWidget = ({
   postId,
@@ -34,6 +35,7 @@ const PostWidget = ({
   userPicturePath,
   likes,
   comments,
+  createdAt,
 }) => {
   const [isComments, setIsComments] = useState(false);
   const dispatch = useDispatch();
@@ -94,10 +96,17 @@ const PostWidget = ({
           userPicturePath={userPicturePath}
         />
         <Typography color={main} sx={{ mt: "1rem" }}>
-        <Badge color="secondary" badgeContent={category}
-        sx={{  marginTop: "-190px",mt: "-190px", mr: "8px", marginLeft: "415px"}}>
-
-        </Badge>
+          <Badge
+            color="secondary"
+            badgeContent={category}
+            sx={{
+              marginTop: "-190px",
+              mt: "-190px",
+              mr: "8px",
+              marginLeft: "415px",
+            }}
+          ></Badge>
+          <ReactTimeAgo style={{fontSize: "90%"}} date={createdAt} locale="en-US" />
         </Typography>
         <Typography color={main} sx={{ mt: "-25px", ml: "8px" }}>
           {description}
@@ -159,7 +168,7 @@ const PostWidget = ({
                 sx={{
                   // color: palette.background.alt,
                   color: "black",
-                  backgroundColor:"silver",
+                  backgroundColor: "silver",
                   borderRadius: "0.75rem",
                   fontSize: "0.5rem",
                   fontWeight: "bold",
