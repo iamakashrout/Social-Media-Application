@@ -89,7 +89,7 @@ const ChatOnline = ({ currentId }) => {
 
   return (
     <div className="chatOnline">
-      <div style={{fontSize: "20px"}}>Select Friend to Start a Chat</div>
+      <div style={{fontSize: "20px", fontWeight: "bold"}}>Select Friend to Start a Chat</div>
       {Array.isArray(temp) &&
         temp?.map((o) => (
           <div className="chatOnlineFriend" onClick={() => handleClick(o)}>
@@ -99,6 +99,7 @@ const ChatOnline = ({ currentId }) => {
             <span className="chatOnlineName">
               {o?.firstName} {o?.lastName}
             </span>
+            <divider/>
           </div>
         ))}
     </div>

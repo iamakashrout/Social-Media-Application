@@ -92,7 +92,7 @@ const PostWidget = ({
         <Friend
           friendId={postUserId}
           name={name}
-          subtitle={location}
+          subtitle={<ReactTimeAgo style={{fontSize: "90%", color: main}} date={createdAt} locale="en-US" />}
           userPicturePath={userPicturePath}
         />
         <Typography color={main} sx={{ mt: "1rem" }}>
@@ -106,7 +106,6 @@ const PostWidget = ({
               marginLeft: "415px",
             }}
           ></Badge>
-          <ReactTimeAgo style={{fontSize: "90%"}} date={createdAt} locale="en-US" />
         </Typography>
         <Typography color={main} sx={{ mt: "-25px", ml: "8px" }}>
           {description}
@@ -172,9 +171,6 @@ const PostWidget = ({
                   borderRadius: "0.75rem",
                   fontSize: "0.5rem",
                   fontWeight: "bold",
-                  "&:hover": {
-                    backgroundColor: "primary.dark",
-                  },
                 }}
               >
                 COMMENT
