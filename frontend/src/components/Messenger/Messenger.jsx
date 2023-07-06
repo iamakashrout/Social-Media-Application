@@ -132,7 +132,7 @@ const Messenger = () => {
       <div className="messenger">
         <div className="chatMenu">
           <div className="chatMenuWrapper">
-            <div style={{fontSize: "20px"}}>Your Chats</div>
+            <div style={{fontSize: "20px", fontWeight: "bold"}}>Your Chats</div>
             {conversations.map((c) => (
               <div onClick={() => setCurrentChat(c)}>
                 <Conversation conversation={c} />
@@ -167,7 +167,7 @@ const Messenger = () => {
                 </div>
               </>
             ) : (
-              <span className="noConversationText">
+              <span className="noConversationText" style={{ color: "silver", fontWeight: "bold" }}>
                 Open a conversation to start a chat
               </span>
             )}
