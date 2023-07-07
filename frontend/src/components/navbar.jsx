@@ -194,9 +194,29 @@ const Navbar = () => {
                 <LightMode sx={{ color: dark, fontSize: "25px" }} />
               )}
             </IconButton>
-            <Message sx={{ fontSize: "25px" }} />
-            <Notifications sx={{ fontSize: "25px" }} />
-            <Help sx={{ fontSize: "25px" }} />
+            <IconButton
+              onClick={() => {
+                navigate(`/messenger`);
+                navigate(0);
+              }}
+            >
+              <Message sx={{ fontSize: "25px", color: "white" }} />
+              <Button
+                sx={{
+                  padding: 0,
+                  margin: 0,
+                  fontSize: "16px",
+                  textTransform: "none",
+                  color: "darkGray",
+                  fontWeight: "bold",
+                  ":hover": {
+                    color: "#F582A7",
+                  },
+                }}
+              >
+                MESSENGER
+              </Button>
+            </IconButton>
             <FormControl variant="standard" value={fullName}>
               <Select
                 value={fullName}
