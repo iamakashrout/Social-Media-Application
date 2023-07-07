@@ -16,6 +16,7 @@ import messageRoutes from "./routes/messageRoutes.js";
 import { register } from "./controllers/authControllers.js";
 import { createPost } from "./controllers/postControllers.js";
 import { verifyToken } from "./middleware/auth.js";
+import http from "http";
 import { Server } from "socket.io";
 
 /* CONFIGURATION */
@@ -23,6 +24,12 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 dotenv.config();
 const app = express();
+const server = http.createServer(app);
+const io = new Server(server, {
+  cors: {
+    origin: "*",
+  },
+});
 app.use(express.json());
 app.use(helmet());
 app.use(helmet.crossOriginResourcePolicy({ policy: "cross-origin" }));
@@ -55,13 +62,13 @@ app.use("/conversations", conversationRoutes);
 app.use("/messages", messageRoutes);
 
 /* MONGOOSE SETUP */
-const PORT = process.env.PORT || 8000;
 mongoose
   .connect(process.env.MONGO_URL, {
     useNewUrlParser: true,
   })
   .then(() => {
-    app.listen(PORT, () => console.log(`Server successfully running on Port: ${PORT}`));
+     console.log("Database Connected Successfully!");
+    //app.listen(PORT, () => console.log(`Server successfully running on Port: ${PORT}`));
   })
   .catch((error) => console.log(`${error} did not connect`));
 
@@ -71,11 +78,6 @@ mongoose
 
   // SOCKET.IO FOR REAL TIME MESSAGING
 
-  const io = new Server(7000, {
-    cors: {
-      origin: "http://localhost:3000",
-    },
-  });
 
   let users = [];
 
@@ -117,3 +119,9 @@ mongoose
       io.emit("getUsers", users);
     });
   });
+
+
+   const PORT = process.env.PORT || 5000;
+   server.listen(PORT, () =>
+     console.log(`Server successfully running on Port: ${PORT}`)
+   );
