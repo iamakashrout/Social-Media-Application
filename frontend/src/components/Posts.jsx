@@ -5,6 +5,7 @@ import { setPosts } from "state";
 import PostWidget from "./PostWidget";
 import { Box } from "@mui/system";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import { BASE_URL } from "helper.js";
 
 const PostsWidget = ({ userId, isProfile = false }) => {
   const [selectedCategory, setSelectedCategory] = useState(null);
@@ -23,7 +24,7 @@ const PostsWidget = ({ userId, isProfile = false }) => {
   const token = useSelector((state) => state.token);
 
   const getPosts = async () => {
-    const response = await fetch("http://localhost:5000/posts", {
+    const response = await fetch(`${BASE_URL}/posts`, {
       method: "GET",
       headers: { Authorization: `Bearer ${token}` },
     });
@@ -33,7 +34,7 @@ const PostsWidget = ({ userId, isProfile = false }) => {
 
   const getUserPosts = async () => {
     const response = await fetch(
-      `http://localhost:5000/posts/${userId}/posts`,
+      `${BASE_URL}/posts/${userId}/posts`,
       {
         method: "GET",
         headers: { Authorization: `Bearer ${token}` },

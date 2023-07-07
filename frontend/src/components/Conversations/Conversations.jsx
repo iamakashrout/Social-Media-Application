@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useSelector } from "react-redux";
 import "./Conversations.css";
+import { BASE_URL } from "helper.js";
 
 const Conversation = ({ conversation }) => {
   const loggedInUser = useSelector((state) => state.user);
@@ -9,7 +10,7 @@ const Conversation = ({ conversation }) => {
 
   const friendId = conversation.members.find((m) => m !== loggedInUser._id);
   const getUser = async () => {
-    const response = await fetch(`http://localhost:5000/users/${friendId}`, {
+    const response = await fetch(`${BASE_URL}/users/${friendId}`, {
       method: "GET",
       headers: { Authorization: `Bearer ${token}` },
     });

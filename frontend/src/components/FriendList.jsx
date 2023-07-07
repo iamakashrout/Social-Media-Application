@@ -4,6 +4,7 @@ import WidgetWrapper from "tools/WidgetWrapper";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setFriends } from "state";
+import { BASE_URL } from "helper.js";
 
 const FriendListWidget = ({ userId }) => {
   const dispatch = useDispatch();
@@ -13,7 +14,7 @@ const FriendListWidget = ({ userId }) => {
 
   const getFriends = async () => {
     const response = await fetch(
-      `http://localhost:5000/users/${userId}/friends`,
+      `${BASE_URL}/users/${userId}/friends`,
       {
         method: "GET",
         headers: { Authorization: `Bearer ${token}` },

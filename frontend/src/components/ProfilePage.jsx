@@ -7,6 +7,7 @@ import FriendListWidget from "components/FriendList";
 import MyPostWidget from "components/MyPost";
 import PostsWidget from "components/Posts";
 import UserWidget from "components/UserWidget";
+import { BASE_URL } from "helper.js";
 
 const ProfilePage = () => {
   const loggedInUser = useSelector((state) => state.user);
@@ -16,7 +17,7 @@ const ProfilePage = () => {
   const isNonMobileScreens = useMediaQuery("(min-width:1000px)");
 
   const getUser = async () => {
-    const response = await fetch(`http://localhost:5000/users/${userId}`, {
+    const response = await fetch(`${BASE_URL}/users/${userId}`, {
       method: "GET",
       headers: { Authorization: `Bearer ${token}` },
     });

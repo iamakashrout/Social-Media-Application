@@ -37,6 +37,7 @@ import app from "../firebase.js"
      ref,
      uploadBytesResumable,
 } from "firebase/storage";
+import { BASE_URL } from "helper.js";
   
   const MyPostWidget = ({ picturePath }) => {
     const dispatch = useDispatch();
@@ -85,7 +86,7 @@ import app from "../firebase.js"
               console.log(downloadURL);
               formData.append("picture", image);
               formData.append("picturePath", downloadURL);
-              fetch(`http://localhost:5000/posts`, {
+              fetch(`${BASE_URL}/posts`, {
                 method: "POST",
                 headers: { Authorization: `Bearer ${token}` },
                 body: formData,
@@ -117,7 +118,7 @@ import app from "../firebase.js"
       setImage(null);
       setPost("");*/
       else {
-        const response = await fetch(`http://localhost:5000/posts`, {
+        const response = await fetch(`${BASE_URL}/posts`, {
           method: "POST",
           headers: { Authorization: `Bearer ${token}` },
           body: formData,

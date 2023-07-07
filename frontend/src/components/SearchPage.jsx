@@ -8,6 +8,7 @@ import MyPostWidget from "components/MyPost";
 import PostsWidget from "components/Posts";
 import UserWidget from "components/UserWidget";
 import { useNavigate } from "react-router-dom";
+import { BASE_URL } from "helper.js";
 
 const SearchPage = () => {
   const loggedInUser = useSelector((state) => state.user);
@@ -18,7 +19,7 @@ const SearchPage = () => {
   const isNonMobileScreens = useMediaQuery("(min-width:1000px)");
 
   const searchUser = async () => {
-    const response = await fetch(`http://localhost:5000/users/search/${userName}`, {
+    const response = await fetch(`${BASE_URL}/users/search/${userName}`, {
       method: "GET",
       headers: { Authorization: `Bearer ${token}` },
     });
@@ -67,20 +68,27 @@ const SearchPage = () => {
       <>
         <Box>
           <Navbar />
-          <Typography>User not found!</Typography>
+          <Typography
+            sx={{
+              fontSize: "1.5rem",
+              marginTop: "10%",
+              marginLeft: "42%",
+            }}
+          >User not found!</Typography>
           <Button
             onClick={() => navigate("/home")}
             sx={{
-              backgroundColor: "primary.main",
+              backgroundColor: "silver",
               color: "black",
               fontWeight: "bold",
-              fontSize: "0.7rem",
+              fontSize: "2rem",
               padding: "5px 10px",
               textTransform: "uppercase",
-              marginRight: "16px",
+              marginTop: "2%",
+              marginLeft: "40%",
               borderRadius: "0.75rem",
               "&:hover": {
-                backgroundColor: "primary.dark",
+                backgroundColor: "#c147e9",
               },
             }}
           >

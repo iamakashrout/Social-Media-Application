@@ -6,6 +6,7 @@ import { setFriends } from "state";
 import FlexBetween from "./FlexBetween";
 import UserImage from "./UserImage";
 import { toast } from "react-hot-toast";
+import { BASE_URL } from "helper.js";
 
 
 const Friend = ({ friendId, name, subtitle, userPicturePath }) => {
@@ -25,7 +26,7 @@ const Friend = ({ friendId, name, subtitle, userPicturePath }) => {
 
   const patchFriend = async () => {
     const response = await fetch(
-      `http://localhost:5000/users/${_id}/${friendId}`,
+      `${BASE_URL}/users/${_id}/${friendId}`,
       {
         method: "PATCH",
         headers: {

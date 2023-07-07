@@ -7,6 +7,7 @@ import Conversation from "components/Conversations/Conversations";
 import Message from "components/Message/Message";
 import ChatOnline from "components/ChatOnline/ChatOnline";
 import { io } from "socket.io-client";
+import { BASE_URL } from "helper.js";
 
 const Messenger = () => {
   const loggedInUser = useSelector((state) => state.user);
@@ -21,7 +22,7 @@ const Messenger = () => {
   const scrollRef = useRef();
 
   useEffect(() => {
-    socket.current = io("ws://localhost:7000");
+    socket.current = io(`${BASE_URL}`);
     socket.current.on("getMessage", (data) => {
       setArrivalMessage({
         sender: data.senderId,
@@ -52,7 +53,7 @@ const Messenger = () => {
     const getConversations = async () => {
       try {
         const res = await fetch(
-          `http://localhost:5000/conversations/${loggedInUser._id}`,
+          `${BASE_URL}/conversations/${loggedInUser._id}`,
           {
             method: "GET",
             headers: { Authorization: `Bearer ${token}` },
@@ -71,7 +72,7 @@ const Messenger = () => {
     const getMessages = async () => {
       try {
         const res = await fetch(
-          `http://localhost:5000/messages/${currentChat?._id}`,
+          `${BASE_URL}/messages/${currentChat?._id}`,
           {
             method: "GET",
             headers: { Authorization: `Bearer ${token}` },
@@ -100,7 +101,7 @@ const Messenger = () => {
     });
 
     try {
-      const res = await fetch(`http://localhost:5000/messages`, {
+      const res = await fetch(`${BASE_URL}/messages`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

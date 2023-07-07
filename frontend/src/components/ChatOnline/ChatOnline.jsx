@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setFriends } from "state";
 import "./ChatOnline.css";
 import { useNavigate } from "react-router-dom";
+import { BASE_URL } from "helper.js";
 
 const ChatOnline = ({ currentId }) => {
   const dispatch = useDispatch();
@@ -16,7 +17,7 @@ const ChatOnline = ({ currentId }) => {
     const getConversations = async () => {
       try {
         const res = await fetch(
-          `http://localhost:5000/conversations/${currentId}`,
+          `${BASE_URL}/conversations/${currentId}`,
           {
             method: "GET",
             headers: { Authorization: `Bearer ${token}` },
@@ -35,7 +36,7 @@ const ChatOnline = ({ currentId }) => {
 
   const getFriends = async () => {
     const response = await fetch(
-      `http://localhost:5000/users/${currentId}/friends`,
+      `${BASE_URL}/users/${currentId}/friends`,
       {
         method: "GET",
         headers: { Authorization: `Bearer ${token}` },
@@ -51,7 +52,7 @@ const ChatOnline = ({ currentId }) => {
 
   const handleClick = async (user) => {
     try {
-      const res = await fetch(`http://localhost:5000/conversations`, {
+      const res = await fetch(`${BASE_URL}/conversations`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import ReactTimeAgo from "react-time-ago";
 import "./Message.css";
+import { BASE_URL } from "helper.js";
 
 const Message = ({ message, own }) => {
   const token = useSelector((state) => state.token);
@@ -10,7 +11,7 @@ const Message = ({ message, own }) => {
   const sender = message?.sender;
 
   const getUser = async () => {
-    const response = await fetch(`http://localhost:5000/users/${sender}`, {
+    const response = await fetch(`${BASE_URL}/users/${sender}`, {
       method: "GET",
       headers: { Authorization: `Bearer ${token}` },
     });

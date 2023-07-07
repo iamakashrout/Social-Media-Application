@@ -6,6 +6,7 @@ import { useDispatch } from "react-redux";
 import { setLogin } from "state";
 import Dropzone from "react-dropzone";
 import app from "../../firebase.js";
+import { BASE_URL } from "helper.js";
 
 import "./auth.css";
 import backgroundImage from "../../images/bgImage.jpg";
@@ -81,7 +82,7 @@ const Auth = () => {
           console.log(downloadURL);
           formData.append("picturePath", downloadURL);
           toast.loading("loading...");
-          fetch(`http://localhost:5000/auth/register`, {
+          fetch(`${BASE_URL}/auth/register`, {
             method: "POST",
             body: formData,
           }).then(async (savedUserResponse) => {
@@ -124,7 +125,7 @@ const Auth = () => {
 
   const login = async (values, onSubmitProps) => {
      toast.loading("loading...");
-    const loggedInResponse = await fetch("http://localhost:5000/auth/login", {
+    const loggedInResponse = await fetch(`${BASE_URL}/auth/login`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(values),
