@@ -10,7 +10,7 @@ import { createTheme } from "@mui/material/styles";
 import { themeSettings } from "./theme";
 import Auth from "components/Auth/auth";
 import Messenger from "components/Messenger/Messenger";
-
+import EditProfilePage from "state/EditProfile";
 
 //DEPLOYMENT READY YAYY !
 
@@ -34,6 +34,10 @@ function App() {
             <Route
               path="/profile/:userId"
               element={isAuth ? <ProfilePage /> : <Navigate to="/" />}
+            />
+            <Route
+              path="/edit-profile" 
+              element={isAuth ? <EditProfilePage /> : <Navigate to="/" />}
             />
             <Route
               path="/search/:userName"
