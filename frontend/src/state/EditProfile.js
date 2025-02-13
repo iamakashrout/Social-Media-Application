@@ -1,9 +1,10 @@
 import React,{ useState } from "react";
 import {Box,TextField,Button,Typography } from "@mui/material"
 import { useSelector } from "react-redux";
+import { BASE_URL } from "helper";
 const EditProfilePage= () =>{
     const user=useSelector((state)=>state.user)
-
+    const token = useSelector((state) => state.token);
     const[firstName,setFirstname]=useState(user?.firstName || "" );
     const[email,setEmail]=useState(user?.email || "");
     const[occupation,setOccupation]=useState(user?.occupation || "");
@@ -11,11 +12,34 @@ const EditProfilePage= () =>{
     const[lastName,setLastname]=useState(user?.lastName || "");
     const[picture,setProfilePicture]=useState(user?.picture || "");
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log("Profile updated:", { firstName,email,occupation,location,lastName,picture});
-    };
-
+        
+        const updatedProfile = { firstName, email, occupation, location, lastName, picture };
+      
+        try {
+          console.log(user);
+          const response = await fetch(`${BASE_URL}/users/editUsertProfile/${user._id}`, {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify(updatedProfile),
+          });
+      
+          if (!response.ok) {
+            throw new Error("Failed to update profile");
+          }
+      
+          const data = await response.json();
+          console.log("Profile updated:", data);
+          
+        } catch (error) {
+          console.error("Error updating profile:", error);
+        }
+      };
+      
   return (
     <Box sx={{ padding: "2rem" }}>
       <Typography variant="h4" mb={2}>
