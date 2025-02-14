@@ -1,4 +1,4 @@
-import { Box, useMediaQuery } from "@mui/material";
+import { Box, useMediaQuery, Button } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
@@ -8,14 +8,15 @@ import MyPostWidget from "components/MyPost";
 import PostsWidget from "components/Posts";
 import UserWidget from "components/UserWidget";
 import { BASE_URL } from "helper.js";
-
+import { useNavigate } from "react-router-dom";
 const ProfilePage = () => {
   const loggedInUser = useSelector((state) => state.user);
   const [user, setUser] = useState(null);
   const { userId } = useParams();
   const token = useSelector((state) => state.token);
   const isNonMobileScreens = useMediaQuery("(min-width:1000px)");
-
+  const navigate=useNavigate();
+  
   const getUser = async () => {
     const response = await fetch(`${BASE_URL}/users/${userId}`, {
       method: "GET",
@@ -30,7 +31,10 @@ const ProfilePage = () => {
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   if (!user) return null;
-
+  const EditProfile=()=>{
+    console.log("Edit Profile clicked!")
+    navigate("/edit-profile");
+  };
   return (
     <Box>
       <Navbar />
@@ -43,8 +47,17 @@ const ProfilePage = () => {
       >
         <Box flexBasis={isNonMobileScreens ? "26%" : undefined}>
           <UserWidget userId={userId} picturePath={user.picturePath} />
-          <Box m="2rem 0" />
+          <Button 
+            variant="contained"
+            color="primary"
+            onClick={EditProfile}
+            sx={{marginTop:"1rem"}}
+          >
+          Edit Profile
+          </Button>
+          <Box m="2rem 0">
           <FriendListWidget userId={userId} />
+          </Box>
         </Box>
         <Box
           flexBasis={isNonMobileScreens ? "42%" : undefined}
