@@ -8,8 +8,6 @@ import Dropzone from "react-dropzone";
 import app from "../../firebase.js";
 import { BASE_URL } from "helper.js";
 
-import "./auth.css";
-import backgroundImage from "../../images/bgImage.jpg";
 import {
   getDownloadURL,
   getStorage,
@@ -18,6 +16,8 @@ import {
 } from "firebase/storage";
 import { toast } from "react-hot-toast";
 
+import "./auth.css";
+
 const registerSchema = yup.object().shape({
   firstName: yup.string().required("required"),
   lastName: yup.string().required("required"),
@@ -25,7 +25,7 @@ const registerSchema = yup.object().shape({
   password: yup.string().required("required"),
   location: yup.string().required("required"),
   occupation: yup.string().required("required"),
-  picture: yup.string(),
+  picture: yup.mixed(),
 });
 
 const loginSchema = yup.object().shape({
@@ -49,242 +49,163 @@ const initialValuesLogin = {
 };
 
 const Auth = () => {
-  const [pageType, setPageType] = useState("login");
+  const [isLogin, setIsLogin] = useState(true);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const isLogin = pageType === "login";
-  const isRegister = pageType === "register";
 
   const register = async (values, onSubmitProps) => {
     const formData = new FormData();
-    for (let value in values) {
-      formData.append(value, values[value]);
+    for (let key in values) {
+      formData.append(key, values[key]);
     }
-    const fileName = new Date().getTime() + values.picture?.name;
+
     const storage = getStorage(app);
-    const StorageRef = ref(storage, fileName);
-    const uploadTask = uploadBytesResumable(StorageRef, values.picture);
-    uploadTask.on("state_changed", (snapshot) => {
-      const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-      console.log("Upload is " + progress + "% done");
-      switch (snapshot.state) {
-        case "paused":
-          console.log("Upload is paused");
-          break;
-        case "running":
-          console.log("Upload is running");
-          break;
-      }
-    },
-      (error) => { },
+    const fileName = new Date().getTime() + values.picture?.name;
+    const storageRef = ref(storage, fileName);
+    const uploadTask = uploadBytesResumable(storageRef, values.picture);
+
+    uploadTask.on(
+      "state_changed",
+      (snapshot) => {
+        const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+        console.log(`Upload is ${progress}% done`);
+      },
+      (error) => {
+        console.error("Upload error:", error);
+      },
       () => {
         getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-          console.log(downloadURL);
           formData.append("picturePath", downloadURL);
-          toast.loading("loading...");
+          toast.loading("Registering...");
+
           fetch(`${BASE_URL}/auth/register`, {
             method: "POST",
             body: formData,
-          }).then(async (savedUserResponse) => {
-            const savedUser = await savedUserResponse.json();
-            if (savedUserResponse.status !== 201) {
-              toast.dismiss();
+          }).then(async (response) => {
+            const data = await response.json();
+            toast.dismiss();
+
+            if (response.status !== 201) {
               toast.error("Email already in use");
               return;
             }
+
             onSubmitProps.resetForm();
-
-            if (savedUser) {
-              setPageType("login");
-              if (savedUser) {
-                setPageType("login");
-                toast.dismiss();
-                toast.success("Registered successfully");
-              }
-            }
-          })
-        })
-      }
-    )
-    /*formData.append("picturePath", values.picture.name);
-
-    const savedUserResponse = await fetch(
-      "http://localhost:5000/auth/register",
-      {
-        method: "POST",
-        body: formData,
+            setIsLogin(true);
+            toast.success("Registered successfully!");
+          });
+        });
       }
     );
-    const savedUser = await savedUserResponse.json();
-    onSubmitProps.resetForm();
-
-    if (savedUser) {
-      setPageType("login");
-    }*/
   };
 
   const login = async (values, onSubmitProps) => {
-     toast.loading("loading...");
-    const loggedInResponse = await fetch(`${BASE_URL}/auth/login`, {
+    toast.loading("Logging in...");
+
+    const response = await fetch(`${BASE_URL}/auth/login`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(values),
     });
-    if (loggedInResponse.status !== 200) {
-      toast.dismiss();
-       toast.error("invalid credentials");
-       return;
-     }
-    const loggedIn = await loggedInResponse.json();
-    onSubmitProps.resetForm();
-    if (loggedIn) {
-      dispatch(
-        setLogin({
-          user: loggedIn.user,
-          token: loggedIn.token,
-        })
-      );
-      navigate("/home");
-       toast.dismiss();
-       toast.success("Logged in succesfully");
+
+    toast.dismiss();
+
+    if (response.status !== 200) {
+      toast.error("Invalid credentials");
+      return;
     }
+
+    const data = await response.json();
+    onSubmitProps.resetForm();
+
+    dispatch(setLogin({ user: data.user, token: data.token }));
+    navigate("/home");
+    toast.success("Logged in successfully!");
   };
 
   const handleFormSubmit = async (values, onSubmitProps) => {
-    if (isLogin) await login(values, onSubmitProps);
-    if (isRegister) await register(values, onSubmitProps);
+    if (isLogin) {
+      await login(values, onSubmitProps);
+    } else {
+      await register(values, onSubmitProps);
+    }
   };
 
   return (
+    
+    
     <div className="container">
-    <div className="form-container">
-    <Formik
-      onSubmit={handleFormSubmit}
-      initialValues={isLogin ? initialValuesLogin : initialValuesRegister}
-      validationSchema={isLogin ? loginSchema : registerSchema}
-    >
-      {({
-        values,
-        errors,
-        touched,
-        handleBlur,
-        handleChange,
-        handleSubmit,
-        setFieldValue,
-        resetForm,
-      }) => (
-        <form onSubmit={handleSubmit} className="auth-form-container">
-          {isRegister && (
-            <>
-              <label htmlFor="name" style={{ color: "purple" }}>Enter First name</label>
-              <input
-                onBlur={handleBlur}
-                onChange={handleChange}
-                value={values.firstName}
-                name="firstName"
-                placeholder="first Name"
-                error={Boolean(touched.firstName) && Boolean(errors.firstName)}
-                helperText={touched.firstName && errors.firstName}
-              />
-              <label htmlFor="name" style={{ color: "purple" }}>Enter Last name</label>
-              <input
-                onBlur={handleBlur}
-                onChange={handleChange}
-                value={values.lastName}
-                name="lastName"
-                placeholder="last Name"
-                error={Boolean(touched.lastName) && Boolean(errors.lastName)}
-                helperText={touched.lastName && errors.lastName}
-              />
-              <label htmlFor="name" style={{ color: "purple" }}>Location</label>
-              <input
-                label="Location"
-                onBlur={handleBlur}
-                onChange={handleChange}
-                value={values.location}
-                name="location"
-                placeholder="city name"
-                error={Boolean(touched.location) && Boolean(errors.location)}
-                helperText={touched.location && errors.location}
-              />
-              <label htmlFor="name" style={{ color: "purple" }}>Occupation</label>
-              <input
-                label="Occupation"
-                onBlur={handleBlur}
-                onChange={handleChange}
-                value={values.occupation}
-                name="occupation"
-                placeholder="your occupation"
-                error={
-                  Boolean(touched.occupation) && Boolean(errors.occupation)
-                }
-                helperText={touched.occupation && errors.occupation}
-              />
-              <div>
-                <Dropzone
-                  acceptedFiles=".jpg, .jpeg, .png"
-                  multiple={false}
-                  onDrop={(acceptedFiles) =>
-                    setFieldValue("picture", acceptedFiles[0])
-                  }
-                >
-                  {({ getRootProps, getInputProps }) => (
-                    <button {...getRootProps()}>
-                      <input {...getInputProps()} />
-                      {!values.picture ? (
-                        <p  style={{ color: "purple" }}>Add picture here</p>
-                      ) : (
-                        <div>
-                          <p>{values.picture.name}</p>
+      <h1 className="brand-title">
+        <span className="one">One</span>
+        <span className="world">World.</span>
+      </h1>
+      <p className="tagline">Explore. Engage. Empower.</p>
+      <h2 className="auth-heading">{isLogin ? "Login" : "Signup"}</h2>
+<div className="toggle-switch">
+  <div
+    className={`toggle-track ${isLogin ? "login-mode" : "signup-mode"}`}
+    onClick={() => setIsLogin(!isLogin)}
+  >
+    <div className="toggle-knob"></div>
+  </div>
+</div>
+
+
+
+      <div className="form-container">
+        <Formik
+          onSubmit={handleFormSubmit}
+          initialValues={isLogin ? initialValuesLogin : initialValuesRegister}
+          validationSchema={isLogin ? loginSchema : registerSchema}
+        >
+          {({ values, errors, touched, handleBlur, handleChange, handleSubmit, setFieldValue, resetForm }) => (
+            <form onSubmit={handleSubmit} className="auth-form-container">
+              {!isLogin && (
+                <>
+                  <label htmlFor="firstName" style={{ fontSize: "1.5rem"}}>First Name</label>
+                  <input name="firstName" placeholder="First Name" onBlur={handleBlur} onChange={handleChange} value={values.firstName} />
+                  <label htmlFor="lastName" style={{ fontSize: "1.5rem" }}>Last Name</label>
+                  <input name="lastName" placeholder="Last Name" onBlur={handleBlur} onChange={handleChange} value={values.lastName} />
+                  <label htmlFor="location" style={{ fontSize: "1.5rem" }}>Location</label>
+                  <input name="location" placeholder="City Name" onBlur={handleBlur} onChange={handleChange} value={values.location} />
+                  <label htmlFor="occupation" style={{ fontSize: "1.5rem" }}>Occupation</label>
+                  <input name="occupation" placeholder="Your Occupation" onBlur={handleBlur} onChange={handleChange} value={values.occupation} />
+                  
+                  <div>
+                    <Dropzone
+                      acceptedFiles=".jpg,.jpeg,.png"
+                      multiple={false}
+                      onDrop={(acceptedFiles) => setFieldValue("picture", acceptedFiles[0])}
+                    >
+                      {({ getRootProps, getInputProps }) => (
+                        <div {...getRootProps()} className="dropzone">
+                          <input {...getInputProps()} />
+                          <p>{values.picture ? values.picture.name : "Add a profile picture"}</p>
                         </div>
                       )}
-                    </button>
-                  )}
-                </Dropzone>
-              </div>
-            </>
+                    </Dropzone>
+                  </div>
+                </>
+              )}
+
+              <label htmlFor="email" style={{ fontSize: "1.5rem", marginBottom: "4px", display: "block" }}>
+  Email
+</label>
+              <input name="email" placeholder="youremail@gmail.com" onBlur={handleBlur} onChange={handleChange} value={values.email} />
+
+              <label htmlFor="password" style={{ fontSize: "1.5rem" }}>Password</label>
+              <input type="password" name="password" placeholder="********" onBlur={handleBlur} onChange={handleChange} value={values.password} />
+
+              <button type="submit" className="submit-btn">{isLogin ? "LOGIN" : "REGISTER"}</button>
+
+              <button className="link-btn normal-case" onClick={() => { setIsLogin(!isLogin); resetForm(); }}>
+  {isLogin ? "Don't have an account? Register here!" : "Already have an account? Login here!"}
+</button>
+
+            </form>
           )}
-          <label htmlFor="email" style={{ color: "purple" }}>Email</label>
-          <input
-            label="Email"
-            onBlur={handleBlur}
-            onChange={handleChange}
-            value={values.email}
-            name="email"
-            placeholder="youremail@gmail.com"
-            error={Boolean(touched.email) && Boolean(errors.email)}
-            helperText={touched.email && errors.email}
-          />
-          <label htmlFor="password" style={{ color: "purple" }}>Password</label>
-          <input
-            label="Password"
-            type="password"
-            onBlur={handleBlur}
-            onChange={handleChange}
-            value={values.password}
-            name="password"
-            placeholder="********"
-            error={Boolean(touched.password) && Boolean(errors.password)}
-            helperText={touched.password && errors.password}
-          />
-          <button type="submit" style={{ backgroundColor: "gray", color: "white" }}>{isLogin ? "LOGIN" : "REGISTER"}</button>
-          <button className="link-btn"
-            onClick={() => {
-              setPageType(isLogin ? "register" : "login");
-              resetForm();
-            }}
-          >
-            <p style={{ color: "gray" }}>
-            {isLogin
-              ? "Don't have an account? Sign up here."
-              : "Already have an account? Login here."}
-            </p>
-          </button>
-        </form>
-       
-      )}
-    </Formik>
-    </div>
+        </Formik>
+      </div>
     </div>
   );
 };
