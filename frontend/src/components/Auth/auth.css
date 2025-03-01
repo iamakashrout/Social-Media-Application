@@ -1,14 +1,256 @@
+/* Background */
+html, body {
+  height: 100%;
+  /* overflow: hidden; Remove if applied */
+}
+* {
+  margin: 0;
+  padding: 0;
+  /* box-sizing: border-box; */
+  font-family: 'Poppins', sans-serif;
+}
 .container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 150vh;
-    background-image: url('../../images/bgImage.jpg'); /* Replace with your image file path */
-  background-size: cover;
-  background-position: center;
+  background: url("../../images/home_background\ \(1\).png") no-repeat center center/cover;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 200%;
+  text-align: center;
+  min-height: 100vh;
+  width: 100%;
+  object-fit: cover;
+}
+
+.form-container {
+  backdrop-filter: blur(12px);
+  /* border-radius: 15px; */
+  padding: 00px;
+  width: 600px; /* Increased width */
+  max-width: 100%;
+  animation: fadeIn 0.7s ease-in-out;
+  box-shadow: 0 4px 10px rgba(255, 255, 255, 0.2); /* Optional soft glow */
+
+}
+
+.input-container {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  margin: 0px 0;
+  background: #222;
+  border-radius: 5px;
+  padding: 1px; /* Ensure space inside */
+  border: none; /* Remove any unwanted borders */
+}
+
+input {
+  width: 100%;
+  padding: 12px;
+  border: none;
+  background: transparent;
+  color: white;
+  outline: none;
+}
+
+input:focus {
+  background: rgba(255, 255, 255, 0.1);
+  box-shadow: 0px 0px 10px rgba(255, 255, 255, 0.3);
+}
+
+/* Form */
+.auth-form-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+label {
+  font-size: 14px;
+  font-weight: 600;
+  margin-top: 10px;
+  color: #fff;
+}
+
+.input-container {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  margin: 8px 0;
+  background: #222;
+  border-radius: 5px;
+}
+
+.input-container .input-icon {
+  margin: 0 10px;
+  color: #6b5b95;
+}
+
+input {
+  width: calc(100% - 40px);
+  padding: 12px;
+  border: none;
+  background: transparent;
+  color: white;
+  outline: none;
+}
+
+input:focus {
+  background: rgba(255, 255, 255, 0.2);
+  box-shadow: 0px 0px 10px rgba(255, 255, 255, 0.3);
+}
+
+/* Buttons */
+button {
+  width: 100%;
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: bold;
+  text-transform: none;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+}
+
+button[type="submit"] {
+  width: 100%;
+  background: rgb(123, 0, 255);
+  color: rgb(255, 255, 255);
+  font-weight: bold;
+  padding: 12px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: 0.3s;
+}
+
+button[type="submit"]:hover {
+  background: #00d9ff;
+}
+.toggle-switch {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.toggle-track {
+  width: 120px;
+  height: 40px;
+  background: #ddd;
+  border-radius: 20px;
+  position: relative;
+  cursor: pointer;
+  transition: background 0.3s ease-in-out;
+}
+
+.toggle-track.login-mode {
+  background: #4caf50; /* Green for Login */
+}
+
+.toggle-track.signup-mode {
+  background: #ff9800; /* Orange for Signup */
+}
+.auth-heading{
+  color:white;
+}
+.toggle-knob {
+  width: 35px;
+  height: 35px;
+  background: #fff;
+  border-radius: 50%;
+  position: absolute;
+  top: 2.5px;
+  left: 5px;
+  transition: transform 0.3s ease-in-out;
+}
+
+.signup-mode .toggle-knob {
+  transform: translateX(75px); /* Move right */
+}
+
+.link-btn {
+  background: none;
+  border: none;
+  color: gray;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+.link-btn:hover p {
+  color: #ff9a8b;
+  text-decoration: underline;
+}
+
+button[role="button"] {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px dashed white;
+  padding: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+button[role="button"]:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
   }
-  
-  .form-container {
-    border: 1px solid #000;
-    padding: 20px;
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
+}
+
+.brand-title {
+  font-family: "Poppins", sans-serif;
+  font-size: 6rem;
+  font-weight: bold;
+  margin-bottom: -40px;
+  animation: slideIn 1.5s ease-in-out !important;
+  margin-top: 90px;
+}
+
+.one {
+  color: white;
+}
+
+.world {
+  color: #a600ff;
+}
+
+.tagline {
+  font-family: "Poppins", sans-serif;
+  font-size: 2.5rem;
+  color: white;
+  font-style: bold;
+  animation: fadeIn 2.5s ease-in-out;
+  font-weight: 500;
+  margin-bottom: 40px;
+}
+
+@keyframes slideIn {
+  0% {
+    transform: translateY(-50px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Dropzone */
+.dropzone {
+  background: #a458de;
+  padding: 10px;
+  border-radius: 8px;
+  color: white;
+  cursor: pointer;
+  margin: 10px 0;
+}
