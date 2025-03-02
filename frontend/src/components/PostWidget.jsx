@@ -15,6 +15,10 @@ import {
   Button,
 } from "@mui/material";
 import FlexBetween from "tools/FlexBetween";
+import { Favorite, FavoriteBorder } from "@mui/icons-material";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
 import Friend from "tools/Friend";
 import WidgetWrapper from "tools/WidgetWrapper";
 import { useState } from "react";
@@ -48,6 +52,11 @@ const PostWidget = ({
   const isLiked = Boolean(likes[loggedInUserId]);
   const likeCount = Object.keys(likes).length;
   const [comment, setComment] = useState("");
+
+  const [editingCommentId, setEditingCommentId] = useState(null);
+  const [editedComment, setEditedComment] = useState("");
+  const [anchorEl, setAnchorEl] = useState(null);
+
 
   const { palette } = useTheme();
   const main = palette.neutral.main;
@@ -87,6 +96,70 @@ const PostWidget = ({
     setComment("");
     dispatch(setPost({ post: updatedPost }));
   };
+
+  const handleDeleteComment = async (commentId) => {
+    try {
+      const response = await fetch(
+        `${BASE_URL}/posts/${postId}/delete/${commentId}`,
+        {
+          method: "PATCH",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            
+            userId: loggedInUserId, 
+          }),
+        }
+      );
+  
+      const updatedPost = await response.json();
+      dispatch(setPost({ post: updatedPost })); // Update the post in Redux state
+    } catch (error) {
+      console.error("Error deleting comment:", error);
+    }
+  };
+
+  const handleEditClick = (commentId, existingComment) => {
+    setEditingCommentId(commentId);
+    setEditedComment(existingComment);
+  };
+  
+  const handleUpdateComment = async (commentId) => {
+    const response = await fetch(`${BASE_URL}/posts/${postId}/edit/${commentId}`, {
+      method: "PATCH",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        
+        newComment: editedComment,
+      }),
+    });
+  
+    const updatedPost = await response.json();
+    dispatch(setPost({ post: updatedPost }));
+    setEditingCommentId(null);
+    setEditedComment("");
+  };
+
+  const handleLikeComment = async (commentId) => {
+    const response = await fetch(`${BASE_URL}/posts/${postId}/like/${commentId}`, {
+      method: "PATCH",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      }
+    });
+  
+    const updatedPost = await response.json();
+    dispatch(setPost({ post: updatedPost }));
+  };
+  
+
+  
   return (
     <WidgetWrapper m="2rem 0">
       <div sx={{ margin: "-8px 0 16px 0" }}>
@@ -189,19 +262,13 @@ const PostWidget = ({
             {comments.map((item, i) => (
               <Box key={`${name}-${i}`} sx={{ mt: "0.5rem" }}>
                 <Divider />
-                <Box
-                  sx={{ display: "flex", alignItems: "center", mt: "0.5rem" }}
-                >
+                <Box sx={{ display: "flex", alignItems: "center", mt: "0.5rem", gap: "0.5rem" }}>
                   <UserImage image={item.userpic} size="30px" />
                   <Typography
                     sx={{
                       color: palette.secondary.main,
-                      ml: "1rem",
                       fontWeight: "bold",
-                      "&:hover": {
-                        color: palette.primary.light,
-                        cursor: "pointer",
-                      },
+                      "&:hover": { color: palette.primary.light, cursor: "pointer" },
                     }}
                     onClick={() => {
                       navigate(`/profile/${item.userId}`);
@@ -210,12 +277,67 @@ const PostWidget = ({
                   >
                     {item.username}
                   </Typography>
-                  <Typography sx={{ color: main, ml: "0.5rem" }}>
-                    {item.comment}
-                  </Typography>
+
+
+                  {/* Edit Mode */}
+                  {editingCommentId === item._id ? (
+                    
+                    <Box display="flex" alignItems="center" gap={1}>
+                    <InputBase
+                      value={editedComment}
+                      onChange={(e) => setEditedComment(e.target.value)}
+                      sx={{
+                        flex: 1,
+                        backgroundColor: palette.neutral.light,
+                        borderRadius: "1rem",
+                        padding: "4px",
+                      }}
+                    />
+                    <MenuItem onClick={() => { handleUpdateComment(item._id); setAnchorEl(null); }}>
+                      Save✅
+                    </MenuItem>
+                  </Box>
+                    
+                  ) : (
+                    <Typography sx={{ color: main, flex: 1 }}>{item.comment}</Typography>
+                  )}
+
+                  {/* Menu for Edit & Delete */}
+                  {item.userId === loggedInUserId && (
+                    <Box>
+                      <IconButton onClick={(event) => setAnchorEl(event.currentTarget)}>
+                        <MoreVertIcon />
+                      </IconButton>
+                      <Menu
+                        anchorEl={anchorEl}
+                        open={Boolean(anchorEl)}
+                        onClose={() => setAnchorEl(null)}
+                      >
+                        {editingCommentId !== item._id ? 
+                          
+                        (
+                          <MenuItem onClick={() => { handleEditClick(item._id, item.comment); setAnchorEl(null); }}>
+                            Edit
+                          </MenuItem>
+                        ):<></>}
+                        <MenuItem onClick={() => { handleDeleteComment(item._id); setAnchorEl(null); }}>
+                          Delete
+                        </MenuItem>
+                      </Menu>
+                    </Box>
+                  )}
+                  {/* Like Button & Count */}
+                  <Box sx={{ marginLeft: "auto", display: "flex", alignItems: "center", gap: "0.3rem" }}>
+                    <IconButton onClick={() => handleLikeComment(item._id)}>
+                      {item.likes && item.likes[loggedInUserId] ? <FavoriteOutlined sx={{ color: "#c147e9" }} /> : <FavoriteBorderOutlined />}
+                    </IconButton>
+                    <Typography sx={{ minWidth: "20px", textAlign: "center" }}>{item.likes ? Object.keys(item.likes).length : 0}</Typography>
+                  </Box>
                 </Box>
               </Box>
             ))}
+
+
             <Divider sx={{ mt: "0.2rem" }} />
           </Box>
         )}
