@@ -101,7 +101,7 @@ input:focus {
 }
 
 /* Buttons */
-button {
+.auth-button {
   width: 100%;
   padding: 12px;
   border: none;
@@ -113,7 +113,7 @@ button {
   transition: all 0.3s ease-in-out;
 }
 
-button[type="submit"] {
+.auth-button[type="submit"] {
   width: 100%;
   background: rgb(123, 0, 255);
   color: rgb(255, 255, 255);
@@ -126,7 +126,7 @@ button[type="submit"] {
   transition: 0.3s;
 }
 
-button[type="submit"]:hover {
+.auth-button[type="submit"]:hover {
   background: #00d9ff;
 }
 .toggle-switch {
@@ -183,7 +183,7 @@ button[type="submit"]:hover {
   text-decoration: underline;
 }
 
-button[role="button"] {
+.auth-button[role="button"] {
   background: rgba(255, 255, 255, 0.1);
   border: 1px dashed white;
   padding: 12px;
@@ -191,7 +191,7 @@ button[role="button"] {
   transition: all 0.3s ease;
 }
 
-button[role="button"]:hover {
+.auth-button[role="button"]:hover {
   background: rgba(255, 255, 255, 0.2);
 }
 

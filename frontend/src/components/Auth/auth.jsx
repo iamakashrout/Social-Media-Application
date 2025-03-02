@@ -196,7 +196,7 @@ const Auth = () => {
               <label htmlFor="password" style={{ fontSize: "1.5rem" }}>Password</label>
               <input type="password" name="password" placeholder="********" onBlur={handleBlur} onChange={handleChange} value={values.password} />
 
-              <button type="submit" className="submit-btn">{isLogin ? "LOGIN" : "REGISTER"}</button>
+              <button type="submit" className="auth-button">{isLogin ? "LOGIN" : "REGISTER"}</button>
 
               <button className="link-btn normal-case" onClick={() => { setIsLogin(!isLogin); resetForm(); }}>
   {isLogin ? "Don't have an account? Register here!" : "Already have an account? Login here!"}
