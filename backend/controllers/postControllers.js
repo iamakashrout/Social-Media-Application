@@ -88,3 +88,106 @@ export const commentPost = async (req, res) => {
     res.status(404).json({ message: err.message });
   }
 }
+
+export const deleteComment = async (req, res) => {
+  try {
+    const { id, commentId } = req.params;
+    const userId = req.user.id;
+    const post = await Post.findById(id);
+    if (!post) {
+      return res.status(404).json({ message: "Post not found" });
+    }
+
+    // Find the comment
+    const comment = post.comments.find(comment => comment._id.toString() === commentId);
+    if (!comment) {
+      return res.status(404).json({ message: "Comment not found" });
+    }
+
+    // Check if the comment belongs to the logged-in user
+    if (comment.userId !== userId) {
+      return res.status(403).json({ message: "You can only delete your own comments" });
+    }
+
+
+    post.comments = post.comments.filter(comment => comment._id.toString() !== commentId);
+
+    
+    const updatedPost = await Post.findByIdAndUpdate(
+      id,
+      { comments: post.comments },
+      { new: true }
+    );
+
+    res.status(200).json(updatedPost);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
+export const editComment = async (req, res) => {
+  try {
+    const { id, commentId } = req.params;
+    const { newComment } = req.body;
+    const userId = req.user.id;
+
+    const post = await Post.findById(id);
+    if (!post) {
+      return res.status(404).json({ message: "Post not found" });
+    }
+   
+    const comment = post.comments.find(comment => comment._id.toString() === commentId);
+    if (!comment) {
+      return res.status(404).json({ message: "Comment not found" });
+    }
+   
+    if (comment.userId !== userId) {
+      return res.status(403).json({ message: "You can only edit your own comments" });
+    }
+
+    // Update the comment
+    comment.comment = newComment;
+
+    // Save the updated post
+    await post.save();
+
+    res.status(200).json(post);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
+export const likeComment = async (req, res) => {
+  try {
+      const { id,commentId } = req.params; // Post ID
+      const userId = req.user.id;
+      
+      const post = await Post.findById(id);
+      if (!post) {
+          return res.status(404).json({ message: "Post not found" });
+      }
+
+      const comment = post.comments.find(c => c._id.toString() === commentId);
+      if (!comment) {
+          return res.status(404).json({ message: "Comment not found" });
+      }
+      
+      if (!comment.likes) {
+          comment.likes = new Map();
+      }
+      
+      const isLiked = comment.likes.get(userId);
+      if (isLiked) {
+          comment.likes.delete(userId);
+      } else {
+          comment.likes.set(userId, true);
+      }
+
+      await post.save();
+      res.status(200).json(post);
+  } catch (err) {
+      res.status(500).json({ message: err.message });
+  }
+};
+
+

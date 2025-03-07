@@ -195,7 +195,8 @@ const Auth = () => {
 
               <label htmlFor="password" style={{ fontSize: "1.5rem" }}>Password</label>
               <input type="password" name="password" placeholder="********" onBlur={handleBlur} onChange={handleChange} value={values.password} />
-              <button type="submit" className="submit-btn">{isLogin ? "LOGIN" : "REGISTER"}</button>
+
+              <button type="submit" className="auth-button">{isLogin ? "LOGIN" : "REGISTER"}</button>
 
               {isLogin && (
              <div style={{ textAlign: "center", marginTop: "10px" }}> {/* Added marginTop for spacing */}
