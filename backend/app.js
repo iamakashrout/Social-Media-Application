@@ -30,14 +30,26 @@ const io = new Server(server, {
     origin: "*",
   },
 });
-app.use(express.json());
+app.use(cors());
+
 app.use(helmet());
 app.use(helmet.crossOriginResourcePolicy({ policy: "cross-origin" }));
 app.use(morgan("common"));
 app.use(bodyParser.json({ extended: true }));
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(cors());
+// app.use(cors());
 app.use("/assets", express.static(path.join(__dirname, "public//assets")));
+
+app.use(express.json()); 
+app.use(express.urlencoded({ extended: true })); 
+
+// Debugging Log Middleware
+app.use((req, res, next) => {
+  console.log("Incoming Request:", req.method, req.url);
+  console.log("Headers:", req.headers);
+  console.log("Body:", req.body);  
+  next();
+});
 
 /* FILE STORAGE */
 const storage = multer.diskStorage({

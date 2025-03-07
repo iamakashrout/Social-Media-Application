@@ -1,0 +1,109 @@
+
+
+/* Overall container */
+.verify-otp-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background: linear-gradient(to right, #2a1a4a, #3b1e68);
+}
+
+/* OTP Card */
+.verify-otp-card {
+    background: rgba(30, 15, 50, 0.9);
+    backdrop-filter: blur(12px);
+    padding: 2rem;
+    border-radius: 20px;
+    text-align: center;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+    width: 400px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: #fff;
+    animation: fadeInUp 0.8s ease-out forwards;
+}
+
+/* OTP Icon */
+.otp-icon {
+    width: 50px;
+    margin-bottom: 10px;
+}
+
+/* Heading */
+.verify-otp-card h2 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin-bottom: 10px;
+    color: #ffffff;
+}
+
+/* Text */
+.verify-otp-card p {
+    font-size: 1rem;
+    margin-bottom: 15px;
+    color: #e2e2e2;
+    line-height: 1.4;
+}
+
+/* OTP Input */
+.otp-input-container {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+.otp-input {
+    width: 50px;
+    height: 40px;
+    font-size: 1.5rem;
+    text-align: center;
+    border: 2px solid rgba(255, 255, 255, 0.6);
+    border-radius: 8px;
+    background: rgba(60, 30, 100, 0.6);
+    color: #fff;
+    outline: none;
+    transition: all 0.3s ease-in-out;
+}
+
+.otp-input:focus {
+    border-color: #caa8ff;
+    box-shadow: 0 0 10px rgba(202, 168, 255, 0.6);
+}
+
+/* Verify Button */
+.verify-otp-btn {
+    width: 70%;
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: bold;
+    color: #fff;
+    background: linear-gradient(to right, #af87ff, #7c4dff);
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+    margin-top: 10px;
+}
+
+.verify-otp-btn:hover {
+    background: linear-gradient(to right, #916cff, #693bff);
+    transform: scale(1.05);
+}
+
+.verify-otp-btn:active {
+    transform: scale(0.98);
+}
+
+/* Fade In Animation */
+@keyframes fadeInUp {
+    0% {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
