@@ -10,6 +10,9 @@ import { createTheme } from "@mui/material/styles";
 import { themeSettings } from "./theme";
 import Auth from "components/Auth/auth";
 import Messenger from "components/Messenger/Messenger";
+import ForgotPassword from "components/Auth/ForgotPassword.jsx";  
+import VerifyOtp from "components/Auth/VerifyOtp.jsx";  
+import ResetPassword from "components/Auth/ResetPassword.jsx"; 
 
 
 //DEPLOYMENT READY YAYY !
@@ -26,11 +29,14 @@ function App() {
         <ThemeProvider theme={theme}>
           <CssBaseline />
           <Routes>
-            <Route path="/" element={<Auth />} />
+          <Route path="/" element={<Auth />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/verify-otp/:email" element={<VerifyOtp />} />  
+          <Route path="/reset-password/:email" element={<ResetPassword />} />
             <Route
               path="/home"
               element={isAuth ? <HomePage /> : <Navigate to="/" />}
-            />
+            /> 
             <Route
               path="/profile/:userId"
               element={isAuth ? <ProfilePage /> : <Navigate to="/" />}

@@ -198,6 +198,17 @@ const Auth = () => {
 
               <button type="submit" className="auth-button">{isLogin ? "LOGIN" : "REGISTER"}</button>
 
+              {isLogin && (
+             <div style={{ textAlign: "center", marginTop: "10px" }}> {/* Added marginTop for spacing */}
+             <button
+               type="button"
+               className="link-btn normal-case"
+               onClick={() => navigate("/forgot-password")}
+             >
+               Forgot Password?
+             </button>
+           </div>
+         )}
               <button className="link-btn normal-case" onClick={() => { setIsLogin(!isLogin); resetForm(); }}>
   {isLogin ? "Don't have an account? Register here!" : "Already have an account? Login here!"}
 </button>
