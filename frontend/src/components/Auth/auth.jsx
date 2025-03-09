@@ -18,6 +18,7 @@ import { toast } from "react-hot-toast";
 
 import "./auth.css";
 
+
 const registerSchema = yup.object().shape({
   firstName: yup.string().required("required"),
   lastName: yup.string().required("required"),
@@ -48,16 +49,46 @@ const initialValuesLogin = {
   password: "",
 };
 
+
 const Auth = () => {
   const [isLogin, setIsLogin] = useState(true);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  const sendOtpRe = async (userData) => {
+    try {
+      toast.loading("Verifying...");
+      const response = await fetch(`${BASE_URL}/auth/sendOtp-register`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(userData),
+      });
+      toast.dismiss();
+      if (!response.ok) throw new Error("Failed to send OTP");
+      toast.success("OTP sent successfully!");
+      navigate(`/verifyRegister-otp/${userData.email}`);
+    } catch (error) {
+      toast.error(error.message);
+    }
+  };
 
   const register = async (values, onSubmitProps) => {
     const formData = new FormData();
     for (let key in values) {
       formData.append(key, values[key]);
     }
+
+    const userData = {
+      email: values.email,
+      firstName: values.firstName,
+      lastName: values.lastName,
+      password: values.password,
+      location: values.location,
+      occupation: values.occupation,
+      picturePath: "", // Will be updated later
+    };
 
     const storage = getStorage(app);
     const fileName = new Date().getTime() + values.picture?.name;
@@ -74,8 +105,12 @@ const Auth = () => {
         console.error("Upload error:", error);
       },
       () => {
-        getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+        getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
           formData.append("picturePath", downloadURL);
+          userData.picturePath = downloadURL;
+          const otpSent = await sendOtpRe(userData);
+          if (!otpSent) return; 
+
           toast.loading("Registering...");
 
           fetch(`${BASE_URL}/auth/register`, {
@@ -90,6 +125,7 @@ const Auth = () => {
               return;
             }
 
+            // await sendOtpRe(values.email);
             onSubmitProps.resetForm();
             setIsLogin(true);
             toast.success("Registered successfully!");

@@ -13,7 +13,7 @@ import Messenger from "components/Messenger/Messenger";
 import ForgotPassword from "components/Auth/ForgotPassword.jsx";  
 import VerifyOtp from "components/Auth/VerifyOtp.jsx";  
 import ResetPassword from "components/Auth/ResetPassword.jsx"; 
-
+import VerifyOtpRegister from "components/Auth/VerifyOtpRegister";
 
 //DEPLOYMENT READY YAYY !
 
@@ -30,6 +30,7 @@ function App() {
           <CssBaseline />
           <Routes>
           <Route path="/" element={<Auth />} />
+          <Route path="/verifyRegister-otp/:email" element={<VerifyOtpRegister />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/verify-otp/:email" element={<VerifyOtp />} />  
           <Route path="/reset-password/:email" element={<ResetPassword />} />
