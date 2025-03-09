@@ -26,7 +26,7 @@ const registerSchema = yup.object().shape({
   password: yup.string().required("required"),
   location: yup.string().required("required"),
   occupation: yup.string().required("required"),
-  picture: yup.mixed(),
+  picture: yup.mixed().notRequired(),  //pic optional
 });
 
 const loginSchema = yup.object().shape({
@@ -73,11 +73,16 @@ const Auth = () => {
       toast.error(error.message);
     }
   };
-
+  
+/*
   const register = async (values, onSubmitProps) => {
     const formData = new FormData();
+    // for (let key in values) {
+    //   formData.append(key, values[key]);
+    // }
+
     for (let key in values) {
-      formData.append(key, values[key]);
+      if (values[key]) formData.append(key, values[key]); // Append only non-empty fields
     }
 
     const userData = {
@@ -87,7 +92,7 @@ const Auth = () => {
       password: values.password,
       location: values.location,
       occupation: values.occupation,
-      picturePath: "", // Will be updated later
+      picturePath: `${BASE_URL}/uploads/default_profile_image.png`, // Will be updated later
     };
 
     const storage = getStorage(app);
@@ -133,8 +138,80 @@ const Auth = () => {
         });
       }
     );
+  }; */
+
+
+  //structured register code
+  const register = async (values, onSubmitProps) => {
+    const formData = new FormData();
+    for (let key in values) {
+      if (values[key]) formData.append(key, values[key]); // Append only non-empty fields
+    }
+  
+    const userData = {
+      email: values.email,
+      firstName: values.firstName,
+      lastName: values.lastName,
+      password: values.password,
+      location: values.location,
+      occupation: values.occupation,
+      picturePath: `${BASE_URL}/uploads/default_profile_image.png`, // Default pic if no picture
+    };
+  
+    // Only upload if a picture is selected
+    if (values.picture) {
+      const storage = getStorage(app);
+      const fileName = new Date().getTime() + values.picture.name;
+      const storageRef = ref(storage, fileName);
+      const uploadTask = uploadBytesResumable(storageRef, values.picture);
+  
+      uploadTask.on(
+        "state_changed",
+        (snapshot) => {
+          const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+          console.log(`Upload is ${progress}% done`);
+        },
+        (error) => {
+          console.error("Upload error:", error);
+        },
+        async () => { //Changed to async function to wait for upload
+          const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
+          formData.append("picturePath", downloadURL);
+          userData.picturePath = downloadURL;
+          await handleRegistration(userData, formData, onSubmitProps); 
+        }
+      );
+    } else {
+      //If no picture is selected, proceed with registration immediately
+      await handleRegistration(userData, formData, onSubmitProps);
+    }
+  };
+  
+  //Moved the registration logic to a separate function
+  const handleRegistration = async (userData, formData, onSubmitProps) => {
+    const otpSent = await sendOtpRe(userData);
+    if (!otpSent) return;
+  
+    toast.loading("Registering...");
+    fetch(`${BASE_URL}/auth/register`, {
+      method: "POST",
+      body: formData,
+    }).then(async (response) => {
+      const data = await response.json();
+      toast.dismiss();
+  
+      if (response.status !== 201) {
+        toast.error("Email already in use");
+        return;
+      }
+  
+      onSubmitProps.resetForm();
+      setIsLogin(true);
+      toast.success("Registered successfully!");
+    });
   };
 
+  
   const login = async (values, onSubmitProps) => {
     toast.loading("Logging in...");
 
@@ -211,7 +288,10 @@ const Auth = () => {
                     <Dropzone
                       acceptedFiles=".jpg,.jpeg,.png"
                       multiple={false}
-                      onDrop={(acceptedFiles) => setFieldValue("picture", acceptedFiles[0])}
+                      onDrop={(acceptedFiles) => {
+                        console.log("Selected file:", acceptedFiles[0]); // ✅ Debugging log
+                        setFieldValue("picture", acceptedFiles[0]);
+                      }}
                     >
                       {({ getRootProps, getInputProps }) => (
                         <div {...getRootProps()} className="dropzone">
