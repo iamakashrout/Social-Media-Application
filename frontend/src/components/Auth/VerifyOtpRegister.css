@@ -1,0 +1,118 @@
+/* Main container */
+.verify-otp-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background: linear-gradient(135deg, #1a1333, #372568);
+    padding: 20px;
+}
+
+/* OTP Card */
+.verify-otp-card {
+    background: rgba(40, 20, 60, 0.95);
+    backdrop-filter: blur(10px);
+    padding: 2.5rem;
+    border-radius: 15px;
+    text-align: center;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+    width: 100%;
+    max-width: 400px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: #fff;
+    animation: fadeInUp 0.7s ease-out forwards;
+}
+
+/* Heading */
+.verify-otp-card h2 {
+    font-size: 2rem;
+    font-weight: bold;
+    margin-bottom: 12px;
+    color: #ffffff;
+}
+
+/* Text */
+.verify-otp-card p {
+    font-size: 1rem;
+    margin-bottom: 18px;
+    color: #e2e2e2;
+    line-height: 1.5;
+}
+
+/* OTP Input Container */
+.otp-input-container {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+/* OTP Input Fields */
+.otp-input {
+    width: 45px;
+    height: 50px;
+    font-size: 1.5rem;
+    text-align: center;
+    border: 2px solid rgba(255, 255, 255, 0.6);
+    border-radius: 8px;
+    background: rgba(70, 40, 110, 0.6);
+    color: #fff;
+    outline: none;
+    transition: all 0.3s ease-in-out;
+}
+
+.otp-input:focus {
+    border-color: #caa8ff;
+    box-shadow: 0 0 12px rgba(202, 168, 255, 0.6);
+}
+
+/* Button */
+.verify-otp-btn {
+    width: 80%;
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    color: #fff;
+    background: linear-gradient(to right, #a67df8, #7b5cff);
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+}
+
+.verify-otp-btn:hover {
+    background: linear-gradient(to right, #916cff, #693bff);
+    transform: scale(1.05);
+}
+
+.verify-otp-btn:active {
+    transform: scale(0.98);
+}
+
+/* Fade In Animation */
+@keyframes fadeInUp {
+    0% {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Responsive Design */
+@media (max-width: 480px) {
+    .otp-input {
+        width: 40px;
+        height: 45px;
+        font-size: 1.3rem;
+    }
+
+    .verify-otp-btn {
+        font-size: 1rem;
+        width: 90%;
+    }
+}

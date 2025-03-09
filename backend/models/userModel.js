@@ -4,20 +4,20 @@ const userSchema = new mongoose.Schema(
   {
     firstName: {
       type: String,
-      require: true,
+      required: true,
     },
     lastName: {
       type: String,
-      require: true,
+      required: true,
     },
     email: {
       type: String,
-      require: true,
+      required: true,
       unique: true,
     },
     password: {
       type: String,
-      require: true,
+      required: true,
     },
     picturePath: {
       type: String,
@@ -39,6 +39,9 @@ const userSchema = new mongoose.Schema(
     impressions: {
       type: Number,
     },
+    isVerified: { type: Boolean, default: false }, // NEW FIELD
+    otp: { type: String }, // Store OTP temporarily
+    otpExpires: { type: Date }, // Store OTP expiration time
   },
   { timestamps: true } // timestamps maintains record for when user is created and updated
 );
