@@ -32,6 +32,8 @@ const io = new Server(server, {
 });
 app.use(cors());
 
+app.use("/uploads", express.static("uploads"));
+
 app.use(helmet());
 app.use(helmet.crossOriginResourcePolicy({ policy: "cross-origin" }));
 app.use(morgan("common"));

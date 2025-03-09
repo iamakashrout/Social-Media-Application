@@ -16,11 +16,13 @@ export const register = async (req, res) => {
       lastName,
       email,
       password,
-      picturePath,
+      // picturePath,
       friends,
       location,
       occupation,
     } = req.body;
+
+    const picturePath = req.body || "/uploads/default_profile_image.png";
 
     const salt = await bcrypt.genSalt();
     const passwordHash = await bcrypt.hash(password, salt);
