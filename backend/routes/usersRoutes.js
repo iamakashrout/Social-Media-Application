@@ -1,4 +1,7 @@
 import express from "express";
+import multer from "multer";
+import { updateUserProfile } from "../controllers/usersControllers.js";
+
 import {
   getUser,
   getUserFriends,
@@ -16,5 +19,9 @@ router.get("/search/:name", verifyToken, searchUser);
 
 /* UPDATE */
 router.patch("/:id/:friendId", verifyToken, addRemoveFriend);
+const upload = multer({ storage: multer.memoryStorage() });
+
+// **Update User Profile Route**
+router.put("/users-profile/:id", upload.single("profilePic"), updateUserProfile);
 
 export default router;
