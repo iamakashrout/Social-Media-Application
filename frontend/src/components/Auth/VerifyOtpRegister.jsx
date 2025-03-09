@@ -7,6 +7,7 @@ import "./VerifyOtpRegister.css";
 
 const VerifyOtpRegister = () => {
   const [otp, setOtp] = useState(["", "", "", "", "", ""]);
+  const [attempts, setAttempts] = useState(0);
   const { email } = useParams();
   const navigate = useNavigate();
 
@@ -46,12 +47,25 @@ const VerifyOtpRegister = () => {
         toast.success("OTP verified! Redirecting...");
         navigate("/"); // Redirect to home page
       } else {
-        toast.error(response.data.message || "Invalid OTP. Try again.");
+        handleFailedAttempt(response.data.message || "Invalid OTP. Try again.");
       }
     } catch (error) {
-      toast.error(error.response?.data?.message || "Error verifying OTP.");
+      handleFailedAttempt(error.response?.data?.message || "Error verifying OTP.");
     }
   };
+
+  const handleFailedAttempt = (message) => {
+    const newAttempts = attempts + 1;
+    setAttempts(newAttempts);
+
+    if (newAttempts >= 3) {
+      toast.error("Too many failed attempts. Redirecting to login.");
+      navigate("/");
+    } else {
+      toast.error(message);
+    }
+  };
+
 
   return (
     <div className="verify-otp-container">
