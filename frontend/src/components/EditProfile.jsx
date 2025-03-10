@@ -7,6 +7,7 @@ import { BASE_URL } from "helper.js";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import app from "../firebase";
 import { toast } from "react-hot-toast";
+import { ArrowBack } from "@mui/icons-material";
 
 const EditProfile = () => {
   const user = useSelector((state) => state.user);
@@ -86,6 +87,10 @@ const EditProfile = () => {
     }
   };
 
+  const handleBackToProfile = () => {
+    navigate(`/profile/${user._id}`);
+  };
+
   return (
     <Box display="flex" justifyContent="center" alignItems="center" minHeight="100vh" bgcolor="#f3e5f5">
       <Card sx={{ width: 500, p: 5, textAlign: "center", borderRadius: 5, boxShadow: 10, bgcolor: "white" }}>
@@ -154,6 +159,25 @@ const EditProfile = () => {
           <Button variant="contained" fullWidth sx={{ mt: 4, py: 1.5, fontSize: "1rem", borderRadius: 3, boxShadow: 3, background: "linear-gradient(45deg, #9c27b0, #6a1b9a)", color: "white" }} onClick={handleSaveChanges}>
             Save Changes
           </Button>
+          <Box display="flex" justifyContent="center" alignItems="center" mt={2}>
+          <Button 
+           variant="outlined" 
+           onClick={handleBackToProfile} 
+           sx={{ 
+           py: 1.5, 
+           fontSize: "1rem", 
+           borderRadius: 3, 
+           boxShadow: 3, 
+           color: "#8e24aa", 
+          display: "flex", 
+          alignItems: "center", 
+          borderColor: "#8e24aa" // Ensure the border color is set so the button is visible
+            }}
+           >
+           <ArrowBack sx={{ mr: 1, color: "#8e24aa" }} />
+           Back to Profile
+           </Button>
+           </Box>
         </CardContent>
       </Card>
     </Box>
