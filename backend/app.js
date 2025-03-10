@@ -30,7 +30,7 @@ const io = new Server(server, {
     origin: "*",
   },
 });
-app.use(cors());
+// app.use(cors());
 
 app.use("/uploads", express.static("uploads"));
 
@@ -52,6 +52,7 @@ app.use((req, res, next) => {
   console.log("Body:", req.body);  
   next();
 });
+app.use(cors());
 
 /* FILE STORAGE */
 const storage = multer.diskStorage({
