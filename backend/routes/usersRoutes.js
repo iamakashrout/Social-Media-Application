@@ -22,6 +22,6 @@ router.patch("/:id/:friendId", verifyToken, addRemoveFriend);
 const upload = multer({ storage: multer.memoryStorage() });
 
 // **Update User Profile Route**
-router.put("/users-profile/:id", upload.single("profilePic"), updateUserProfile);
+router.put("/users-profile/:id", updateUserProfile);
 
 export default router;
