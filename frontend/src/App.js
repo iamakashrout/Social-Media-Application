@@ -14,6 +14,7 @@ import ForgotPassword from "components/Auth/ForgotPassword.jsx";
 import VerifyOtp from "components/Auth/VerifyOtp.jsx";  
 import ResetPassword from "components/Auth/ResetPassword.jsx"; 
 import VerifyOtpRegister from "components/Auth/VerifyOtpRegister";
+import EditProfile from "components/EditProfile";
 
 //DEPLOYMENT READY YAYY !
 
@@ -50,6 +51,11 @@ function App() {
               path="/messenger"
               element={isAuth ? <Messenger /> : <Navigate to="/" />}
             />
+            <Route
+              path="/edit-profile/:userId"
+              element={isAuth ? <EditProfile /> : <Navigate to="/" />}
+            />
+
           </Routes>
         </ThemeProvider>
       </BrowserRouter>

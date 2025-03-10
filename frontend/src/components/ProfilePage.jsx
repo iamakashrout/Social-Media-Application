@@ -1,4 +1,4 @@
-import { Box, useMediaQuery } from "@mui/material";
+import { Box, useMediaQuery, Button} from "@mui/material";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
@@ -8,10 +8,12 @@ import MyPostWidget from "components/MyPost";
 import PostsWidget from "components/Posts";
 import UserWidget from "components/UserWidget";
 import { BASE_URL } from "helper.js";
+import { useNavigate } from "react-router-dom";
 
 const ProfilePage = () => {
   const loggedInUser = useSelector((state) => state.user);
   const [user, setUser] = useState(null);
+  const navigate = useNavigate();
   const { userId } = useParams();
   const token = useSelector((state) => state.token);
   const isNonMobileScreens = useMediaQuery("(min-width:1000px)");
@@ -43,6 +45,19 @@ const ProfilePage = () => {
       >
         <Box flexBasis={isNonMobileScreens ? "26%" : undefined}>
           <UserWidget userId={userId} picturePath={user.picturePath || `${BASE_URL}/uploads/default_profile_image.png`} />
+          <Box m="1rem 0" />
+          {/* Addded Edit Profile Button if logged-in user matches the profile */}
+          {loggedInUser._id === user._id && (
+            <Button
+              variant="contained"
+              color="primary"
+              fullWidth 
+              sx={{ mt: 4, py: 1.5, fontSize: "1rem", borderRadius: 3, boxShadow: 3, background: "linear-gradient(45deg, #9c27b0, #6a1b9a)", color: "white" }} 
+              onClick={() => navigate(`/edit-profile/${user._id}`)}
+            >
+              Edit Profile
+            </Button>
+          )}
           <Box m="2rem 0" />
           <FriendListWidget userId={userId} />
         </Box>
