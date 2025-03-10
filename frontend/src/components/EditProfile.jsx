@@ -8,6 +8,7 @@ import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import app from "../firebase";
 import { toast } from "react-hot-toast";
 import { ArrowBack } from "@mui/icons-material";
+import axios from "axios";
 
 const EditProfile = () => {
   const user = useSelector((state) => state.user);
@@ -25,21 +26,28 @@ const EditProfile = () => {
   const [profilePic, setProfilePic] = useState(user.picturePath);
   const [selectedFile, setSelectedFile] = useState(null);
 
+  // Handle file upload to Firebase Storage
   const handleFileChange = async (event) => {
     const file = event.target.files[0];
-    if (file) {
-      setSelectedFile(file);
-      setProfilePic(URL.createObjectURL(file)); // Show preview immediately
-      setSelectedFileName(file.name); // Show file name
-  
-      // Upload image to Firebase
+    if (!file) return;
+
+    setSelectedFile(file);
+    setProfilePic(URL.createObjectURL(file)); // Show preview immediately
+    setSelectedFileName(file.name); // Show file name
+
+    try {
+      // Upload image to Firebase Storage
       const storage = getStorage(app);
       const storageRef = ref(storage, `profile_pictures/${user._id}`);
+
       await uploadBytes(storageRef, file);
       const profilePicUrl = await getDownloadURL(storageRef);
-  
+
       setProfilePic(profilePicUrl); // Update UI with uploaded image URL
       toast.success("Profile picture uploaded successfully!");
+    } catch (error) {
+      toast.error("Failed to upload profile picture.");
+      console.error(error);
     }
   };
 
@@ -48,42 +56,33 @@ const EditProfile = () => {
   };
 
   const handleSaveChanges = async () => {
-    let profilePicUrl = profilePic;
+    try {
+      const response = await axios.put(
+        `${BASE_URL}/users/users-profile/${user._id}`,
+        {
+          firstName,
+          lastName,
+          password,
+          location,
+          occupation,
+          pictureUrl: profilePic, // Send updated profile picture URL
+        },
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
 
-    if (selectedFile) {
-      const storage = getStorage(app);
-      const storageRef = ref(storage, `profile_pictures/${user._id}`);
-      await uploadBytes(storageRef, selectedFile);
-      profilePicUrl = await getDownloadURL(storageRef);
-      setProfilePic(profilePicUrl); // Ensure UI updates immediately
-    }
-
-    const formData = new FormData();
-    formData.append("firstName", firstName);
-    formData.append("lastName", lastName);
-    formData.append("password", password);
-    formData.append("location", location);
-    formData.append("occupation", occupation);
-    formData.append("picturePath", profilePicUrl);
-
-    if (selectedFile) {
-      formData.append("profilePic", selectedFile);
-    }
-
-    const response = await fetch(`${BASE_URL}/users/users-profile/${user._id}`, {
-      method: "PUT",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-      body: formData,
-    });
-
-    if (response.status === 200) {
-      const updatedUser = await response.json();
-      dispatch({ type: "UPDATE_USER", payload: updatedUser });
-      navigate(`/profile/${user._id}`);
-    } else {
-      console.error("Failed to update profile");
+      if (response.status === 200) {
+        const updatedUser = response.data;
+        dispatch({ type: "UPDATE_USER", payload: updatedUser });
+        navigate(`/profile/${user._id}`);
+        toast.success("Profile updated successfully!");
+      } else {
+        toast.error("Failed to update profile.");
+      }
+    } catch (error) {
+      console.error("Update failed:", error);
+      toast.error("An error occurred while updating the profile.");
     }
   };
 
@@ -99,10 +98,32 @@ const EditProfile = () => {
           <Typography variant="h4" fontWeight="bold" color="black" gutterBottom>
             Edit Profile
           </Typography>
-          <Box display="flex" flexDirection="column" alignItems="center">
-            <input type="file" accept="image/*" onChange={handleFileChange} style={{ display: "block", margin: "10px auto" }} />
-            <Typography variant="body2" color="textSecondary">{selectedFileName}</Typography>
-          </Box>
+          <Box display="flex" flexDirection="row" alignItems="center" justifyContent="center" mt={1} gap={2}>
+  <Button
+    variant="outlined"
+    component="label"
+    sx={{
+      textTransform: "none",
+      fontSize: "0.9rem",
+      borderRadius: 3,
+      py: 1,
+      px: 3,
+      color: "#8e24aa",
+      borderColor: "#8e24aa",
+      "&:hover": { backgroundColor: "#f3e5f5" }
+    }}
+  >
+    Choose File
+    <input
+      type="file"
+      accept="image/*"
+      onChange={handleFileChange}
+      hidden
+    />
+  </Button>
+  <Typography variant="body2" color="textSecondary">{selectedFileName}</Typography>
+</Box>
+
           <Grid container spacing={3} mt={2}>
             <Grid item xs={12}>
               <TextField fullWidth label="First Name" value={firstName} onChange={(e) => setFirstName(e.target.value)} variant="outlined" sx={{
@@ -160,24 +181,24 @@ const EditProfile = () => {
             Save Changes
           </Button>
           <Box display="flex" justifyContent="center" alignItems="center" mt={2}>
-          <Button 
-           variant="outlined" 
-           onClick={handleBackToProfile} 
-           sx={{ 
-           py: 1.5, 
-           fontSize: "1rem", 
-           borderRadius: 3, 
-           boxShadow: 3, 
-           color: "#8e24aa", 
-          display: "flex", 
-          alignItems: "center", 
-          borderColor: "#8e24aa" // Ensure the border color is set so the button is visible
-            }}
-           >
-           <ArrowBack sx={{ mr: 1, color: "#8e24aa" }} />
-           Back to Profile
-           </Button>
-           </Box>
+            <Button 
+              variant="outlined" 
+              onClick={handleBackToProfile} 
+              sx={{ 
+                py: 1.5, 
+                fontSize: "1rem", 
+                borderRadius: 3, 
+                boxShadow: 3, 
+                color: "#8e24aa", 
+                display: "flex", 
+                alignItems: "center", 
+                borderColor: "#8e24aa"
+              }}
+            >
+              <ArrowBack sx={{ mr: 1, color: "#8e24aa" }} />
+              Back to Profile
+            </Button>
+          </Box>
         </CardContent>
       </Card>
     </Box>
