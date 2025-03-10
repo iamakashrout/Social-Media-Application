@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { Avatar, Button, TextField, Box, Typography, Card, CardContent, Grid, IconButton, InputAdornment } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { BASE_URL } from "helper.js";
-import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { getStorage, ref, getDownloadURL , uploadBytesResumable} from "firebase/storage";
 import app from "../firebase";
 import { toast } from "react-hot-toast";
 import { ArrowBack } from "@mui/icons-material";
@@ -25,29 +25,45 @@ const EditProfile = () => {
   const [occupation, setOccupation] = useState("");
   const [profilePic, setProfilePic] = useState(user.picturePath);
   const [selectedFile, setSelectedFile] = useState(null);
+  const [uploading, setUploading] = useState(false); // Track upload progress
 
   // Handle file upload to Firebase Storage
   const handleFileChange = async (event) => {
     const file = event.target.files[0];
     if (!file) return;
 
-    setSelectedFile(file);
-    setProfilePic(URL.createObjectURL(file)); // Show preview immediately
-    setSelectedFileName(file.name); // Show file name
+    setSelectedFileName(file.name);
+    setUploading(true);
 
     try {
-      // Upload image to Firebase Storage
       const storage = getStorage(app);
-      const storageRef = ref(storage, `profile_pictures/${user._id}`);
+      const fileName = `profile_pictures/${user._id}`;
+      const storageRef = ref(storage, fileName);
+      const uploadTask = uploadBytesResumable(storageRef, file);
 
-      await uploadBytes(storageRef, file);
-      const profilePicUrl = await getDownloadURL(storageRef);
-
-      setProfilePic(profilePicUrl); // Update UI with uploaded image URL
-      toast.success("Profile picture uploaded successfully!");
+      uploadTask.on(
+        "state_changed",
+        (snapshot) => {
+          const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+          console.log(`Upload is ${progress}% done`);
+        },
+        (error) => {
+          console.error("Upload error:", error);
+          toast.error("Failed to upload profile picture.");
+          setUploading(false);
+        },
+        async () => {
+          const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
+          setProfilePic(downloadURL); // Update UI
+          dispatch({ type: "UPDATE_USER", payload: { ...user, picturePath: downloadURL } }); // Update Redux store
+          toast.success("Profile picture uploaded successfully!");
+          setUploading(false);
+        }
+      );
     } catch (error) {
+      console.error("Upload error:", error);
       toast.error("Failed to upload profile picture.");
-      console.error(error);
+      setUploading(false);
     }
   };
 
