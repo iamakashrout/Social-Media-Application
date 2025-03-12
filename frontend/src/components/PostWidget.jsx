@@ -28,7 +28,7 @@ import { setPost } from "state";
 import UserImage from "tools/UserImage";
 import ReactTimeAgo from "react-time-ago";
 import { BASE_URL } from "helper.js";
-
+import { removePost } from '../state/index';
 const PostWidget = ({
   postId,
   postUserId,
@@ -157,12 +157,46 @@ const PostWidget = ({
     const updatedPost = await response.json();
     dispatch(setPost({ post: updatedPost }));
   };
+  const handleDeletePost = async (postId) => {
+    try {
+      // Check if the logged-in user is the owner of the post
+      if (postUserId !== loggedInUserId) {
+        console.error("You do not have permission to delete this post.");
+        return;
+      }
+  
+      console.log("Deleting post with ID:", postId);
+      console.log("Authorization token:", token);
+  
+      const response = await fetch(`${BASE_URL}/posts/${postId}/deletepost`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
+  
+      console.log("Response status:", response.status);
+  
+      if (!response.ok) {
+        const errorData = await response.json(); // Parse the error response
+        console.error("Error details:", errorData);
+        throw new Error("Failed to delete post");
+      }
+  
+      dispatch(removePost({ postId })); // Dispatch the removePost action
+    } catch (error) {
+      console.error("Error deleting post:", error.message);
+    }
+  };
+
   
 
   
   return (
     <WidgetWrapper m="2rem 0">
       <div sx={{ margin: "-8px 0 16px 0" }}>
+        
         <Friend
           friendId={postUserId}
           name={name}
@@ -336,12 +370,32 @@ const PostWidget = ({
                 </Box>
               </Box>
             ))}
-
+            
 
             <Divider sx={{ mt: "0.2rem" }} />
+            
           </Box>
         )}
+        
       </div>
+      
+      {postUserId === loggedInUserId && (
+        <Box sx={{ display: "flex", justifyContent: "flex-end", gap: "1rem", mt: "1rem" }}>
+          
+          <Button
+            sx={{
+              backgroundColor: "#e91e63",
+              color: "white",
+              borderRadius: "8px",
+              fontWeight: "bold",
+              ":hover": { backgroundColor: "#c2185b" },
+            }}
+            onClick={() => handleDeletePost(postId)}
+          >
+            Delete
+          </Button>
+        </Box>
+      )}
     </WidgetWrapper>
   );
 };
