@@ -1,4 +1,3 @@
-import fetch from "node-fetch";
 import dotenv from "dotenv";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { initialMessage } from "./context.js";
@@ -23,6 +22,7 @@ const getResponse = async (req, res) => {
         }
 
         console.log("🔑 GOOGLE_API_KEY:", process.env.GOOGLE_API_KEY ? "Exists" : "Not Found");
+        console.log("🚀 Node.js Version:", process.version);
 
         const { messages } = req.body;
 
