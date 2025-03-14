@@ -1,15 +1,19 @@
 import { Box, useMediaQuery } from "@mui/material";
 import { useSelector } from "react-redux";
-import Navbar from "components/navbar"; 
+import Navbar from "components/navbar";
 import UserWidget from "components/UserWidget";
 import MyPostWidget from "components/MyPost";
 import PostsWidget from "components/Posts";
 import FriendListWidget from "components/FriendList";
-import { BASE_URL } from "helper.js"; 
+import { BASE_URL } from "helper.js";
+import HelpButton from "components/Chatbot/HelpButton";
+import HelpChat from "components/Chatbot/HelpChat";
+import { useState } from "react";
 
 const HomePage = () => {
   const isNonMobileScreens = useMediaQuery("(min-width:1000px)");
   const { _id, picturePath } = useSelector((state) => state.user);
+  const [showHelpChat, setShowHelpChat] = useState(false);
 
   return (
     <Box>
@@ -38,9 +42,10 @@ const HomePage = () => {
           </Box>
         )}
       </Box>
+      <HelpButton onClick={() => setShowHelpChat(true)} />
+      {showHelpChat && <HelpChat onClose={() => setShowHelpChat(false)} />}
     </Box>
   );
 };
 
 export default HomePage;
-
