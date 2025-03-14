@@ -1,3 +1,4 @@
+import fetch from "node-fetch";
 import dotenv from "dotenv";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { initialMessage } from "./context.js";
