@@ -1,4 +1,6 @@
 import { useState, useEffect, useRef } from "react";
+import { Mic } from "lucide-react";
+import VoiceSearch from "./voicespeech.jsx";
 import "./HelpChat.css";
 import { BASE_URL } from "helper";
 
@@ -15,9 +17,12 @@ export default function HelpChat({ onClose }) {
     const sendMessage = async (event) => {
         event.preventDefault();
         if (!input.trim()) return;
+        handleSendMessage(input);
+    };
 
-        const userMessage = { role: "user", content: input };
-        setMessages((prev) => [...prev, userMessage]); // Add user message to UI
+    const handleSendMessage = async (message) => {
+        const userMessage = { role: "user", content: message };
+        setMessages((prev) => [...prev, userMessage]);
         setInput("");
         setLoading(true);
 
@@ -32,7 +37,7 @@ export default function HelpChat({ onClose }) {
             if (data.error) throw new Error(data.error);
 
             const botMessage = { role: "assistant", content: data.response };
-            setMessages((prev) => [...prev, botMessage]); // Add bot message to UI
+            setMessages((prev) => [...prev, botMessage]);
         } catch (error) {
             console.error("Error:", error);
             setMessages((prev) => [...prev, { role: "assistant", content: "Something went wrong!" }]);
@@ -58,13 +63,22 @@ export default function HelpChat({ onClose }) {
                 <div ref={messagesEndRef} />
             </div>
             <form onSubmit={sendMessage} className="help-chat-footer">
-                <input
-                    type="text"
-                    value={input}
-                    onChange={(e) => setInput(e.target.value)}
-                    placeholder="Type your message here..."
-                    className="chat-input"
-                />
+                <div className="input-container">
+                    <input
+                        type="text"
+                        value={input}
+                        onChange={(e) => setInput(e.target.value)}
+                        placeholder="Type your message here..."
+                        className="chat-input"
+                        onKeyDown={(e) => {
+                            if (e.key === "Enter") {
+                                e.preventDefault(); // Prevent unintended form submission
+                                sendMessage(e);
+                            }
+                        }}
+                    />
+                    <VoiceSearch onSearch={(transcript) => setInput(transcript)} />
+                </div>
                 <button type="submit" className="send-button" disabled={loading}>
                     {loading ? "Loading..." : "Send"}
                 </button>
