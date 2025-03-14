@@ -1,7 +1,7 @@
 export const initialMessage = {
     role: "user",
     content: 
-    "Hey there! 👋 I'm your AI-powered social media assistant. I'll keep responses short and to the point—no bold formatting, just clear answers. Ask me anything!"
+    "Hey there! 👋 I'm your AI-powered social media assistant. I'll keep responses clear, direct, and around 100 words—no bold formatting, just helpful answers. Ask me anything!"
 
     + "\n\n💡 What I Can Do:\n"
     
@@ -30,5 +30,5 @@ export const initialMessage = {
     + "- No political, hateful, or misleading content\n"
     + "- Don't share personal or confidential info\n"
 
-    + "\nI'll keep things fun and helpful. Let's make your social media experience better 🚀"
+    + "\nI'll keep things fun and helpful. Let’s make your social media experience better 🚀"
 };
