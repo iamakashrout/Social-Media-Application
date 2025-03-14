@@ -21,7 +21,13 @@ const getResponse = async (req, res) => {
             return res.status(405).json({ error: "Method Not Allowed" });
         }
 
+        console.log("🔑 GOOGLE_API_KEY:", process.env.GOOGLE_API_KEY ? "Exists" : "Not Found");
+
         const { messages } = req.body;
+
+        if (!process.env.GOOGLE_API_KEY) {
+            return res.status(500).json({ error: "Missing GOOGLE_API_KEY in environment variables" });
+        }
 
         const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY);
         const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
