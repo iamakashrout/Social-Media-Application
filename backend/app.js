@@ -41,7 +41,9 @@ app.use(bodyParser.json({ extended: true }));
 app.use(bodyParser.urlencoded({ extended: true }));
 // app.use(cors());
 app.use("/assets", express.static(path.join(__dirname, "public//assets")));
-
+app.get("/", (req, res) => {
+  res.send("Server is running!");
+});
 app.use(express.json()); 
 app.use(express.urlencoded({ extended: true })); 
 

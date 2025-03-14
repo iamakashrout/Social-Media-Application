@@ -1,0 +1,22 @@
+
+
+services:
+  frontend:
+    build: ./frontend
+    ports:
+      - "3000:3000"  
+    networks:
+      - oneworld-network
+
+  backend:
+    build: ./backend
+    ports:
+      - "5000:5000"
+    networks:
+      - oneworld-network
+    volumes:
+      - ./backend/.env:/app/.env
+
+networks:
+  oneworld-network:
+    driver: bridge
