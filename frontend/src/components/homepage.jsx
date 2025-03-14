@@ -42,7 +42,9 @@ const HomePage = () => {
           </Box>
         )}
       </Box>
-      <HelpButton onClick={() => setShowHelpChat(true)} />
+
+      {/* Hide HelpButton when HelpChat is open */}
+      {!showHelpChat && <HelpButton onClick={() => setShowHelpChat(true)} />}
       {showHelpChat && <HelpChat onClose={() => setShowHelpChat(false)} />}
     </Box>
   );
