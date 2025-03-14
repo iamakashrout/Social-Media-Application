@@ -67,10 +67,17 @@ const Navbar = () => {
             padding="0.1rem 1.5rem"
           >
             <InputBase
-              placeholder="Search..."
-              onChange={(e) => setSearchedUser(e.target.value)}
-              value={searchedUser}
-            />
+             placeholder="Search..."
+            onChange={(e) => setSearchedUser(e.target.value)}
+            value={searchedUser}
+            onKeyDown={(e) => {
+            if (e.key === "Enter") {
+            navigate(`/search/${searchedUser}`);
+            navigate(0);
+           }
+           }} //search when Enter is pressed
+          />
+
             <IconButton
               onClick={() => {
                 navigate(`/search/${searchedUser}`);

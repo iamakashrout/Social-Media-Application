@@ -52,15 +52,47 @@ export const getUser = async (req, res) => {
     }
 }
 
+// export const searchUser = async (req, res) => {
+//   try {
+//     const name = req.params.name;
+//     const user = await User.findOne({ firstName: name })
+//     res.status(200).json(user);
+//   } catch (err) {
+//     res.status(404).json({ message: err.message });
+//   }
+// }
+
 export const searchUser = async (req, res) => {
   try {
-    const name = req.params.name;
-    const user = await User.findOne({ firstName: name })
-    res.status(200).json(user);
+    const { name } = req.params;
+    let query = {};
+    
+    if (name) {
+      query = {
+        $or: [
+          { firstName: { $regex: `^${name}$`, $options: "i" } },
+          { lastName: { $regex: `^${name}$`, $options: "i" } },
+          { occupation: { $regex: `^${name}$`, $options: "i" } },
+          { location: { $regex: `^${name}$`, $options: "i" } },
+          { 
+            $expr: { 
+              $regexMatch: { 
+                input: { $concat: ["$firstName", " ", "$lastName"] }, 
+                regex: `^${name}$`, 
+                options: "i" 
+              } 
+            } 
+          }
+        ]
+      };
+    }
+    
+    const users = await User.find(query);
+    res.status(200).json(users);
   } catch (err) {
-    res.status(404).json({ message: err.message });
+    res.status(500).json({ message: err.message || "An error occurred" });
   }
-}
+};
 
 export const getUserFriends = async (req, res) => {
     try {
