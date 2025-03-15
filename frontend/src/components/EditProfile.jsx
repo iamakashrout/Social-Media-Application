@@ -17,12 +17,12 @@ const EditProfile = () => {
   const navigate = useNavigate();
 
   const [selectedFileName, setSelectedFileName] = useState("No file chosen");
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
+  const [firstName, setFirstName] = useState(user.firstName || "");
+  const [lastName, setLastName] = useState(user.lastName || "");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [location, setLocation] = useState("");
-  const [occupation, setOccupation] = useState("");
+  const [location, setLocation] = useState(user.location || "");
+  const [occupation, setOccupation] = useState(user.occupation || "");
   const [profilePic, setProfilePic] = useState(user.picturePath);
   const [selectedFile, setSelectedFile] = useState(null);
   const [uploading, setUploading] = useState(false); // Track upload progress
@@ -88,6 +88,11 @@ const EditProfile = () => {
         }
       );
 
+      if (password) {
+        response.password = password; //Only send password if user entered a new one else dont change
+      }
+
+      
       if (response.status === 200) {
         const updatedUser = response.data;
         dispatch({ type: "UPDATE_USER", payload: updatedUser });
