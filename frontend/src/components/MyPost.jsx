@@ -143,10 +143,10 @@ import { BASE_URL } from "helper.js";
           console.log("Uploading image to Cloudinary...");
           const imageFormData = new FormData();
           imageFormData.append("file", image);
-          imageFormData.append("upload_preset", "oneworld");
-          imageFormData.append("cloud_name", "dx31kszy8");
+          imageFormData.append("upload_preset", "OneWorld");
+          imageFormData.append("cloud_name", "ddenfqz4u");
   
-          const res = await fetch("https://api.cloudinary.com/v1_1/dx31kszy8/image/upload", {
+          const res = await fetch("https://api.cloudinary.com/v1_1/ddenfqz4u/image/upload", {
             method: "POST",
             body: imageFormData,
           });
