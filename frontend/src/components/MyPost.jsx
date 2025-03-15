@@ -55,81 +55,132 @@ import { BASE_URL } from "helper.js";
     const isNonMobileScreens = useMediaQuery("(min-width: 1000px)");
     const mediumMain = palette.neutral.mediumMain;
     const medium = palette.neutral.medium;
+    // const handlePost = async () => {
+    //   const formData = new FormData();
+    //   formData.append("userId", _id);
+    //   formData.append("description", post);
+    //   formData.append("category", selectedCategory);
+    //   if (image) {
+    //     const fileName = new Date().getTime() + image?.name;
+    //     const storage = getStorage(app);
+    //     const StorageRef = ref(storage, fileName);
+    //     const uploadTask = uploadBytesResumable(StorageRef, image);
+    //     uploadTask.on(
+    //       "state_changed",
+    //       (snapshot) => {
+    //         const progress =
+    //           (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+    //         console.log("Upload is " + progress + "% done");
+    //         switch (snapshot.state) {
+    //           case "paused":
+    //             console.log("Upload is paused");
+    //             break;
+    //           case "running":
+    //             console.log("Upload is running");
+    //             break;
+    //         }
+    //       },
+    //       (error) => {},
+    //       () => {
+    //         getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+    //           console.log(downloadURL);
+    //           formData.append("picture", image);
+    //           formData.append("picturePath", downloadURL);
+    //           fetch(`${BASE_URL}/posts`, {
+    //             method: "POST",
+    //             headers: { Authorization: `Bearer ${token}` },
+    //             body: formData,
+    //           }).then(async (response) => {
+    //             const posts = await response.json();
+    //             dispatch(setPosts({ posts }));
+    //             setImage(null);
+    //             setPost("");
+    //             toast.dismiss();
+    //             toast.success("Post added");
+    //           });
+    //         });
+    //       }
+    //     );
+
+
+
+    //     /*formData.append("picture", image);
+    //     formData.append("picturePath", image.name);*/
+    //   }
+  
+    //   /*const response = await fetch(`http://localhost:5000/posts`, {
+    //     method: "POST",
+    //     headers: { Authorization: `Bearer ${token}` },
+    //     body: formData,
+    //   });
+    //   const posts = await response.json();
+    //   dispatch(setPosts({ posts }));
+    //   setImage(null);
+    //   setPost("");*/
+    //   else {
+    //     const response = await fetch(`${BASE_URL}/posts`, {
+    //       method: "POST",
+    //       headers: { Authorization: `Bearer ${token}` },
+    //       body: formData,
+    //     });
+    //     const posts = await response.json();
+    //     dispatch(setPosts({ posts }));
+    //     setImage(null);
+    //     setPost("");
+    //     toast.dismiss();
+    //     toast.success("Post added");
+    //   }
+    // };
+  
     const handlePost = async () => {
       const formData = new FormData();
       formData.append("userId", _id);
       formData.append("description", post);
       formData.append("category", selectedCategory);
+  
       if (image) {
-        const fileName = new Date().getTime() + image?.name;
-        const storage = getStorage(app);
-        const StorageRef = ref(storage, fileName);
-        const uploadTask = uploadBytesResumable(StorageRef, image);
-        uploadTask.on(
-          "state_changed",
-          (snapshot) => {
-            const progress =
-              (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-            console.log("Upload is " + progress + "% done");
-            switch (snapshot.state) {
-              case "paused":
-                console.log("Upload is paused");
-                break;
-              case "running":
-                console.log("Upload is running");
-                break;
-            }
-          },
-          (error) => {},
-          () => {
-            getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-              console.log(downloadURL);
-              formData.append("picture", image);
-              formData.append("picturePath", downloadURL);
-              fetch(`${BASE_URL}/posts`, {
-                method: "POST",
-                headers: { Authorization: `Bearer ${token}` },
-                body: formData,
-              }).then(async (response) => {
-                const posts = await response.json();
-                dispatch(setPosts({ posts }));
-                setImage(null);
-                setPost("");
-                toast.dismiss();
-                toast.success("Post added");
-              });
-            });
+        try {
+          console.log("Uploading image to Cloudinary...");
+          const imageFormData = new FormData();
+          imageFormData.append("file", image);
+          imageFormData.append("upload_preset", "oneworld");
+          imageFormData.append("cloud_name", "dx31kszy8");
+  
+          const res = await fetch("https://api.cloudinary.com/v1_1/dx31kszy8/image/upload", {
+            method: "POST",
+            body: imageFormData,
+          });
+  
+          const uploadedImage = await res.json();
+          console.log("Cloudinary response:", uploadedImage);
+  
+          if (uploadedImage.url) {
+            formData.append("picture", image);
+            formData.append("picturePath", uploadedImage.url);
+            console.log("image uploaded successfully, post getting created...");
+          } else {
+            throw new Error("Image upload failed");
           }
-        );
-
-
-
-        /*formData.append("picture", image);
-        formData.append("picturePath", image.name);*/
+        } catch (error) {
+          console.error("Cloudinary upload error:", error);
+          toast.error("failed to upload image.");
+          return;
+        }
       }
   
-      /*const response = await fetch(`http://localhost:5000/posts`, {
+      console.log("Submitting post request...");
+      const response = await fetch(`${BASE_URL}/posts`, {
         method: "POST",
         headers: { Authorization: `Bearer ${token}` },
         body: formData,
       });
+  
       const posts = await response.json();
       dispatch(setPosts({ posts }));
       setImage(null);
-      setPost("");*/
-      else {
-        const response = await fetch(`${BASE_URL}/posts`, {
-          method: "POST",
-          headers: { Authorization: `Bearer ${token}` },
-          body: formData,
-        });
-        const posts = await response.json();
-        dispatch(setPosts({ posts }));
-        setImage(null);
-        setPost("");
-        toast.dismiss();
-        toast.success("Post added");
-      }
+      setPost("");
+      toast.dismiss();
+      toast.success("Post added");
     };
   
     return (
