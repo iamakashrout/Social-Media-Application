@@ -28,6 +28,45 @@ const EditProfile = () => {
   const [uploading, setUploading] = useState(false); // Track upload progress
 
   // Handle file upload to Firebase Storage
+  // const handleFileChange = async (event) => {
+  //   const file = event.target.files[0];
+  //   if (!file) return;
+
+  //   setSelectedFileName(file.name);
+  //   setUploading(true);
+
+  //   try {
+  //     const storage = getStorage(app);
+  //     const fileName = `profile_pictures/${user._id}`;
+  //     const storageRef = ref(storage, fileName);
+  //     const uploadTask = uploadBytesResumable(storageRef, file);
+
+  //     uploadTask.on(
+  //       "state_changed",
+  //       (snapshot) => {
+  //         const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+  //         console.log(`Upload is ${progress}% done`);
+  //       },
+  //       (error) => {
+  //         console.error("Upload error:", error);
+  //         toast.error("Failed to upload profile picture.");
+  //         setUploading(false);
+  //       },
+  //       async () => {
+  //         const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
+  //         setProfilePic(downloadURL); // Update UI
+  //         dispatch({ type: "UPDATE_USER", payload: { ...user, picturePath: downloadURL } }); // Update Redux store
+  //         toast.success("Profile picture uploaded successfully!");
+  //         setUploading(false);
+  //       }
+  //     );
+  //   } catch (error) {
+  //     console.error("Upload error:", error);
+  //     toast.error("Failed to upload profile picture.");
+  //     setUploading(false);
+  //   }
+  // };
+
   const handleFileChange = async (event) => {
     const file = event.target.files[0];
     if (!file) return;
@@ -36,36 +75,35 @@ const EditProfile = () => {
     setUploading(true);
 
     try {
-      const storage = getStorage(app);
-      const fileName = `profile_pictures/${user._id}`;
-      const storageRef = ref(storage, fileName);
-      const uploadTask = uploadBytesResumable(storageRef, file);
+      console.log("Uploading image to Cloudinary...");
+      const imageFormData = new FormData();
+      imageFormData.append("file", file);
+      imageFormData.append("upload_preset", "OneWorld");
+      imageFormData.append("cloud_name", "ddenfqz4u");
 
-      uploadTask.on(
-        "state_changed",
-        (snapshot) => {
-          const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-          console.log(`Upload is ${progress}% done`);
-        },
-        (error) => {
-          console.error("Upload error:", error);
-          toast.error("Failed to upload profile picture.");
-          setUploading(false);
-        },
-        async () => {
-          const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
-          setProfilePic(downloadURL); // Update UI
-          dispatch({ type: "UPDATE_USER", payload: { ...user, picturePath: downloadURL } }); // Update Redux store
-          toast.success("Profile picture uploaded successfully!");
-          setUploading(false);
-        }
-      );
+      const res = await fetch("https://api.cloudinary.com/v1_1/ddenfqz4u/image/upload", {
+        method: "POST",
+        body: imageFormData,
+      });
+
+      const uploadedImage = await res.json();
+      console.log("Cloudinary response:", uploadedImage);
+
+      if (uploadedImage.url) {
+        setProfilePic(uploadedImage.url); 
+        dispatch({ type: "UPDATE_USER", payload: { ...user, picturePath: uploadedImage.url } }); // Update Redux store
+        toast.success("Profile picture uploaded successfully!");
+      } else {
+        throw new Error("Image upload failed");
+      }
     } catch (error) {
-      console.error("Upload error:", error);
+      console.error("Cloudinary upload error:", error);
       toast.error("Failed to upload profile picture.");
+    } finally {
       setUploading(false);
     }
   };
+
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);

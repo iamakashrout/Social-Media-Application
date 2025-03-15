@@ -142,11 +142,59 @@ const Auth = () => {
 
 
   //structured register code
+  // const register = async (values, onSubmitProps) => {
+  //   const formData = new FormData();
+  //   for (let key in values) {
+  //     if (values[key]) formData.append(key, values[key]); // Append only non-empty fields
+  //   }
+  
+  //   const userData = {
+  //     email: values.email,
+  //     firstName: values.firstName,
+  //     lastName: values.lastName,
+  //     password: values.password,
+  //     location: values.location,
+  //     occupation: values.occupation,
+  //     picturePath: `${BASE_URL}/uploads/default_profile_image.png`, // Default pic if no picture
+  //   };
+  
+  //   // Only upload if a picture is selected
+  //   if (values.picture) {
+  //     const storage = getStorage(app);
+  //     const fileName = new Date().getTime() + values.picture.name;
+  //     const storageRef = ref(storage, fileName);
+  //     const uploadTask = uploadBytesResumable(storageRef, values.picture);
+  
+  //     uploadTask.on(
+  //       "state_changed",
+  //       (snapshot) => {
+  //         const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+  //         console.log(`Upload is ${progress}% done`);
+  //       },
+  //       (error) => {
+  //         console.error("Upload error:", error);
+  //       },
+  //       async () => { //Changed to async function to wait for upload
+  //         const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
+  //         formData.append("picturePath", downloadURL);
+  //         userData.picturePath = downloadURL;
+  //         await handleRegistration(userData, formData, onSubmitProps); 
+  //       }
+  //     );
+  //   } else {
+  //     //If no picture is selected, proceed with registration immediately
+  //     await handleRegistration(userData, formData, onSubmitProps);
+  //   }
+  // };
+  
   const register = async (values, onSubmitProps) => {
+    console.log("Starting registration process...");
     const formData = new FormData();
     for (let key in values) {
-      if (values[key]) formData.append(key, values[key]); // Append only non-empty fields
+      if (values[key]) formData.append(key, values[key]); 
     }
+  
+    console.log("Form data prepared:", values);
   
     const userData = {
       email: values.email,
@@ -155,36 +203,40 @@ const Auth = () => {
       password: values.password,
       location: values.location,
       occupation: values.occupation,
-      picturePath: `${BASE_URL}/uploads/default_profile_image.png`, // Default pic if no picture
+      picturePath: `${BASE_URL}/uploads/default_profile_image.png`, 
     };
   
-    // Only upload if a picture is selected
+    console.log("User data before image upload:", userData);
     if (values.picture) {
-      const storage = getStorage(app);
-      const fileName = new Date().getTime() + values.picture.name;
-      const storageRef = ref(storage, fileName);
-      const uploadTask = uploadBytesResumable(storageRef, values.picture);
+      try {
+        console.log("Uploading image to Cloudinary...");
+        const imageFormData = new FormData();
+        imageFormData.append("file", values.picture);
+        imageFormData.append("upload_preset", "OneWorld");
+        imageFormData.append("cloud_name", "ddenfqz4u");
   
-      uploadTask.on(
-        "state_changed",
-        (snapshot) => {
-          const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-          console.log(`Upload is ${progress}% done`);
-        },
-        (error) => {
-          console.error("Upload error:", error);
-        },
-        async () => { //Changed to async function to wait for upload
-          const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
-          formData.append("picturePath", downloadURL);
-          userData.picturePath = downloadURL;
-          await handleRegistration(userData, formData, onSubmitProps); 
+        const res = await fetch("https://api.cloudinary.com/v1_1/ddenfqz4u/image/upload", {
+          method: "POST",
+          body: imageFormData,
+        });
+  
+        const uploadedImage = await res.json();
+        console.log("Cloudinary response:", uploadedImage);
+  
+        if (uploadedImage.url) {
+          formData.append("picturePath", uploadedImage.url);
+          userData.picturePath = uploadedImage.url;
+          console.log("Image uploaded successfully, updated userData:", userData);
         }
-      );
-    } else {
-      //If no picture is selected, proceed with registration immediately
-      await handleRegistration(userData, formData, onSubmitProps);
+      } catch (error) {
+        console.error("Cloudinary upload error:", error);
+      }
     }
+  
+    console.log("Final user data before registration:", userData);
+    console.log("Submitting registration request...");
+    await handleRegistration(userData, formData, onSubmitProps);
+    console.log("Registration process completed.");
   };
   
   //Moved the registration logic to a separate function

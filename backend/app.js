@@ -16,6 +16,7 @@ import messageRoutes from "./routes/messageRoutes.js";
 import { register } from "./controllers/authControllers.js";
 import { createPost } from "./controllers/postControllers.js";
 import { verifyToken } from "./middleware/auth.js";
+import chatbotRoutes from "./routes/chatbotRoutes.js";
 import http from "http";
 import { Server } from "socket.io";
 
@@ -77,6 +78,7 @@ app.use("/users", usersRoutes);
 app.use("/posts", postRoutes);
 app.use("/conversations", conversationRoutes);
 app.use("/messages", messageRoutes);
+app.use("/api", chatbotRoutes);
 
 /* MONGOOSE SETUP */
 mongoose

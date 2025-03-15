@@ -1,0 +1,22 @@
+.help-button {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    padding: 14px 28px;
+    background: linear-gradient(135deg, #7b3fe4, #9b50ff);
+    color: white;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+    box-shadow: 0 0 12px rgba(155, 80, 255, 0.8);
+    transition: all 0.3s ease-in-out;
+    z-index: 9999;
+}
+
+.help-button:hover {
+    transform: scale(1.1);
+    background: linear-gradient(135deg, #9b50ff, #bb66ff);
+    box-shadow: 0 0 18px rgba(155, 80, 255, 1);
+}
