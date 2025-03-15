@@ -4,7 +4,6 @@
     right: 20px;
     width: 380px;
     background: rgba(25, 12, 52, 0.9);
-    backdrop-filter: blur(12px);
     color: white;
     border-radius: 16px;
     box-shadow: 0px 4px 20px rgba(155, 80, 255, 0.4);
@@ -48,7 +47,6 @@
     padding: 12px;
     display: flex;
     flex-direction: column;
-    backdrop-filter: blur(5px);
 }
 
 .placeholder-text {
@@ -166,4 +164,62 @@
 
 .stop-button:hover {
     background-color: #cc0000;
+}
+
+.input-container {
+    display: flex;
+    align-items: center;
+    position: relative;
+    width: 100%;
+}
+
+.chat-input {
+    flex-grow: 1;
+    height: 50px;
+    padding: 10px;
+    padding-right: 50px;
+    border-radius: 8px;
+    border: none;
+    font-size: 14px;
+    outline: none;
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+}
+
+.input-container:focus-within {
+    filter: none !important;
+}
+
+
+.mic-button {
+    position: absolute;
+    right: 10px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    font-size: 20px;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.2s ease;
+}
+
+.mic-button svg {
+    color: white;
+}
+
+.mic-button:hover {
+    transform: scale(1.1);
+}
+
+.mic-button.listening {
+    animation: pulse 1.5s infinite;
+    box-shadow: 0 0 10px rgba(155, 80, 255, 0.8);
+}
+
+@keyframes pulse {
+    0% { box-shadow: 0 0 10px rgba(155, 80, 255, 0.8); }
+    50% { box-shadow: 0 0 20px rgba(155, 80, 255, 0.5); }
+    100% { box-shadow: 0 0 10px rgba(155, 80, 255, 0.8); }
 }
