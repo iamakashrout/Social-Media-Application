@@ -3,14 +3,12 @@ import { Mic, Volume2 } from "lucide-react";
 import VoiceSearch from "./voicespeech.jsx";
 import "./HelpChat.css";
 import { BASE_URL } from "helper";
-import { useSpeechSynthesis } from "react-speech-kit";
 
 export default function HelpChat({ onClose }) {
     const [messages, setMessages] = useState([]);
     const [input, setInput] = useState("");
     const [loading, setLoading] = useState(false);
     const messagesEndRef = useRef(null);
-    const { speak } = useSpeechSynthesis();
 
     useEffect(() => {
         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -48,6 +46,11 @@ export default function HelpChat({ onClose }) {
         }
     };
 
+    const handleTextToSpeech = (text) => {
+        const utterance = new SpeechSynthesisUtterance(text);
+        window.speechSynthesis.speak(utterance);
+    };
+
     return (
         <div className="help-chat">
             <div className="help-chat-header">
@@ -62,7 +65,7 @@ export default function HelpChat({ onClose }) {
                         {msg.role === "assistant" && (
                             <button 
                                 className="tts-button"
-                                onClick={() => speak({ text: msg.content })}
+                                onClick={() => handleTextToSpeech(msg.content)}
                                 title="Listen"
                             >
                                 <Volume2 size={14} />
