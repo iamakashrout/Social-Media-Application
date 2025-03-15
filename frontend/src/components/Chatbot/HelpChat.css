@@ -14,6 +14,20 @@
     z-index: 1000;
 }
 
+.tts-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.7);
+    margin-left: 6px;
+    transition: color 0.2s ease;
+}
+
+.tts-button:hover {
+    color: #bb86fc;
+}
+
 /* Header */
 .help-chat-header {
     display: flex;

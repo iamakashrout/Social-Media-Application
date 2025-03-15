@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { Mic } from "lucide-react";
+import { Mic, Volume2 } from "lucide-react";
 import VoiceSearch from "./voicespeech.jsx";
 import "./HelpChat.css";
 import { BASE_URL } from "helper";
@@ -46,6 +46,11 @@ export default function HelpChat({ onClose }) {
         }
     };
 
+    const handleTextToSpeech = (text) => {
+        const utterance = new SpeechSynthesisUtterance(text);
+        window.speechSynthesis.speak(utterance);
+    };
+
     return (
         <div className="help-chat">
             <div className="help-chat-header">
@@ -57,6 +62,15 @@ export default function HelpChat({ onClose }) {
                 {messages.map((msg, index) => (
                     <div key={index} className={`message ${msg.role === "user" ? "user-message" : "bot-message"}`}>
                         {msg.content}
+                        {msg.role === "assistant" && (
+                            <button 
+                                className="tts-button"
+                                onClick={() => handleTextToSpeech(msg.content)}
+                                title="Listen"
+                            >
+                                <Volume2 size={14} />
+                            </button>
+                        )}
                     </div>
                 ))}
                 {loading && <p className="loading">Loading...</p>}
@@ -72,7 +86,7 @@ export default function HelpChat({ onClose }) {
                         className="chat-input"
                         onKeyDown={(e) => {
                             if (e.key === "Enter") {
-                                e.preventDefault(); // Prevent unintended form submission
+                                e.preventDefault();
                                 sendMessage(e);
                             }
                         }}
