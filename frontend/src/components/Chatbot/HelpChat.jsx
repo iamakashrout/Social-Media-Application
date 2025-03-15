@@ -1,14 +1,16 @@
 import { useState, useEffect, useRef } from "react";
-import { Mic } from "lucide-react";
+import { Mic, Volume2 } from "lucide-react";
 import VoiceSearch from "./voicespeech.jsx";
 import "./HelpChat.css";
 import { BASE_URL } from "helper";
+import { useSpeechSynthesis } from "react-speech-kit";
 
 export default function HelpChat({ onClose }) {
     const [messages, setMessages] = useState([]);
     const [input, setInput] = useState("");
     const [loading, setLoading] = useState(false);
     const messagesEndRef = useRef(null);
+    const { speak } = useSpeechSynthesis();
 
     useEffect(() => {
         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -57,6 +59,15 @@ export default function HelpChat({ onClose }) {
                 {messages.map((msg, index) => (
                     <div key={index} className={`message ${msg.role === "user" ? "user-message" : "bot-message"}`}>
                         {msg.content}
+                        {msg.role === "assistant" && (
+                            <button 
+                                className="tts-button"
+                                onClick={() => speak({ text: msg.content })}
+                                title="Listen"
+                            >
+                                <Volume2 size={14} />
+                            </button>
+                        )}
                     </div>
                 ))}
                 {loading && <p className="loading">Loading...</p>}
@@ -72,7 +83,7 @@ export default function HelpChat({ onClose }) {
                         className="chat-input"
                         onKeyDown={(e) => {
                             if (e.key === "Enter") {
-                                e.preventDefault(); // Prevent unintended form submission
+                                e.preventDefault();
                                 sendMessage(e);
                             }
                         }}
