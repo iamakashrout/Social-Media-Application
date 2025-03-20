@@ -58,13 +58,13 @@ const PostsWidget = ({ userId, isProfile = false }) => {
     }
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-  const sortedPosts=posts.slice().sort(function (p1, p2) {
-    return Object.keys(p1.likes).length - Object.keys(p2.likes).length;
-  });
+  // const sortedPosts=posts.slice().sort(function (p1, p2) {
+  //   return Object.keys(p1.likes).length - Object.keys(p2.likes).length;
+  // });
 
-  // const sortedPosts = Array.isArray(posts)
-  // ? posts.slice().sort((p1, p2) => Object.keys(p1.likes).length - Object.keys(p2.likes).length)
-  // : [];
+  const sortedPosts = Array.isArray(posts)
+  ? posts.slice().sort((p1, p2) => Object.keys(p1.likes).length - Object.keys(p2.likes).length)
+  : [];
 
 
   var viewPosts = posts;

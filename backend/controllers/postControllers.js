@@ -140,7 +140,7 @@ export const commentPost = async (req, res) => {
      const title = `${name} commented on your post!`;
      const field = "comment";
      const postOwner = postCreator.email;
-     console.log("id inside comment func ",postOwnerId);
+     //console.log("id inside comment func ",postOwnerId);
      await add_notif(postOwner,title,field);
 
      res.status(200).json(updatedPost);
