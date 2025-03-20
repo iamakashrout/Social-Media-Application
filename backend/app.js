@@ -19,6 +19,7 @@ import { verifyToken } from "./middleware/auth.js";
 import chatbotRoutes from "./routes/chatbotRoutes.js";
 import http from "http";
 import { Server } from "socket.io";
+import notifsRoutes from "./routes/notifsRoutes.js";
 
 /* CONFIGURATION */
 const __filename = fileURLToPath(import.meta.url);
@@ -79,6 +80,7 @@ app.use("/posts", postRoutes);
 app.use("/conversations", conversationRoutes);
 app.use("/messages", messageRoutes);
 app.use("/api", chatbotRoutes);
+app.use("/notif", notifsRoutes);
 
 /* MONGOOSE SETUP */
 mongoose
