@@ -21,7 +21,10 @@ const PostsWidget = ({ userId, isProfile = false }) => {
   
   const dispatch = useDispatch();
   const posts = useSelector((state) => state.posts);
+  // const [posts, setPosts] = useState([]);
+  //console.log("posts: ", posts);
   const token = useSelector((state) => state.token);
+  //console.log("token: ", token);
 
   const getPosts = async () => {
     const response = await fetch(`${BASE_URL}/posts`, {
@@ -29,6 +32,7 @@ const PostsWidget = ({ userId, isProfile = false }) => {
       headers: { Authorization: `Bearer ${token}` },
     });
     const data = await response.json();
+    //console.log("data inside posts: ", data);
     dispatch(setPosts({ posts: data }));
   };
 
@@ -42,6 +46,8 @@ const PostsWidget = ({ userId, isProfile = false }) => {
     );
     const data = await response.json();
     dispatch(setPosts({ posts: data }));
+    // setPosts(data);
+    // setPosts(Array.isArray(data) ? data : []);
   };
 
   useEffect(() => {
@@ -52,9 +58,14 @@ const PostsWidget = ({ userId, isProfile = false }) => {
     }
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-  const sortedPosts=posts.slice().sort(function (p1, p2) {
-    return Object.keys(p1.likes).length - Object.keys(p2.likes).length;
-  });
+  // const sortedPosts=posts.slice().sort(function (p1, p2) {
+  //   return Object.keys(p1.likes).length - Object.keys(p2.likes).length;
+  // });
+
+  const sortedPosts = Array.isArray(posts)
+  ? posts.slice().sort((p1, p2) => Object.keys(p1.likes).length - Object.keys(p2.likes).length)
+  : [];
+
 
   var viewPosts = posts;
   if (selectedOrder === "Latest") {
