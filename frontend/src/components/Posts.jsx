@@ -6,25 +6,33 @@ import PostWidget from "./PostWidget";
 import { Box } from "@mui/system";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { BASE_URL } from "helper.js";
+import FriendListWidget from "./FriendList";
 
 const PostsWidget = ({ userId, isProfile = false }) => {
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [anchorEl, setAnchorEl] = useState(null);
   const [selectedOrder, setSelectedOrder] = useState("Latest");
   const [anchorEl2, setAnchorEl2] = useState(null);
+  const [showFriendsPosts, setShowFriendsPosts] = useState(false);
+  const [friendsPosts, setFriendsPosts] = useState([]);
+  const [friendList, setFriendList] = useState([]);
   const handleCategorySelect = (category) => {
     setSelectedCategory(category);
   }
   const handleOrderSelect = (order) => {
     setSelectedOrder(order);
   }
-  
+  const handleFriendsPosts = () => {
+    setShowFriendsPosts(!showFriendsPosts);
+  }
+
   const dispatch = useDispatch();
   const posts = useSelector((state) => state.posts);
   // const [posts, setPosts] = useState([]);
   //console.log("posts: ", posts);
   const token = useSelector((state) => state.token);
   //console.log("token: ", token);
+  const friends = useSelector((state) => state.user.friends);
 
   const getPosts = async () => {
     const response = await fetch(`${BASE_URL}/posts`, {
@@ -50,6 +58,21 @@ const PostsWidget = ({ userId, isProfile = false }) => {
     // setPosts(Array.isArray(data) ? data : []);
   };
 
+  const getFriendsPosts = async () => {
+    const friendIds = friends.map(friend => friend._id);
+    const promises = friendIds.map(id => fetch(
+      `${BASE_URL}/posts/${id}/posts`,
+      {
+        method: "GET",
+        headers: { Authorization: `Bearer ${token}` },
+      }
+    ).then(response => response.json()));
+    
+    const postsData = await Promise.all(promises);
+    const allFriendsPosts = postsData.flat();
+    setFriendsPosts(allFriendsPosts);
+  };
+
   useEffect(() => {
     if (isProfile) {
       getUserPosts();
@@ -61,6 +84,11 @@ const PostsWidget = ({ userId, isProfile = false }) => {
   // const sortedPosts=posts.slice().sort(function (p1, p2) {
   //   return Object.keys(p1.likes).length - Object.keys(p2.likes).length;
   // });
+useEffect(() => {
+    if (showFriendsPosts) {
+      getFriendsPosts();
+    }
+  }, [showFriendsPosts, friends]);
 
   const sortedPosts = Array.isArray(posts)
   ? posts.slice().sort((p1, p2) => Object.keys(p1.likes).length - Object.keys(p2.likes).length)
@@ -80,7 +108,9 @@ const PostsWidget = ({ userId, isProfile = false }) => {
       return p.category === selectedCategory;
     })
   }
-
+if (showFriendsPosts) {
+    viewPosts = friendsPosts;
+  }
 
   return (
     <>
@@ -137,6 +167,24 @@ const PostsWidget = ({ userId, isProfile = false }) => {
             Health
           </MenuItem>
         </Menu>
+        <Button
+          onClick={handleFriendsPosts}
+          sx={{
+            backgroundColor: "silver",
+            color: "black",
+            fontWeight: "bold",
+            fontSize: "0.7rem",
+            padding: "4px 8px",
+            textTransform: "uppercase",
+            marginRight: "16px",
+            borderRadius: "0.75rem",
+            ":hover": {
+              backgroundColor: "#c147e9",
+            },
+          }}
+        >
+          {showFriendsPosts ? "Show All Posts" : "Show Posts By Friends"}
+        </Button>
 
         <Button
           onClick={(event) => setAnchorEl2(event.currentTarget)}
