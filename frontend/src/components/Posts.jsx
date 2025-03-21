@@ -6,7 +6,7 @@ import PostWidget from "./PostWidget";
 import { Box } from "@mui/system";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { BASE_URL } from "helper.js";
-import FriendListWidget from "./FriendList";
+
 
 const PostsWidget = ({ userId, isProfile = false }) => {
   const [selectedCategory, setSelectedCategory] = useState(null);
@@ -15,7 +15,6 @@ const PostsWidget = ({ userId, isProfile = false }) => {
   const [anchorEl2, setAnchorEl2] = useState(null);
   const [showFriendsPosts, setShowFriendsPosts] = useState(false);
   const [friendsPosts, setFriendsPosts] = useState([]);
-  const [friendList, setFriendList] = useState([]);
   const handleCategorySelect = (category) => {
     setSelectedCategory(category);
   }
@@ -58,20 +57,26 @@ const PostsWidget = ({ userId, isProfile = false }) => {
     // setPosts(Array.isArray(data) ? data : []);
   };
 
-  const getFriendsPosts = async () => {
-    const friendIds = friends.map(friend => friend._id);
-    const promises = friendIds.map(id => fetch(
-      `${BASE_URL}/posts/${id}/posts`,
-      {
-        method: "GET",
-        headers: { Authorization: `Bearer ${token}` },
-      }
-    ).then(response => response.json()));
+  // const getFriendsPosts = async () => {
+  //   const friendIds = friends.map(friend => friend._id);
+  //   const promises = friendIds.map(id => fetch(
+  //     `${BASE_URL}/posts/${id}/posts`,
+  //     {
+  //       method: "GET",
+  //       headers: { Authorization: `Bearer ${token}` },
+  //     }
+  //   ).then(response => response.json()));
     
-    const postsData = await Promise.all(promises);
-    const allFriendsPosts = postsData.flat();
-    setFriendsPosts(allFriendsPosts);
-  };
+  //   const postsData = await Promise.all(promises);
+  //   const allFriendsPosts = postsData.flat();
+  //   allFriendsPosts.sort((a, b) => {
+  //     const dateA = new Date(a.createdAt);
+  //     const dateB = new Date(b.createdAt);
+  //     return dateB - dateA; 
+  //   });
+    
+  //   setFriendsPosts(allFriendsPosts);
+  // };
 
   useEffect(() => {
     if (isProfile) {
@@ -84,11 +89,11 @@ const PostsWidget = ({ userId, isProfile = false }) => {
   // const sortedPosts=posts.slice().sort(function (p1, p2) {
   //   return Object.keys(p1.likes).length - Object.keys(p2.likes).length;
   // });
-useEffect(() => {
-    if (showFriendsPosts) {
-      getFriendsPosts();
-    }
-  }, [showFriendsPosts, friends]);
+// useEffect(() => {
+//     if (showFriendsPosts) {
+//       getFriendsPosts();
+//     }
+//   }, [showFriendsPosts, friends]);
 
   const sortedPosts = Array.isArray(posts)
   ? posts.slice().sort((p1, p2) => Object.keys(p1.likes).length - Object.keys(p2.likes).length)
@@ -109,7 +114,9 @@ useEffect(() => {
     })
   }
 if (showFriendsPosts) {
-    viewPosts = friendsPosts;
+    viewPosts = viewPosts.filter(function (p) {
+      return friends.some(friend => friend._id === p.userId);
+    });
   }
 
   return (
