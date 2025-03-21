@@ -157,7 +157,7 @@ export const addRemoveFriend = async (req, res) => {
         const friend_id = friendId;
         const friend_name = friend.firstName;
 
-        const isAddingFriend = !user.friends.includes(friendId); // true if adding, false if removing
+        const isAddingFriend = user.friends.includes(friendId); // true if adding, false if removing
 
         const keyword = isAddingFriend ? "added to" : "removed from";
         const title1 = `${friend_name} has been ${keyword} your friend list!`;

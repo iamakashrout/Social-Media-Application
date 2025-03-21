@@ -59,6 +59,7 @@ export const getUserPosts = async (req, res) => {
 /* UPDATE POSTS */
 export const likePost = async (req, res) => {
     try {
+      console.log('post liked');
         const { id } = req.params;
         const { userId } = req.body;
         const post = await Post.findById(id);
@@ -84,6 +85,7 @@ export const likePost = async (req, res) => {
         const postOwner = postCreator.email;
 
         if(!isLiked){
+          console.log('add notif called');
             await add_notif(postOwner,title,field);
         }
 
