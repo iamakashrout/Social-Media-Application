@@ -2,8 +2,10 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   mode: "light",
-  user: null,
-  token: null,
+  // user: null,
+  // token: null,
+  user: JSON.parse(localStorage.getItem("user")) || null,
+  token: localStorage.getItem("token") || null,
   posts: [],
 };
 
@@ -21,6 +23,8 @@ export const authSlice = createSlice({
     setLogout: (state) => {
       state.user = null;
       state.token = null;
+      localStorage.removeItem("user");  // Clear user from localStorage
+      localStorage.removeItem("token"); // Clear token from localStorage
     },
     setFriends: (state, action) => {
       if (state.user) {
