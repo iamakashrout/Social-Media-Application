@@ -283,6 +283,10 @@ const Auth = () => {
     const data = await response.json();
     onSubmitProps.resetForm();
 
+    // Store user and token in localStorage
+    localStorage.setItem("user", JSON.stringify(data.user));
+    localStorage.setItem("token", data.token);
+
     dispatch(setLogin({ user: data.user, token: data.token }));
     navigate("/home");
     toast.success("Logged in successfully!");

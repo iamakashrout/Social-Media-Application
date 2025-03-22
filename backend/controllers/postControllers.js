@@ -1,6 +1,9 @@
 import Post from "../models/postModel.js";
 import User from "../models/userModel.js";
 
+import { add_notif } from "./notif/addNotifController.js";
+import {postNotif} from "./notif/postNotifsControllers.js";
+
 /* CREATE POST */
 export const createPost = async (req, res) => {
   try {
@@ -20,6 +23,11 @@ export const createPost = async (req, res) => {
     });
     await newPost.save();
     const post = await Post.find();
+    console.log('firstName: ', user.firstName);
+    //notification
+    const title = `${user.firstName} posted something!`;
+    await postNotif(user.email,title,"post");
+
     res.status(201).json(post);
   } catch (err) {
     res.status(409).json({ message: err.message });
@@ -51,10 +59,12 @@ export const getUserPosts = async (req, res) => {
 /* UPDATE POSTS */
 export const likePost = async (req, res) => {
     try {
+      console.log('post liked');
         const { id } = req.params;
         const { userId } = req.body;
         const post = await Post.findById(id);
         const isLiked = post.likes.get(userId);
+
         if (isLiked) {
             post.likes.delete(userId);
         } else {
@@ -65,6 +75,20 @@ export const likePost = async (req, res) => {
             { likes: post.likes },
             { new: true }
         );
+
+        //notification 
+        const postCreator = await User.findById(post.userId);
+        const user = await User.findById(userId);
+        const name = user.firstName;  
+        const title = `${name} liked your post!`;
+        const field = "like_post";
+        const postOwner = postCreator.email;
+
+        if(!isLiked){
+          console.log('add notif called');
+            await add_notif(postOwner,title,field);
+        }
+
         res.status(200).json(updatedPost);
     } catch (err) {
         res.status(404).json({ message: err.message });
@@ -110,7 +134,19 @@ export const commentPost = async (req, res) => {
       { comments: post.comments },
       { new: true }
     );
-      res.status(200).json(updatedPost);
+
+      //notification 
+     const postCreator = await User.findById(post.userId);
+     const user = await User.findById(userId);
+     const name = user.firstName;  
+     const title = `${name} commented on your post!`;
+     const field = "comment";
+     const postOwner = postCreator.email;
+     //console.log("id inside comment func ",postOwnerId);
+     await add_notif(postOwner,title,field);
+
+     res.status(200).json(updatedPost);
+
   } catch (err) {
     res.status(404).json({ message: err.message });
   }
@@ -202,7 +238,7 @@ export const likeComment = async (req, res) => {
       if (!comment.likes) {
           comment.likes = new Map();
       }
-      
+
       const isLiked = comment.likes.get(userId);
       if (isLiked) {
           comment.likes.delete(userId);
@@ -211,6 +247,17 @@ export const likeComment = async (req, res) => {
       }
 
       await post.save();
+
+      //notification 
+      const commentCreator = await User.findById(comment.userId);
+      const user = await User.findById(userId);
+      const name = user.firstName;  
+      const title = `${name} liked your comment!`;
+      const field = "like_comment";
+      const commentOwner = commentCreator.email;
+      if(!isLiked)
+          await add_notif(commentOwner,title,field);
+
       res.status(200).json(post);
   } catch (err) {
       res.status(500).json({ message: err.message });
