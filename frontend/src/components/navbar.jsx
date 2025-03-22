@@ -26,11 +26,20 @@ import { setMode, setLogout } from "state";
 import { useNavigate } from "react-router-dom";
 import FlexBetween from "tools/FlexBetween";
 
+import React, { useEffect, useRef } from "react";
+import { Bell } from "lucide-react"; // Bell icon for notifications
+import { BASE_URL } from "../helper.js";
+import NotificationsPopup from "./NotificationsPopup";
+//import Notifs from "./Notifications";
+
 const Navbar = () => {
   const [isMobileMenuToggled, setIsMobileMenuToggled] = useState(false);
   const dispatch = useDispatch();
+  const token = useSelector((state) => state.token);
   const navigate = useNavigate();
   const user = useSelector((state) => state.user);
+  const _id = user._id; 
+  const userEmail = user.email;
   const [searchedUser, setSearchedUser] = useState("");
   const isNonMobileScreens = useMediaQuery("(min-width: 1000px)");
 
@@ -42,6 +51,78 @@ const Navbar = () => {
   const alt = theme.palette.background.alt;
 
   const fullName = `${user.firstName} ${user.lastName}`;
+
+  const [showNotifications, setShowNotifications] = useState(false);
+  const [notifications, setNotifications] = useState([]);
+  const notificationsRef = useRef(null);
+
+  const fetchNotifications = async () => {
+    try {
+      const response = await fetch(`${BASE_URL}/notif/view/${userEmail}`, {
+            method: "GET",
+            headers: { Authorization: `Bearer ${token}` },
+          });
+          const data = await response.json();
+          console.log("data to navbar : ", data);
+          setNotifications(data);
+    } catch (error) {
+      console.error("Error fetching notifications:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchNotifications();
+  }, []);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (
+        notificationsRef.current &&
+        !notificationsRef.current.contains(event.target)
+      ) {
+        setShowNotifications(false);
+      }
+    };
+  
+    if (showNotifications) {
+      document.addEventListener("click", handleClickOutside);
+    } else {
+      document.removeEventListener("click", handleClickOutside);
+    }
+  
+    return () => {
+      document.removeEventListener("click", handleClickOutside);
+    };
+  }, [showNotifications]);
+
+  const handleNotificationClick = async (notifId) => {
+    try {
+      const notification = notifications.find((notif) => notif._id === notifId);
+      if (!notification) return;
+
+      // Delete notification
+      await fetch(`${BASE_URL}/notif/delete/${_id}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({ notifId }),
+});
+  
+      setNotifications((prev) =>
+        prev.filter((notification) => notification._id !== notifId)
+      );
+
+    
+  } catch (error) {
+    console.error("Error handling notification:", error);
+  }
+};
+
+    const toggleNotifications = () => {
+    setShowNotifications((prev) => !prev);
+};
 
   return (
     <FlexBetween padding="1rem 6%" backgroundColor="black">
@@ -127,7 +208,52 @@ const Navbar = () => {
             </Button>
           </IconButton>
 
+
+
+
+           {/* Notifications Icon */}
+           <div className="relative" ref={notificationsRef}>
+            <IconButton
+              onClick={toggleNotifications}
+              sx={{ color: "#ffffff" }}
+              aria-label="View notifications"
+            >
+              <Notifications sx={{ fontSize: "25px", color: "white" }} /> 
+              {/* notification bell icon from material ui */}
+              {notifications.length > 0 && (
+                <span
+                  style={{
+                    position: "absolute",
+                    top: -5,
+                    right: -5,
+                    backgroundColor: "red",
+                    color: "white",
+                    borderRadius: "50%",
+                    padding: "4px 8px",
+                    fontSize: "12px",
+                    fontWeight: "bold",
+                  }}
+                >
+                  {notifications.length}
+                </span>
+              )}
+            </IconButton>
+            {showNotifications && (
+              <NotificationsPopup
+                notifications={notifications}
+                //onNotificationClick ={handleNotificationClick}
+                onClose={() => setShowNotifications(false)}
+              />
+            )}
+          </div>
+
           {/* <Notifications sx={{ fontSize: "25px" }} /> */}
+
+
+
+
+
+
           {/* <Help sx={{ fontSize: "25px" }} /> */}
           <FormControl variant="standard" value={fullName}>
             <Select
@@ -224,6 +350,42 @@ const Navbar = () => {
                 MESSENGER
               </Button>
             </IconButton>
+
+              {/* Notifications Icon */}
+              <div className="relative" ref={notificationsRef}>
+              <IconButton
+                onClick={toggleNotifications}
+                sx={{ color: "#ffffff" }}
+                aria-label="View notifications"
+              >
+                <Notifications sx={{ fontSize: "25px", color: "white" }} />
+                {notifications.length > 0 && (
+                  <span
+                    style={{
+                      position: "absolute",
+                      top: -5,
+                      right: -5,
+                      backgroundColor: "red",
+                      color: "white",
+                      borderRadius: "50%",
+                      padding: "4px 8px",
+                      fontSize: "12px",
+                      fontWeight: "bold",
+                    }}
+                  >
+                    {notifications.length}
+                  </span>
+                )}
+              </IconButton>
+              {showNotifications && (
+                <NotificationsPopup
+                  notifications={notifications}
+                //  onNotificationClick ={onClick}
+                  onClose={() => setShowNotifications(false)}
+                />
+              )}
+            </div>
+  
             <FormControl variant="standard" value={fullName}>
               <Select
                 value={fullName}
@@ -245,7 +407,12 @@ const Navbar = () => {
                 <MenuItem value={fullName}>
                   <Typography>{fullName}</Typography>
                 </MenuItem>
-                <MenuItem onClick={() => dispatch(setLogout())}>
+                <MenuItem onClick={() => {
+                   dispatch(setLogout()); // Updates Redux state
+                   navigate("/login"); // Redirects to login page
+                  // toast.success("Logged out successfully!");
+                }}
+                >
                   Log Out
                 </MenuItem>
               </Select>

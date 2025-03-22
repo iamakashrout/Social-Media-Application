@@ -1,6 +1,8 @@
 import bcrypt from "bcryptjs";
 import User from "../models/userModel.js";
 
+import { add_notif } from "./notif/addNotifController.js";
+
 //Update User Profile
 export const updateUserProfile = async (req, res) => {
   try {
@@ -144,6 +146,28 @@ export const addRemoveFriend = async (req, res) => {
             };
           }
         );
+        
+        //notification 
+
+        //user is the one adding or removing a friend and friend is the one being added or removed as a friend
+        const field = "friend";
+
+        const user_id = id;
+        const user_name = user.firstName; 
+        const friend_id = friendId;
+        const friend_name = friend.firstName;
+
+        const isAddingFriend = user.friends.includes(friendId); // true if adding, false if removing
+
+        const keyword = !isAddingFriend ? "added to" : "removed from";
+        const title1 = `${friend_name} has been ${keyword} your friend list!`;
+        const title2 = `You have been ${keyword} ${user_name}'s friend list!`;
+
+        await add_notif(user.email,title1,field);
+        await add_notif(friend.email,title2,field);
+
+        //console.log("friend update ",title1);
+        
         res.status(200).json(formattedFriends);
     } catch (err) {
       res.status(404).json({ message: err.message });
