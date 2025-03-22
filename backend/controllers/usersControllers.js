@@ -2,6 +2,13 @@ import bcrypt from "bcryptjs";
 import User from "../models/userModel.js";
 
 import { add_notif } from "./notif/addNotifController.js";
+import { createClient } from 'redis'
+
+const client = createClient(); //for localhost
+// const client = createClient( {url: "https://oneworld.onrender.com"});
+await client.connect();
+
+const DEFAULT_EXPIRATION = 3600 //setting expiration time for redis cache as one hour
 
 //Update User Profile
 export const updateUserProfile = async (req, res) => {
@@ -64,11 +71,19 @@ export const getUser = async (req, res) => {
 //   }
 // }
 
+
 export const searchUser = async (req, res) => {
   try {
     const { name } = req.params;
     let query = {};
     
+    const cachedUsers = await client.get(name);
+    if (cachedUsers) {
+      console.log("cache hit!");
+      // console.log(cachedUsers);
+      return res.status(200).json(JSON.parse(cachedUsers));
+    }
+
     if (name) {
       query = {
         $or: [
@@ -90,7 +105,10 @@ export const searchUser = async (req, res) => {
     }
     
     const users = await User.find(query);
-    res.status(200).json(users);
+    console.log(users);
+    await client.setEx(name, DEFAULT_EXPIRATION, JSON.stringify(users));
+
+    return res.status(200).json(users);
   } catch (err) {
     res.status(500).json({ message: err.message || "An error occurred" });
   }
