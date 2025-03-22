@@ -14,6 +14,33 @@
     z-index: 1000;
 }
 
+.mic-button {
+    position: absolute;
+    right: 10px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    font-size: 20px;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.2s ease;
+}
+
+.mic-button svg {
+    color: white;
+}
+
+.mic-button:hover {
+    transform: scale(1.1);
+}
+
+.mic-button.listening {
+    animation: pulse 1.5s infinite;
+    box-shadow: 0 0 10px rgba(155, 80, 255, 0.8);
+}
+
 .tts-button {
     background: none;
     border: none;

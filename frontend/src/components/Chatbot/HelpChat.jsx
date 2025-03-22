@@ -1,106 +1,3 @@
-// import { useState, useEffect, useRef } from "react";
-// import { Mic, Volume2 } from "lucide-react";
-// import VoiceSearch from "./voicespeech.jsx";
-// import "./HelpChat.css";
-// import { BASE_URL } from "helper";
-
-// export default function HelpChat({ onClose }) {
-//     const [messages, setMessages] = useState([]);
-//     const [input, setInput] = useState("");
-//     const [loading, setLoading] = useState(false);
-//     const messagesEndRef = useRef(null);
-
-//     useEffect(() => {
-//         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-//     }, [messages]);
-
-//     const sendMessage = async (event) => {
-//         event.preventDefault();
-//         if (!input.trim()) return;
-//         handleSendMessage(input);
-//     };
-
-//     const handleSendMessage = async (message) => {
-//         const userMessage = { role: "user", content: message };
-//         setMessages((prev) => [...prev, userMessage]);
-//         setInput("");
-//         setLoading(true);
-
-//         try {
-//             const response = await fetch(`${BASE_URL}/api/gemini`, {
-//                 method: "POST",
-//                 headers: { "Content-Type": "application/json" },
-//                 body: JSON.stringify({ messages: [...messages, userMessage] }),
-//             });
-
-//             const data = await response.json();
-//             if (data.error) throw new Error(data.error);
-
-//             const botMessage = { role: "assistant", content: data.response };
-//             setMessages((prev) => [...prev, botMessage]);
-//         } catch (error) {
-//             console.error("Error:", error);
-//             setMessages((prev) => [...prev, { role: "assistant", content: "Something went wrong!" }]);
-//         } finally {
-//             setLoading(false);
-//         }
-//     };
-
-//     const handleTextToSpeech = (text) => {
-//         const utterance = new SpeechSynthesisUtterance(text);
-//         window.speechSynthesis.speak(utterance);
-//     };
-
-//     return (
-//         <div className="help-chat">
-//             <div className="help-chat-header">
-//                 <h2>OneWorld Bot</h2>
-//                 <button className="help-chat-close" onClick={onClose}>✕</button>
-//             </div>
-//             <div className="help-chat-body">
-//                 {messages.length === 0 && <p className="placeholder-text">Here to help, chat away, or give suggestions!</p>}
-//                 {messages.map((msg, index) => (
-//                     <div key={index} className={`message ${msg.role === "user" ? "user-message" : "bot-message"}`}>
-//                         {msg.content}
-//                         {msg.role === "assistant" && (
-//                             <button 
-//                                 className="tts-button"
-//                                 onClick={() => handleTextToSpeech(msg.content)}
-//                                 title="Listen"
-//                             >
-//                                 <Volume2 size={14} />
-//                             </button>
-//                         )}
-//                     </div>
-//                 ))}
-//                 {loading && <p className="loading">Loading...</p>}
-//                 <div ref={messagesEndRef} />
-//             </div>
-//             <form onSubmit={sendMessage} className="help-chat-footer">
-//                 <div className="input-container">
-//                     <input
-//                         type="text"
-//                         value={input}
-//                         onChange={(e) => setInput(e.target.value)}
-//                         placeholder="Type your message here..."
-//                         className="chat-input"
-//                         onKeyDown={(e) => {
-//                             if (e.key === "Enter") {
-//                                 e.preventDefault();
-//                                 sendMessage(e);
-//                             }
-//                         }}
-//                     />
-//                     <VoiceSearch onSearch={(transcript) => setInput(transcript)} />
-//                 </div>
-//                 <button type="submit" className="send-button" disabled={loading}>
-//                     {loading ? "Loading..." : "Send"}
-//                 </button>
-//             </form>
-//         </div>
-//     );
-// }
-
 import { useState, useEffect, useRef } from "react";
 import { Volume2 } from "lucide-react";
 import VoiceSearch from "./voicespeech.jsx";
@@ -170,7 +67,7 @@ export default function HelpChat({ onClose }) {
                     let charCount = 0;
 
                     for (let i = 0; i < words.length; i++) {
-                        charCount += words[i].length + 1; // +1 for space
+                        charCount += words[i].length + 1; 
                         if (charIndex < charCount) {
                             wordIndex = i;
                             break;
