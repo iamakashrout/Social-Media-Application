@@ -3,9 +3,11 @@ import User from "../models/userModel.js";
 
 import { add_notif } from "./notif/addNotifController.js";
 import { createClient } from 'redis'
+import dotenv from "dotenv";
+dotenv.config();
 
-const client = createClient(); //for localhost
-// const client = createClient( {url: "https://oneworld.onrender.com"});
+// const client = createClient(); //for localhost
+const client = createClient( {url: process.env.REDIS_URL});
 await client.connect();
 
 const DEFAULT_EXPIRATION = 3600 //setting expiration time for redis cache as one hour
