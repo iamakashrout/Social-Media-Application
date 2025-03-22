@@ -25,6 +25,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { setMode, setLogout } from "state";
 import { useNavigate } from "react-router-dom";
 import FlexBetween from "tools/FlexBetween";
+import Voice_Search from "./voice search in search bar.jsx";
+import { Mic, MicOff } from "lucide-react";
 
 import React, { useEffect, useRef } from "react";
 import { Bell } from "lucide-react"; // Bell icon for notifications
@@ -124,6 +126,19 @@ const Navbar = () => {
     setShowNotifications((prev) => !prev);
 };
 
+ // Function to handle voice search result
+const handleVoiceSearch = (query) => {
+  if (!query.trim()) return;  // Avoid empty search
+  console.log("Searching for:", query); 
+  setSearchedUser(query);
+  
+  // Wait for state update before navigating
+  setTimeout(() => {
+      navigate(`/search/${query}`);
+      navigate(0);
+  }, 100);
+};
+
   return (
     <FlexBetween padding="1rem 6%" backgroundColor="black">
       <FlexBetween gap="1.75rem">
@@ -144,13 +159,14 @@ const Navbar = () => {
           <FlexBetween
             backgroundColor={neutralLight}
             borderRadius="9px"
-            gap="3rem"
-            padding="0.1rem 1.5rem"
+            gap="0.1rem"
+            padding="0.1rem 1.0rem"
           >
             <InputBase
              placeholder="Search..."
             onChange={(e) => setSearchedUser(e.target.value)}
             value={searchedUser}
+           
             onKeyDown={(e) => {
             if (e.key === "Enter") {
             navigate(`/search/${searchedUser}`);
@@ -167,6 +183,8 @@ const Navbar = () => {
             >
               <Search />
             </IconButton>
+             {/* Add the Voice Search component */}
+             <Voice_Search onSearch={handleVoiceSearch} />
           </FlexBetween>
         )}
       </FlexBetween>
