@@ -407,7 +407,12 @@ const Navbar = () => {
                 <MenuItem value={fullName}>
                   <Typography>{fullName}</Typography>
                 </MenuItem>
-                <MenuItem onClick={() => dispatch(setLogout())}>
+                <MenuItem onClick={() => {
+                   dispatch(setLogout()); // Updates Redux state
+                   navigate("/login"); // Redirects to login page
+                  // toast.success("Logged out successfully!");
+                }}
+                >
                   Log Out
                 </MenuItem>
               </Select>

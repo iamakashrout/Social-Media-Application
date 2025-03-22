@@ -15,6 +15,9 @@ import VerifyOtp from "components/Auth/VerifyOtp.jsx";
 import ResetPassword from "components/Auth/ResetPassword.jsx"; 
 import VerifyOtpRegister from "components/Auth/VerifyOtpRegister";
 import EditProfile from "components/EditProfile";
+import { useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { setLogin } from "state";
 
 //DEPLOYMENT READY YAYY !
 
@@ -24,13 +27,25 @@ function App() {
   const theme = useMemo(() => createTheme(themeSettings(mode)), [mode]);
   const isAuth = Boolean(useSelector((state) => state.token));
 
+  //persistent login
+  const dispatch = useDispatch();
+  useEffect(() => {
+    const storedUser = localStorage.getItem("user");
+    const storedToken = localStorage.getItem("token");
+
+    if (storedUser && storedToken) {
+      dispatch(setLogin({ user: JSON.parse(storedUser), token: storedToken }));
+    }
+  }, [dispatch]);
+
   return (
     <div className="app">
       <BrowserRouter>
         <ThemeProvider theme={theme}>
           <CssBaseline />
           <Routes>
-          <Route path="/" element={<Auth />} />
+          <Route path="/" element={isAuth ? <Navigate to="/home" /> : <Auth />} />
+          {/* <Route path="/" element={<Auth />} /> */}
           <Route path="/verifyRegister-otp/:email" element={<VerifyOtpRegister />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/verify-otp/:email" element={<VerifyOtp />} />  
