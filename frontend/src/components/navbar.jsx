@@ -9,7 +9,10 @@ import {
   FormControl,
   useTheme,
   useMediaQuery,
-  Button
+  Button,
+  Paper, List, ListItem,
+  ListItemText
+
 } from "@mui/material";
 import {
   Search,
@@ -20,6 +23,7 @@ import {
   Help,
   Menu,
   Close,
+  History
 } from "@mui/icons-material";
 import { useDispatch, useSelector } from "react-redux";
 import { setMode, setLogout } from "state";
@@ -44,6 +48,7 @@ const Navbar = () => {
   const userEmail = user.email;
   const [searchedUser, setSearchedUser] = useState("");
   const isNonMobileScreens = useMediaQuery("(min-width: 1000px)");
+  const [searchHistory, setSearchHistory] = useState([]);
 
   const theme = useTheme();
   const neutralLight = theme.palette.neutral.light;
@@ -57,12 +62,24 @@ const Navbar = () => {
   const [showNotifications, setShowNotifications] = useState(false);
   const [notifications, setNotifications] = useState([]);
   const notificationsRef = useRef(null);
+  const dropdownRef = useRef(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setSearchHistory(false); // Close dropdown
+      }
+    };
+  
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   const fetchNotifications = async () => {
     try {
       const response = await fetch(`${BASE_URL}/notif/view/${userEmail}`, {
             method: "GET",
-            headers: { Authorization: `Bearer ${token}` },
+            headers: { "Authorization": `Bearer ${token}` },
           });
           const data = await response.json();
           console.log("data to navbar : ", data);
@@ -72,9 +89,55 @@ const Navbar = () => {
     }
   };
 
+  const fetchSearches = async (name) => {
+    try {
+      const response = await fetch(`${BASE_URL}/users/search/get/${name}`, {
+        method: "GET",
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      const data = await response.json();
+      console.log("Search history:", data);
+      setSearchHistory(data); 
+    } catch (error) {
+      console.error("Error fetching searches:", error);
+    }
+  };
+
+  const storeSearch = async (name) => {
+    console.log("storeSearch called with:", name);
+
+    try {
+      const response = await fetch(`${BASE_URL}/users/search/store`, {
+            method: "POST",
+            headers: { 
+                "Authorization": `Bearer ${token}`,
+                "Content-Type": "application/json"  
+            },
+            body: JSON.stringify({ name })  
+      });
+    } catch (error) {
+      console.error("Error storing search:", error);
+    }
+};
+
+
   useEffect(() => {
     fetchNotifications();
   }, []);
+
+    // Function to handle voice search result
+  const handleVoiceSearch = (query) => {
+    if (!query.trim()) return;  // Avoid empty search
+    console.log("Searching for:", query); 
+    setSearchedUser(query);
+    
+    // Wait for state update before navigating
+    setTimeout(() => {
+        navigate(`/search/${query}`);
+        navigate(0);
+    }, 100);
+  };
+
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -107,7 +170,7 @@ const Navbar = () => {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
+        "Authorization": `Bearer ${token}`,
       },
       body: JSON.stringify({ notifId }),
 });
@@ -124,19 +187,6 @@ const Navbar = () => {
 
     const toggleNotifications = () => {
     setShowNotifications((prev) => !prev);
-};
-
- // Function to handle voice search result
-const handleVoiceSearch = (query) => {
-  if (!query.trim()) return;  // Avoid empty search
-  console.log("Searching for:", query); 
-  setSearchedUser(query);
-  
-  // Wait for state update before navigating
-  setTimeout(() => {
-      navigate(`/search/${query}`);
-      navigate(0);
-  }, 100);
 };
 
   return (
@@ -157,35 +207,84 @@ const handleVoiceSearch = (query) => {
         </Typography>
         {isNonMobileScreens && (
           <FlexBetween
-            backgroundColor={neutralLight}
-            borderRadius="9px"
-            gap="0.1rem"
-            padding="0.1rem 1.0rem"
-          >
-            <InputBase
-             placeholder="Search..."
-            onChange={(e) => setSearchedUser(e.target.value)}
+          backgroundColor={neutralLight}
+          borderRadius="9px"
+          gap="0.1rem"
+          padding="0.1rem 1.0rem"
+          style={{ position: "relative", width: "300px" }}
+        >
+          {/* Search Bar */}
+          <InputBase
+            placeholder="Search..."
+            onChange={(e) => {
+              setSearchedUser(e.target.value);
+              fetchSearches(e.target.value); // ✅ Fetch history on input change
+            }}
             value={searchedUser}
-           
-            onKeyDown={(e) => {
-            if (e.key === "Enter") {
-            navigate(`/search/${searchedUser}`);
-            navigate(0);
-           }
-           }} //search when Enter is pressed
-          />
-
-            <IconButton
-              onClick={() => {
+            onKeyDown={async (e) => {
+              console.log("Key pressed:", e.key);
+              if (e.key === "Enter" && searchedUser.trim() !== "") {
+                console.log("Enter pressed. Storing search...");
+                await storeSearch(searchedUser);
                 navigate(`/search/${searchedUser}`);
-                navigate(0);
-              }}
-            >
-              <Search />
-            </IconButton>
-             {/* Add the Voice Search component */}
-             <Voice_Search onSearch={handleVoiceSearch} />
-          </FlexBetween>
+              }
+            }}
+            fullWidth
+          />
+          <IconButton
+                onClick={async () => {
+                  if (searchedUser.trim() !== "") {
+                    console.log("Search icon clicked. Storing search...");
+                    await storeSearch(searchedUser);
+                    navigate(`/search/${searchedUser}`);
+                  }
+                }}
+              >
+            <Search />
+          </IconButton>
+            <Voice_Search onSearch={handleVoiceSearch} />
+        
+          {/* Search History Dropdown */}
+          {searchHistory && searchHistory.length > 0 && (
+            <Paper
+            ref={dropdownRef}
+            sx={{
+              position: "absolute",
+              top: "100%",
+              left: 0,
+              width: "100%",
+              zIndex: 10,
+              backgroundColor: "white",
+              borderRadius: "8px", // Rounded corners
+              boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.2)", // Soft shadow
+              overflow: "hidden", // Clean look
+            }}
+            elevation={3}
+          >
+            <List sx={{ padding: 0 }}>
+              {searchHistory.map((search, index) => (
+                <ListItem
+                  key={index}
+                  button
+                  onClick={() => {
+                    setSearchedUser(search);
+                    setSearchHistory(false);
+                    navigate(`/search/${search}`);
+                  }}
+                  sx={{
+                    padding: "10px 16px", // Better spacing
+                    "&:hover": { backgroundColor: "#f0f0f0" }, // Hover effect
+                  }}
+                >
+                  <History sx={{ marginRight: "8px", color: "gray" }} />
+                  <ListItemText primary={search} sx={{ color: "black" }} />
+                </ListItem>
+              ))}
+            </List>
+          </Paper>
+          )}
+        </FlexBetween>
+        
         )}
       </FlexBetween>
 
@@ -204,7 +303,7 @@ const handleVoiceSearch = (query) => {
           </IconButton>
           <IconButton
             onClick={() => {
-              navigate(`/messenger`);
+              navigate("/messenger");
               navigate(0);
             }}
           >
@@ -347,7 +446,7 @@ const handleVoiceSearch = (query) => {
             </IconButton>
             <IconButton
               onClick={() => {
-                navigate(`/messenger`);
+                navigate("/messenger");
                 navigate(0);
               }}
             >
