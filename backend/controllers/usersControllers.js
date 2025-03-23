@@ -116,6 +116,54 @@ export const searchUser = async (req, res) => {
   }
 };
 
+export const storeSearch = async (req, res) => {
+  //post method
+
+  try {
+    const name = req.body.name;
+    const id = req.user.id;
+    console.log("storing the search of", name);
+    const key = `user:${id}:searches`;
+
+    //add to existing search if it doesnt exist pehle
+    const existingSearch = await client.lRange(key, 0, -1);
+    if (!existingSearch.includes(name)) {
+        await client.lPush(key, name);
+        await client.lTrim(key, 0, 9);
+    }
+
+    res.status(200).json({success: true});
+  } catch (error) {
+    console.log("error in storing the searched name! ", error);
+    res.status(500).json({errror: "failed to store searched name"});
+  }
+}
+
+export const getPastSearches = async (req, res) => {
+  //get method
+
+  try {
+    const name = req.params.name;
+    const id = req.user.id;
+
+    const key = `user:${id}:searches`;
+
+    const searches = await client.lRange(key, 0, -1);
+    
+    const filteredSearches = name
+      ? searches.filter((search) =>
+          search.toLowerCase().startsWith((name).toLowerCase())
+        )
+      : searches;
+
+      res.status(200).json(filteredSearches);
+
+  } catch (error) {
+    console.log("error in getting past cached searches", error);
+    res.status(500).json({error: "failed to get past queries!"});
+  }
+}
+
 export const getUserFriends = async (req, res) => {
     try {
         const { id } = req.params;
