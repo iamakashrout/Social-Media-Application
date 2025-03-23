@@ -123,7 +123,7 @@ export const storeSearch = async (req, res) => {
     const name = req.body.name;
     const id = req.user.id;
     console.log("storing the search of", name);
-    const key = `user:${id}:searches`;
+    const key = `oneworld:user:${id}:searches`;
 
     //add to existing search if it doesnt exist pehle
     const existingSearch = await client.lRange(key, 0, -1);
@@ -146,7 +146,7 @@ export const getPastSearches = async (req, res) => {
     const name = req.params.name;
     const id = req.user.id;
 
-    const key = `user:${id}:searches`;
+    const key = `oneworld:user:${id}:searches`;
 
     const searches = await client.lRange(key, 0, -1);
     
