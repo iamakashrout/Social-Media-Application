@@ -1,0 +1,195 @@
+.stories-container {
+  text-align: center;
+  padding: 20px;
+}
+
+.back-button {
+  background: none;
+  border: none;
+  font-size: 18px;
+  cursor: pointer;
+  color: purple; /* Changed to purple */
+  margin-bottom: 15px;
+  font-weight: bold;
+}
+
+.back-button:hover {
+  text-decoration: underline;
+}
+
+.stories-heading {
+  color: white;
+  margin-bottom: 20px;
+}
+
+.stories-grid {
+  display: flex;
+  justify-content: flex-start; /* Align to the left */
+  gap: 30px; /* Minimal spacing */
+  flex-wrap: nowrap; /* Prevent wrapping to next line */
+  overflow-x: auto; /* Enable horizontal scrolling if needed */
+  padding: 10px;
+}
+
+.story-card {
+  background: white;
+  border-radius: 10px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform 0.2s ease-in-out;
+  width: 200px;
+  padding: 10px;
+  text-align: center;
+}
+
+.story-card:hover {
+  transform: scale(1.05);
+}
+
+.story-image {
+  width: 100%;
+  height: 250px;
+  object-fit: cover;
+  border-radius: 10px;
+}
+
+.story-title {
+  margin: 10px 0;
+  font-size: 16px;
+  color: purple;
+  font-weight: bold;
+}
+
+/* MODAL STYLES */
+.story-modal {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.7);
+}
+
+.modal-content {
+  background-color: #ffffff; /* White background */
+  color: #000000;            /* Black text */
+  padding: 2rem;
+  border-radius: 12px;
+  max-width: 500px;
+  width: 90%;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+  position: relative;
+}
+
+
+.modal-image {
+  width: 100%; /* Make image fit the modal */
+  height: auto;
+  border-radius: 10px;
+}
+
+.story-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 1rem;
+}
+
+.view-count {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: auto;
+}
+
+.modal-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  margin-top: 1rem;
+}
+
+.modal-content .caption {
+  font-size: 1.3rem;
+  font-weight: 500;
+  margin-top: 1rem;
+  color: black;
+}
+
+
+.close-button {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  font-size: 2rem;
+  cursor: pointer;
+  color: white;
+}
+
+.like-button {
+  font-size: 24px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: red;
+}
+
+.like-count {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.story-caption {
+  font-size: 16px;
+  text-align: center;
+  margin: 10px 0;
+}
+
+.story-caption-box {
+  margin-top: 1rem;
+  background: rgba(255, 255, 255, 0.9);
+  padding: 1rem;
+  border-radius: 10px;
+  width: 100%;
+  text-align: center;
+}
+
+.caption-text {
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: #333;
+  margin-bottom: 0.5rem;
+}
+
+.story-stats {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 2rem;
+  margin-top: 0.5rem;
+}
+
+.like-part,
+.view-part {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.like-text,
+.view-text {
+  font-weight: bold;
+  color: #222;
+}
+.section-heading {
+  margin: 2rem 0 1rem;
+  font-size: 1.7rem;
+  font-weight: 600;
+  color: black;
+}
+
+
