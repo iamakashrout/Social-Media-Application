@@ -1,0 +1,33 @@
+.create-story-btn {
+    background: linear-gradient(135deg, #6a0dad, #8a2be2); /* Gradient for a sleek look */
+    color: white;
+    font-size: 16px;
+    font-weight: 600;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px; /* Space between icon and text */
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(138, 43, 226, 0.3);
+    width: 100%; /* Makes it take full width under UserWidget */
+  }
+  
+  .create-story-btn:hover {
+    background: linear-gradient(135deg, #8a2be2, #9c4dcc);
+    transform: scale(1.05);
+    box-shadow: 0 6px 16px rgba(138, 43, 226, 0.4);
+  }
+  
+  .create-story-btn:active {
+    transform: scale(0.98);
+  }
+  
+  .create-story-btn svg {
+    width: 20px;
+    height: 20px;
+  }
+  

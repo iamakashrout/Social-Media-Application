@@ -1,0 +1,26 @@
+.view-stories-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 1rem;
+  }
+  
+  .view-stories-button {
+    background: linear-gradient(135deg, #6a0dad, #8a2be2); /* Purple gradient */
+    color: white;
+    font-weight: 600;
+    padding: 10px 20px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+    transition: transform 0.2s ease-in-out;
+    width: 100%;
+    text-align: center;
+    text-decoration: none; /* Removes underline */
+    display: inline-block;
+  }
+  
+  .view-stories-button:hover {
+    transform: scale(1.05); /* Slight zoom effect */
+  }
+  

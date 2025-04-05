@@ -20,6 +20,7 @@ import chatbotRoutes from "./routes/chatbotRoutes.js";
 import http from "http";
 import { Server } from "socket.io";
 import notifsRoutes from "./routes/notifsRoutes.js";
+import storyRoutes from "./routes/storyRoutes.js";
 
 /* CONFIGURATION */
 const __filename = fileURLToPath(import.meta.url);
@@ -81,6 +82,7 @@ app.use("/conversations", conversationRoutes);
 app.use("/messages", messageRoutes);
 app.use("/api", chatbotRoutes);
 app.use("/notif", notifsRoutes);
+app.use("/story", storyRoutes);
 
 /* MONGOOSE SETUP */
 mongoose

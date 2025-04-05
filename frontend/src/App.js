@@ -18,6 +18,8 @@ import EditProfile from "components/EditProfile";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { setLogin } from "state";
+import StoriesPage from "components/Stories/Stories";
+import CreateStory from "components/Stories/CreateStory";
 
 //DEPLOYMENT READY YAYY !
 
@@ -69,6 +71,14 @@ function App() {
             <Route
               path="/edit-profile/:userId"
               element={isAuth ? <EditProfile /> : <Navigate to="/" />}
+            />
+            <Route
+              path="/stories/view"
+              element={isAuth ? <StoriesPage /> : <Navigate to="/" />}
+            />
+            <Route
+              path="/stories/create"
+              element={isAuth ? <CreateStory /> : <Navigate to="/" />}
             />
 
           </Routes>
