@@ -115,6 +115,12 @@ Ensure you have the following installed:
       MONGO_URL=your_mongodb_connection_string
       JWT_SECRET=your_jwt_secret
       BASE_URL=https://oneworld.onrender.com
+      EMAIL_HOST=your_email_host
+      EMAIL_PORT=your_email_port
+      EMAIL_USER=your_email
+      EMAIL_PASS=your_email_passkey
+      GOOGLE_API_KEY=your_google_api_key
+      REDIS_URL=your_redis_url
 4. **Start the application:**
     - Run the backend server:
       ```bash
