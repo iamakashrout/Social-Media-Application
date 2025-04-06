@@ -16,6 +16,11 @@ This is a fully functional social media application built using the MERN (MongoD
 - Password reset and email verification
 - Persistent login to avoid repeated sign-ins
 
+![Screenshot 2025-04-06 225233](https://github.com/user-attachments/assets/9cc3bc80-839e-4297-a936-e9e83bdcef06)
+![Screenshot 2025-04-06 225330](https://github.com/user-attachments/assets/bedc2007-3ea6-4adb-8de1-93437c386952)
+![Screenshot 2025-04-06 225311](https://github.com/user-attachments/assets/2dff3dba-9704-4847-b62b-468958c1cb0b)
+
+
 ### Post Interactions
 - Create, edit, and delete posts
 - Like and comment on posts
@@ -65,8 +70,8 @@ This is a fully functional social media application built using the MERN (MongoD
 - Media storage on Cloudinary
 - Responsive UI built with React
 - Backend API using Express.js and MongoDB
--   
 
+  
 ## Tech Stack
 ### Frontend:
 - React.js
