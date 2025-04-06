@@ -8,29 +8,29 @@ This is a fully functional social media application built using the MERN (MongoD
 
 ## Features
 
-# Authentication & Profile Management
+## Authentication & Profile Management
 - User authentication (Login, Register, JWT-based authorization)
 - Profile creation, editing & picture upload
 - Password reset and email verification
 - Persistent login to avoid repeated sign-ins
 
-# Post Interactions
+## Post Interactions
 - Create, edit, and delete posts
 - Like and comment on posts
 - Delete posts and comments
 
-# Chatbot
+## Chatbot
 - Text-to-speech responses from chatbot
 - Highlight text feature
 - Voice search feature 
 
-# Social Features
+## Social Features
 - Friend requests and follow/unfollow 
 - Friend-only filters on feeds
 - Search users with optimization
 - Voice search feature in search bar
 
-# Notifications Feature
+## Notifications Feature
 - Real-time activity alerts are received whenever :
    1. Someone likes someone's post or comment
    2. Someone's friend posts something
@@ -38,13 +38,13 @@ This is a fully functional social media application built using the MERN (MongoD
    4. A user adds someone or is added to someone's friend list
    5. A user removes someone or is removed from someone's friend list
 
-# Chat & Communication
+## Chat & Communication
 - Real-time messaging with Socket.io
 
-# Caching
+## Caching
 - Caching of search history and past queries using Redis
 
-# Additional Tools & Enhancements
+## Additional Tools & Enhancements
 - Dockerized application setup
 - Media storage on Cloudinary
 - Responsive UI built with React
