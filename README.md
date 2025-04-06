@@ -6,50 +6,59 @@ Demo Video Link: https://www.youtube.com/watch?v=CsTe5ioElMI
 ## Introduction
 This is a fully functional social media application built using the MERN (MongoDB, Express.js, React, Node.js) stack. It includes features such as user authentication, posts, likes, comments, and real-time messaging using Socket.io.
 
-## Features
+![image](https://github.com/user-attachments/assets/79dea729-1d3c-4137-a736-8b1940f4ff6a)
 
-## Authentication & Profile Management
+## Features :
+
+### Authentication & Profile Management
 - User authentication (Login, Register, JWT-based authorization)
 - Profile creation, editing & picture upload
 - Password reset and email verification
 - Persistent login to avoid repeated sign-ins
 
-## Post Interactions
+### Post Interactions
 - Create, edit, and delete posts
 - Like and comment on posts
 - Delete posts and comments
 
-## Chatbot
+### Chatbot
 - Text-to-speech responses from chatbot
 - Highlight text feature
-- Voice search feature 
+- Voice search feature
+- Text to speech response
+![image](https://github.com/user-attachments/assets/6d4c728e-e1b5-4d42-930a-d20d3701de06)
 
-## Social Features
+### Social Features
 - Friend requests and follow/unfollow 
 - Friend-only filters on feeds
 - Search users with optimization
 - Voice search feature in search bar
+- Creating and viewing stories
+  ![image](https://github.com/user-attachments/assets/46da5050-d0e0-44a1-ae12-4ddc41bebec2)
 
-## Notifications Feature
+
+### Notifications Feature
 - Real-time activity alerts are received whenever :
    1. Someone likes someone's post or comment
    2. Someone's friend posts something
    3. Someone comments on someone's post
    4. A user adds someone or is added to someone's friend list
    5. A user removes someone or is removed from someone's friend list
+![image](https://github.com/user-attachments/assets/5ef3021c-f01c-4ecb-9d63-fba567e9c13e)
 
-## Chat & Communication
+### Chat & Communication
 - Real-time messaging with Socket.io
+![image](https://github.com/user-attachments/assets/a8e19235-6e56-4857-b7f5-c4b364065e53)
 
-## Caching
+### Caching
 - Caching of search history and past queries using Redis
 
-## Additional Tools & Enhancements
+### Additional Tools & Enhancements
 - Dockerized application setup
 - Media storage on Cloudinary
 - Responsive UI built with React
 - Backend API using Express.js and MongoDB
-  
+-   
 
 ## Tech Stack
 ### Frontend:
