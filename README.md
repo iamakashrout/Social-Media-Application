@@ -7,14 +7,49 @@ Demo Video Link: https://www.youtube.com/watch?v=CsTe5ioElMI
 This is a fully functional social media application built using the MERN (MongoDB, Express.js, React, Node.js) stack. It includes features such as user authentication, posts, likes, comments, and real-time messaging using Socket.io.
 
 ## Features
+
+# Authentication & Profile Management
 - User authentication (Login, Register, JWT-based authorization)
-- Profile creation and editing
-- Post creation, editing, and deletion
-- Like and comment functionality
-- Friend requests and follow/unfollow feature
-- Real-time chat and notifications with Socket.io
+- Profile creation, editing & picture upload
+- Password reset and email verification
+- Persistent login to avoid repeated sign-ins
+
+# Post Interactions
+- Create, edit, and delete posts
+- Like and comment on posts
+- Delete posts and comments
+
+# Chatbot
+- Text-to-speech responses from chatbot
+- Highlight text feature
+- Voice search feature 
+
+# Social Features
+- Friend requests and follow/unfollow 
+- Friend-only filters on feeds
+- Search users with optimization
+- Voice search feature in search bar
+
+# Notifications Feature
+- Real-time activity alerts are received whenever :
+   1. Someone likes someone's post or comment
+   2. Someone's friend posts something
+   3. Someone comments on someone's post
+   4. A user adds someone or is added to someone's friend list
+   5. A user removes someone or is removed from someone's friend list
+
+# Chat & Communication
+- Real-time messaging with Socket.io
+
+# Caching
+- Caching of search history and past queries using Redis
+
+# Additional Tools & Enhancements
+- Dockerized application setup
+- Media storage on Cloudinary
 - Responsive UI built with React
 - Backend API using Express.js and MongoDB
+  
 
 ## Tech Stack
 ### Frontend:
@@ -30,6 +65,7 @@ This is a fully functional social media application built using the MERN (MongoD
 - MongoDB (Mongoose for ORM)
 - JSON Web Tokens (JWT) for authentication
 - Socket.io for real-time messaging
+- Redis Cloud for caching
 
 ## Installation and Setup
 ### Prerequisites:
