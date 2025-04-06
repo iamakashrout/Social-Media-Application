@@ -26,7 +26,9 @@ This is a fully functional social media application built using the MERN (MongoD
 - Highlight text feature
 - Voice search feature
 - Text to speech response
+  
 ![image](https://github.com/user-attachments/assets/6d4c728e-e1b5-4d42-930a-d20d3701de06)
+
 
 ### Social Features
 - Friend requests and follow/unfollow 
@@ -34,7 +36,8 @@ This is a fully functional social media application built using the MERN (MongoD
 - Search users with optimization
 - Voice search feature in search bar
 - Creating and viewing stories
-  ![image](https://github.com/user-attachments/assets/46da5050-d0e0-44a1-ae12-4ddc41bebec2)
+  
+![image](https://github.com/user-attachments/assets/46da5050-d0e0-44a1-ae12-4ddc41bebec2)
 
 
 ### Notifications Feature
@@ -44,11 +47,15 @@ This is a fully functional social media application built using the MERN (MongoD
    3. Someone comments on someone's post
    4. A user adds someone or is added to someone's friend list
    5. A user removes someone or is removed from someone's friend list
+  
 ![image](https://github.com/user-attachments/assets/5ef3021c-f01c-4ecb-9d63-fba567e9c13e)
+
 
 ### Chat & Communication
 - Real-time messaging with Socket.io
+  
 ![image](https://github.com/user-attachments/assets/a8e19235-6e56-4857-b7f5-c4b364065e53)
+
 
 ### Caching
 - Caching of search history and past queries using Redis
