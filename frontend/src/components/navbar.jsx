@@ -37,7 +37,7 @@ import { Bell } from "lucide-react"; // Bell icon for notifications
 import { BASE_URL } from "../helper.js";
 import NotificationsPopup from "./NotificationsPopup";
 //import Notifs from "./Notifications";
-
+import logo from './OneWorld.png'; 
 const Navbar = () => {
   const [isMobileMenuToggled, setIsMobileMenuToggled] = useState(false);
   const dispatch = useDispatch();
@@ -192,10 +192,16 @@ const Navbar = () => {
   return (
     <FlexBetween padding="1rem 6%" backgroundColor="black">
       <FlexBetween gap="1.75rem">
+      <img 
+  src={logo} 
+  alt="Logo" 
+  className="w-16 h-16" 
+  style={{ width: "70px" }} 
+/>
         <Typography
           fontWeight="bold"
           fontSize="clamp(1rem, 2rem, 2.25rem)"
-          color="#F582A7"
+          color="#cb6ce6"
           onClick={() => navigate("/home")}
           sx={{
             "&:hover": {
