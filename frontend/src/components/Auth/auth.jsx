@@ -7,7 +7,7 @@ import { setLogin } from "state";
 import Dropzone from "react-dropzone";
 import app from "../../firebase.js";
 import { BASE_URL } from "helper.js";
-
+import logo from '../OneWorld.png'; 
 import {
   getDownloadURL,
   getStorage,
@@ -304,7 +304,15 @@ const Auth = () => {
     
     
     <div className="container">
+      <img 
+  src={logo} 
+  alt="Logo" 
+  className="w-16 h-16" 
+  style={{ width: "70px" , height: "70px", marginBottom: "-250px",marginTop: "20px"  }} // Adjust size as needed
+/>
       <h1 className="brand-title">
+      
+<br></br>
         <span className="one">One</span>
         <span className="world">World.</span>
       </h1>
