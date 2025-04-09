@@ -95,10 +95,29 @@ const PostsWidget = ({ userId, isProfile = false }) => {
 //     }
 //   }, [showFriendsPosts, friends]);
 
-  const sortedPosts = Array.isArray(posts)
-  ? posts.slice().sort((p1, p2) => Object.keys(p1.likes).length - Object.keys(p2.likes).length)
-  : [];
+  // const sortedPosts = Array.isArray(posts)
+  // ? posts.slice().sort((p1, p2) => Object.keys(p1.likes).length - Object.keys(p2.likes).length)
+  // : [];
 
+  const sortedPosts = Array.isArray(posts) ?posts.slice().sort((a, b) => {
+    // Count the number of reactions of each type for post 'a' and post 'b'
+    const reactionCountsA = Object.values(a.reactions || {}).reduce((acc, reaction) => {
+      acc[reaction] = (acc[reaction] || 0) + 1;
+      return acc;
+    }, {});
+    
+    const reactionCountsB = Object.values(b.reactions || {}).reduce((acc, reaction) => {
+      acc[reaction] = (acc[reaction] || 0) + 1;
+      return acc;
+    }, {});
+  
+    const totalReactionsA = Object.values(reactionCountsA).reduce((acc, count) => acc + count, 0);
+    const totalReactionsB = Object.values(reactionCountsB).reduce((acc, count) => acc + count, 0);
+  
+    return selectedOrder === "Popular"
+      ? totalReactionsB - totalReactionsA // Sort by total reactions
+      : new Date(b.createdAt) - new Date(a.createdAt); // Sort by creation date for "Latest"
+  }):[];
 
   var viewPosts = posts;
   if (selectedOrder === "Latest") {

@@ -16,12 +16,19 @@ const postSchema = new mongoose.Schema(
     },
     location: String,
     description: String,
-    picturePath: String,
+    picturePath: [String],
     userPicturePath: String,
     category: String,
-    likes: {
-      type: Map,
-      of: Boolean,
+    // likes: {
+    //   type: Map,
+    //   of: Boolean,
+    // },
+    reactions:{
+      like:{type:Object,default:{}},
+      love:{type:Object,default:{}},
+      sad:{type:Object,default:{}},
+      funny:{type:Object,default:{}},
+      celebrate:{type:Object,default:{}},
     },
     comments: [
       {

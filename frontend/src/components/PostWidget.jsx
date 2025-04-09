@@ -29,6 +29,10 @@ import UserImage from "tools/UserImage";
 import ReactTimeAgo from "react-time-ago";
 import { BASE_URL } from "helper.js";
 import { removePost } from '../state/index';
+
+import EmojiEmotionsIcon from "@mui/icons-material/EmojiEmotions";
+import Popover from "@mui/material/Popover";
+
 const PostWidget = ({
   postId,
   postUserId,
@@ -38,7 +42,8 @@ const PostWidget = ({
   location,
   picturePath,
   userPicturePath,
-  likes,
+  //likes,
+  reactions,
   comments,
   createdAt,
 }) => {
@@ -49,30 +54,60 @@ const PostWidget = ({
   const loggedInUserId = useSelector((state) => state.user._id);
   const loggedInUserName = useSelector((state) => state.user.firstName);
   const loggedInUserPicture = useSelector((state) => state.user.picturePath);
-  const isLiked = Boolean(likes[loggedInUserId]);
-  const likeCount = Object.keys(likes).length;
+  // const isLiked = Boolean(likes[loggedInUserId]);
+  // const likeCount = Object.keys(likes).length;
   const [comment, setComment] = useState("");
 
   const [editingCommentId, setEditingCommentId] = useState(null);
   const [editedComment, setEditedComment] = useState("");
   const [anchorEl, setAnchorEl] = useState(null);
-
-
+  const [anchorElReaction, setAnchorElReaction] = useState(null);
+  
   const { palette } = useTheme();
   const main = palette.neutral.main;
   const primary = palette.primary.main;
 
-  const patchLike = async () => {
-    const response = await fetch(`${BASE_URL}/posts/${postId}/like`, {
+  const reactionTypes = [
+    { type: "like", emoji: "👍" },
+    { type: "love", emoji: "❤️" },
+    { type: "funny", emoji: "😂" },
+    { type: "sad", emoji: "😢" },
+    { type: "celebrate", emoji: "🎉" },
+  ];
+  
+  const userReaction = reactions?.[loggedInUserId];
+  const reactionCounts = Object.values(reactions || {}).reduce((acc, reaction) => {
+    acc[reaction] = (acc[reaction] || 0) + 1;
+    return acc;
+  }, {});
+
+  // const patchLike = async () => {
+  //   const response = await fetch(`${BASE_URL}/posts/${postId}/like`, {
+  //     method: "PATCH",
+  //     headers: {
+  //       Authorization: `Bearer ${token}`,
+  //       "Content-Type": "application/json",
+  //     },
+  //     body: JSON.stringify({ userId: loggedInUserId }),
+  //   });
+  //   const updatedPost = await response.json();
+  //   dispatch(setPost({ post: updatedPost }));
+  // };
+
+  const handleReaction = async (reactionType) => {
+    const response = await fetch(`${BASE_URL}/posts/${postId}/react`, {
       method: "PATCH",
       headers: {
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ userId: loggedInUserId }),
+      body: JSON.stringify({ userId: loggedInUserId, reactionType }),
     });
+    console.log("we have got the result from the backend");
+    
     const updatedPost = await response.json();
     dispatch(setPost({ post: updatedPost }));
+    console.log("updated post ",updatedPost);
   };
 
   const handleComment = async () => {
@@ -221,19 +256,21 @@ const PostWidget = ({
             }}
           ></Badge>
         </Typography>
+        
         <Typography color={main} sx={{ mt: "-25px", ml: "8px" }}>
           {description}
         </Typography>
-        {picturePath && (
-          <img
-            width="100%"
-            height="auto"
-            alt="post"
-            style={{ borderRadius: "0.75rem", marginTop: "0.75rem" }}
-            src={picturePath}
-          />
-        )}
-        <FlexBetween mt="0.25rem">
+        
+  {picturePath && (
+    <img
+      width="100%"
+      height="auto"
+      alt="post"
+      style={{ borderRadius: "0.75rem", marginTop: "0.75rem" }}
+      src={picturePath}
+    />
+  )}
+   {/* <FlexBetween mt="0.25rem">
           <FlexBetween gap="1rem">
             <FlexBetween gap="0.3rem">
               <IconButton onClick={patchLike}>
@@ -244,7 +281,42 @@ const PostWidget = ({
                 )}
               </IconButton>
               <Typography>{likeCount}</Typography>
-            </FlexBetween>
+            </FlexBetween> */}
+
+        <FlexBetween mt="0.25rem">
+        <FlexBetween gap="0.3rem">
+  <IconButton onClick={(e) => setAnchorElReaction(e.currentTarget)}>
+    <EmojiEmotionsIcon color={userReaction ? "primary" : "action"} />
+  </IconButton>
+  <Box display="flex" gap="0.4rem">
+    {reactionTypes.map(({ type, emoji }) => (
+      <Box key={type} display="flex" alignItems="center" gap="0.1rem">
+        <Typography fontSize="1.2rem">{emoji}</Typography>
+        <Typography fontSize="0.9rem">{reactionCounts[type]}</Typography>
+      </Box>
+    ))}
+  </Box>
+</FlexBetween>
+<Popover
+  open={Boolean(anchorElReaction)}
+  anchorEl={anchorElReaction}
+  onClose={() => setAnchorElReaction(null)}
+  anchorOrigin={{ vertical: "top", horizontal: "center" }}
+  transformOrigin={{ vertical: "bottom", horizontal: "center" }}
+>
+  <Box display="flex" padding="0.5rem">
+    {reactionTypes.map(({ type, emoji }) => (
+      <IconButton key={type} onClick={() => {
+        handleReaction(type);
+        setAnchorElReaction(null);
+      }}>
+        <Typography fontSize="1.5rem" title={type}>
+          {emoji}
+        </Typography>
+      </IconButton>
+    ))}
+  </Box>
+</Popover>
 
             <FlexBetween gap="0.3rem">
               <IconButton onClick={() => setIsComments(!isComments)}>
@@ -253,7 +325,7 @@ const PostWidget = ({
               <Typography>{comments.length}</Typography>
             </FlexBetween>
           </FlexBetween>
-        </FlexBetween>
+        {/* </FlexBetween> */}
         {isComments && (
           <Box mt="0.5rem">
             <Box

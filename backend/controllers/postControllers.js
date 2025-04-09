@@ -7,7 +7,10 @@ import {postNotif} from "./notif/postNotifsControllers.js";
 /* CREATE POST */
 export const createPost = async (req, res) => {
   try {
-    const { userId, description, category, picturePath } = req.body;
+    let { userId, description, category, picturePaths } = req.body;
+    if (typeof picturePaths === "string") {
+      picturePaths = JSON.parse(picturePaths);
+    }
     const user = await User.findById(userId);
     const newPost = new Post({
       userId,
@@ -17,8 +20,8 @@ export const createPost = async (req, res) => {
       description,
       category,
       userPicturePath: user.picturePath,
-      picturePath,
-      likes: {},
+      picturePath:picturePaths,
+      reactions: {like:{},love:{},sad:{},funny:{},celebrate:{}},
       comments: [],
     });
     await newPost.save();
@@ -30,7 +33,9 @@ export const createPost = async (req, res) => {
 
     res.status(201).json(post);
   } catch (err) {
+    console.log(err.message);
     res.status(409).json({ message: err.message });
+    
   }
 };
 
@@ -57,42 +62,80 @@ export const getUserPosts = async (req, res) => {
 
 
 /* UPDATE POSTS */
-export const likePost = async (req, res) => {
-    try {
-      console.log('post liked');
-        const { id } = req.params;
-        const { userId } = req.body;
-        const post = await Post.findById(id);
-        const isLiked = post.likes.get(userId);
+// export const likePost = async (req, res) => {
+//     try {
+//       console.log('post liked');
+//         const { id } = req.params;
+//         const { userId } = req.body;
+//         const post = await Post.findById(id);
+//         const isLiked = post.likes.get(userId);
 
-        if (isLiked) {
-            post.likes.delete(userId);
-        } else {
-            post.likes.set(userId, true);
-        }
-        const updatedPost = await Post.findByIdAndUpdate(
-            id,
-            { likes: post.likes },
-            { new: true }
-        );
+//         if (isLiked) {
+//             post.likes.delete(userId);
+//         } else {
+//             post.likes.set(userId, true);
+//         }
+//         const updatedPost = await Post.findByIdAndUpdate(
+//             id,
+//             { likes: post.likes },
+//             { new: true }
+//         );
 
-        //notification 
-        const postCreator = await User.findById(post.userId);
-        const user = await User.findById(userId);
-        const name = user.firstName;  
-        const title = `${name} liked your post!`;
-        const field = "like_post";
-        const postOwner = postCreator.email;
+//         //notification 
+//         const postCreator = await User.findById(post.userId);
+//         const user = await User.findById(userId);
+//         const name = user.firstName;  
+//         const title = `${name} liked your post!`;
+//         const field = "like_post";
+//         const postOwner = postCreator.email;
 
-        if(!isLiked){
-          console.log('add notif called');
-            await add_notif(postOwner,title,field);
-        }
+//         if(!isLiked){
+//           console.log('add notif called');
+//             await add_notif(postOwner,title,field);
+//         }
 
-        res.status(200).json(updatedPost);
-    } catch (err) {
-        res.status(404).json({ message: err.message });
-    }
+//         res.status(200).json(updatedPost);
+//     } catch (err) {
+//         res.status(404).json({ message: err.message });
+//     }
+// }
+export const reactPost = async (req, res) => {
+  try {
+    console.log("i am reaching here or nah?");
+    console.log('reacted to post');
+      const { id } = req.params;
+      const { userId, reactionType } = req.body;
+      const post = await Post.findById(id);
+      const isReacted=post.reactions[reactionType]?.[userId];
+
+      if (isReacted) {
+        delete post.reactions[reactionType][userId]; 
+      } else {//allows a user to have only one reaction
+          for(let key in post.reactions){
+            delete post.reactions[key][userId];
+          }
+          post.reactions[reactionType][userId]=true;
+      }
+      await post.save();
+      console.log("the updated post is ",post);
+      //notification 
+      const postCreator = await User.findById(post.userId);
+      const user = await User.findById(userId);
+      const name = user.firstName;  
+      const title = `${name} reacted to your post!`;
+      const field = "like_post";
+      const postOwner = postCreator.email;
+
+      if(!isReacted){
+        console.log('add notif called');
+          await add_notif(postOwner,title,field);
+      }
+
+      res.status(200).json(post);
+  } catch (err) {
+    console.log("kya error hai",err.message);
+      res.status(404).json({ message: err.message });
+  }
 }
 
 /* DELETE POST */
