@@ -14,6 +14,11 @@ import {
   InputBase,
   Button,
 } from "@mui/material";
+import { Swiper, SwiperSlide } from 'swiper/react';
+import 'swiper/css';
+import 'swiper/css/navigation';
+import 'swiper/css/pagination';
+import { Navigation, Pagination } from 'swiper/modules';
 import FlexBetween from "tools/FlexBetween";
 import { Favorite, FavoriteBorder } from "@mui/icons-material";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
@@ -261,7 +266,7 @@ const PostWidget = ({
           {description}
         </Typography>
         
-  {picturePath && (
+  {/* {picturePath && (
     <img
       width="100%"
       height="auto"
@@ -269,7 +274,25 @@ const PostWidget = ({
       style={{ borderRadius: "0.75rem", marginTop: "0.75rem" }}
       src={picturePath}
     />
-  )}
+  )} */}
+  {picturePath.length>1?(
+  <Swiper style={{height:'400px',width:'400px'}}
+  modules={[Navigation, Pagination]}
+  navigation
+  pagination={{ clickable: true }}
+      loop={true} // this enables looping
+      spaceBetween={10}
+      slidesPerView={1}
+    >
+     {picturePath.map((url, index) => (
+        <SwiperSlide key={index}>
+          <img src={url} alt={`Slide ${index}`} width={500} height={500} />
+        </SwiperSlide>
+      ))}
+    </Swiper>):picturePath.length===1?
+    (<img src={picturePath[0]} width={500} height={500}/>):null
+    }
+  
    {/* <FlexBetween mt="0.25rem">
           <FlexBetween gap="1rem">
             <FlexBetween gap="0.3rem">
@@ -292,7 +315,7 @@ const PostWidget = ({
     {reactionTypes.map(({ type, emoji }) => (
       <Box key={type} display="flex" alignItems="center" gap="0.1rem">
         <Typography fontSize="1.2rem">{emoji}</Typography>
-        <Typography fontSize="0.9rem">{reactionCounts[type]}</Typography>
+        <Typography fontSize="0.9rem">{reactionCounts[type]||0}</Typography>
       </Box>
     ))}
   </Box>
